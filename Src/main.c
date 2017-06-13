@@ -47,7 +47,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f1xx_hal.h"
+//#include "stm32f1xx_hal.h"
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
@@ -307,19 +307,17 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void ugfx_driver_init(void) {
 
+}
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
-void StartDefaultTask(void const * argument)
-{
+void StartDefaultTask(void const * argument){
 
   /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+	gfxInit();
+
   /* USER CODE END 5 */ 
 }
 

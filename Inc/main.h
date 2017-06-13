@@ -52,13 +52,14 @@
 
 /* USER CODE BEGIN Includes */
 #include "gfx.h"
+#include <stm32f1xx_hal.h>
 
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-
+void ugfx_driver_init(void);
 /* USER CODE END Private defines */
 
 void _Error_Handler(char *, int);

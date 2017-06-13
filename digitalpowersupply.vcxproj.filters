@@ -47,18 +47,24 @@
     <Filter Include="Header files\Device-specific files\FreeRTOS">
       <UniqueIdentifier>{e1f42ab5-c7a5-4695-a523-4dc76fdbeae0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\Src\ugfx">
+      <UniqueIdentifier>{6d6cbb69-99aa-47ed-a713-fcba02b8b380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\hal">
+      <UniqueIdentifier>{3f8e99cf-927c-4717-9a0e-24e8c886dc6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\ugfx">
+      <UniqueIdentifier>{20338bc0-8f93-470a-9aa1-5cd617d0cc74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\hal">
+      <UniqueIdentifier>{62d68ab0-f309-4619-8cb9-14a68cca40da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\FreeRTOSConfig.h">
       <Filter>Header files\Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\main.h">
-      <Filter>Header files\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\stm32f1xx_hal_conf.h">
-      <Filter>Header files\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\stm32f1xx_it.h">
       <Filter>Header files\Inc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h">
@@ -304,11 +310,20 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h">
       <Filter>Header files\Device-specific files\FreeRTOS</Filter>
     </ClInclude>
-    <ClInclude Include="gfxconf.h">
-      <Filter>Header files</Filter>
+    <ClInclude Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_config.h">
+      <Filter>Header files\Inc\ugfx</Filter>
     </ClInclude>
     <ClInclude Include="board_KS0108.h">
-      <Filter>Header files</Filter>
+      <Filter>Header files\Inc\ugfx</Filter>
+    </ClInclude>
+    <ClInclude Include="gfxconf.h">
+      <Filter>Header files\Inc\ugfx</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\stm32f1xx_hal_conf.h">
+      <Filter>Header files\Inc\hal</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\stm32f1xx_it.h">
+      <Filter>Header files\Inc\hal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -316,18 +331,6 @@
       <Filter>Source files\Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\main.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f1xx_hal_msp.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f1xx_hal_timebase_TIM.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f1xx_it.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\system_stm32f1xx.c">
       <Filter>Source files\Src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
@@ -489,8 +492,23 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\MemMang\heap_4.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </ClCompile>
+    <ClCompile Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_KS0108.c">
+      <Filter>Source files\Src\ugfx</Filter>
+    </ClCompile>
     <ClCompile Include="..\ugfx\src\gfx_mk.c">
-      <Filter>Source files\Src</Filter>
+      <Filter>Source files\Src\ugfx</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\stm32f1xx_hal_msp.c">
+      <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\stm32f1xx_hal_timebase_TIM.c">
+      <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\stm32f1xx_it.c">
+      <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\system_stm32f1xx.c">
+      <Filter>Source files\Src\hal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

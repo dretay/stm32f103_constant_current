@@ -127,6 +127,7 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_fsmc.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_sdmmc.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h" />
+    <ClInclude Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_config.h" />
     <ClInclude Include="board_KS0108.h" />
     <ClInclude Include="gfxconf.h" />
     <ClInclude Include="Inc\FreeRTOSConfig.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_fsmc.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_sdmmc.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_usb.c" />
+    <ClCompile Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_KS0108.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\main.c" />

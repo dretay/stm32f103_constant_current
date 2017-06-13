@@ -3,6 +3,9 @@
 #include "gfx.h"
 #include <stm32f1xx_hal.h>
 
+SPI_HandleTypeDef hspi1;
+
+
 static void start_transfer(void) {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET); 
 }

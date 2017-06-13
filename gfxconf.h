@@ -53,7 +53,7 @@
 //    #define GFX_OS_HEAP_SIZE                         0
 #define GFX_OS_NO_INIT                           TRUE
 #define GFX_OS_INIT_NO_WARNING                   TRUE
-//    #define GFX_OS_PRE_INIT_FUNCTION                 myHardwareInitRoutine
+#define GFX_OS_PRE_INIT_FUNCTION                 ugfx_driver_init
 //    #define GFX_OS_EXTRA_INIT_FUNCTION               myOSInitRoutine
 //    #define GFX_OS_EXTRA_DEINIT_FUNCTION             myOSDeInitRoutine
 //    #define GFX_OS_CALL_UGFXMAIN                     FALSE
