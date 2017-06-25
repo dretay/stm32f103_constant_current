@@ -1,42 +1,178 @@
 #pragma once
 
 #include "gfx.h"
+#include "main.h"
+#include "stdbool.h"
 #include <stm32f1xx_hal.h>
+#include "string.h"
 
-SPI_HandleTypeDef hspi1;
+// LCD basic instructions. These all take 72us to execute except LcdDisplayClear, which takes 1.6ms
+const uint8_t LcdDisplayClear = 0x01;
+const uint8_t LcdHome = 0x02;
+const uint8_t LcdEntryModeSet = 0x06;       // move cursor right and indcement address when writing data
+const uint8_t LcdDisplayOff = 0x08;
+const uint8_t LcdDisplayOn = 0x0C;          // add 0x02 for cursor on and/or 0x01 for cursor blink on
+const uint8_t LcdFunctionSetBasicAlpha = 0x20;
+const uint8_t LcdFunctionSetBasicGraphic = 0x22;
+const uint8_t LcdFunctionSetExtendedAlpha = 0x24;
+const uint8_t LcdFunctionSetExtendedGraphic = 0x26;
+const uint8_t LcdSetDdramAddress = 0x80;    // add the address we want to set
 
 
-static void start_transfer(void) {
+// LCD extended instructions
+const uint8_t LcdSetGdramAddress = 0x80;
+
+//const unsigned int LcdCommandDelayMicros = 72 - 24; // 72us required, less 24us time to send the command @ 1MHz
+const unsigned int LcdCommandDelayMicros = 2;
+const unsigned int LcdDataDelayMicros = 2;// 10;         // Delay between sending data bytes
+const unsigned int LcdDisplayClearDelayMillis = 2;  // 1.6ms should be enough
+
+const unsigned int numRows = 64;
+const unsigned int numCols = 128;
+
+enum PixelMode {
+	PixelClear = 0,    // clear the pixel(s)
+	PixelSet   = 1,      // set the pixel(s)
+	PixelFlip  = 2      // invert the pixel(s)
+};
+
+
+uint8_t row, column;
+uint8_t startRow, startCol, endRow, endCol; // coordinates of the dirty rectangle
+uint8_t image[(128 * 64) / 8];       
+
+
+uint32_t getUs(void) {
+	uint32_t usTicks = HAL_RCC_GetSysClockFreq() / 1000000;
+	register uint32_t ms, cycle_cnt;
+	do {
+		ms = HAL_GetTick();
+		cycle_cnt = SysTick->VAL;
+	} while (ms != HAL_GetTick());
+	return (ms * 1000) + (usTicks * 1000 - cycle_cnt) / usTicks;
+}
+ 
+void delay_us(uint16_t micros) {
+	uint32_t start = getUs();
+	while (getUs() - start < (uint32_t) micros) {
+		asm("nop");
+	}
+}
+
+static void enable(void) {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET); 
+	HAL_Delay(5);
 }
-static void stop_transfer(void) {
+static void disable(void) {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET); 
-}
-static void send_command(uint8_t cmd) {
-	if (HAL_SPI_Transmit_DMA(&hspi1, 0x038, 1) != HAL_OK) {}
+	HAL_Delay(5);
 
-	//wait for the xfer to finish
-	while (HAL_SPI_GetState(&hspi1) != HAL_SPI_STATE_READY) {}
+}
+
+static void reset_display(void) {
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); 
+	HAL_Delay(5);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); 
+	HAL_Delay(50);
+}
+void sendLcd(uint8_t data1, uint8_t data2) {
+	SPI_HandleTypeDef* hspi1 = (SPI_HandleTypeDef*)get_display_spi_handle();
+	uint8_t data[] = { data1, (data2 & 0xF0), (data2 << 4 ) };
+	HAL_SPI_Transmit(hspi1, data, 3, 1);
+	while (HAL_SPI_GetState(hspi1) == HAL_SPI_STATE_BUSY);
+	
+}
+void sendLcdCommand(uint8_t command) {
+	sendLcd(0xF8, command);
+}
+void sendLcdData(uint8_t command) {
+	sendLcd(0xFA, command);
+}
+void commandDelay() {
+	delay_us(LcdCommandDelayMicros);
+}
+
+void setGraphicsAddress(unsigned int r, unsigned int c) {
+	sendLcdCommand(LcdSetGdramAddress | (r & 31));
+	//commandDelay();  // don't seem to need this one
+	sendLcdCommand(LcdSetGdramAddress | c | ((r & 32) >> 2));
+	commandDelay();    // we definitely need this one
+}
+
+void flush() {
+	if (endCol > startCol && endRow > startRow) {
+		uint8_t startColNum = startCol / 16;
+		uint8_t endColNum = (endCol + 15) / 16;
+		for (uint8_t r = startRow; r < endRow; ++r) {
+			setGraphicsAddress(r, startColNum);
+			uint8_t *ptr = image + ((16 * r) + (2 * startColNum));
+			for (uint8_t i = startColNum; i < endColNum; ++i) {      
+				sendLcdData(*ptr++);
+				//commandDelay();    // don't seem to need a delay here
+				sendLcdData(*ptr++);
+				//commandDelay();    // don't seem to need as long a delay as this
+				delay_us(LcdDataDelayMicros);
+			}
+		}
+		startRow = numRows;
+		startCol = numCols;
+		endCol = endRow = 0;
+	}
+}
+void clear() {
+	memset(image, 0, sizeof(image));
+	// flag whole image as dirty and update
+	startRow = 0;
+	endRow = numRows;
+	startCol = 0;
+	endCol = numCols;
+	flush();
+}
+
+void setPixel(uint8_t x, uint8_t y, enum PixelMode mode) {
+	if (y < numRows && x < numCols) {
+		uint8_t *p = image + ((y * (numCols / 8)) + (x / 8));
+		uint8_t mask = 0x80u >> (x % 8);
+		switch (mode) {
+		case PixelClear:
+			*p &= ~mask;
+			break;
+		case PixelSet:
+			*p |= mask;
+			break;
+		case PixelFlip:
+			*p ^= mask;
+			break;
+		}
+    
+		// Change the dirty rectangle to account for a pixel being dirty (we assume it was changed)
+		if (startRow > y) { startRow = y; }
+		if (endRow <= y)  { endRow = y + 1; }
+		if (startCol > x) { startCol = x; }
+		if (endCol <= x)  { endCol = x + 1; }
+	}
 }
 static GFXINLINE void init_board(GDisplay* g) {
 	(void) g; 
 	
-	//enable chip
-	HAL_Delay(100);
-	start_transfer();
-	HAL_Delay(10);
+	reset_display();
+	enable();
+		
+	sendLcdCommand(LcdFunctionSetBasicAlpha);
+	delay_us(1);
+	sendLcdCommand(LcdFunctionSetBasicAlpha);
+	commandDelay();
+	sendLcdCommand(LcdEntryModeSet);
+	commandDelay();
+	
+	sendLcdCommand(LcdFunctionSetExtendedGraphic);
+	clear();
+	
+	sendLcdCommand(LcdDisplayOn);
+	commandDelay();
 
-
-
-	send_command(0x038);            			/* 8 Bit interface (DL=1), basic instruction set (RE=0) */
-	send_command(0x008);		                /* display on, cursor & blink off; 0x08: all off */
-	send_command(0x006);		                /* Entry mode: Cursor move to right ,DDRAM address counter (AC) plus 1, no shift  */  
-	send_command(0x002);		                /* disable scroll, enable CGRAM adress  */
-	send_command(0x001);		                /* clear RAM, needs 1.6 ms */
-	HAL_Delay(4);								/* delay 4ms */
-	stop_transfer();							/* disable chip */
-	send_command(0xFF);							/* end of sequence */
-
+	disable();
+	
 
 }
 static GFXINLINE void post_init_board(GDisplay *g) {
@@ -57,22 +193,18 @@ static GFXINLINE void acquire_bus(GDisplay *g) {
 
 static GFXINLINE void release_bus(GDisplay *g) {
 	(void) g;
+	flush();
 }
 void KS0108_delay(uint16_t microsec) {
 	(void) microsec;
 }
-static GFXINLINE void KS0108_write(uint8_t value) {
-	(void) value;
+
+void gdisp_lld_flush(GDisplay *g){
+	(void) g;
+	enable();
+	flush();
+	disable();
 }
-static GFXINLINE void KS0108_select(uint8_t chip) {
-	(void) chip;
-}
-static GFXINLINE void KS0108_unselect(void) {
-}
-#if KS0108_NEED_READ  //Hardware Read ########### needs more testing but my display is broken
-static GFXINLINE uint8_t read_KS0108(void) {
-}
-#endif
 static GFXINLINE void write_data(GDisplay* g, uint16_t data) {
 	(void) g;
 	(void) data;
@@ -80,16 +212,4 @@ static GFXINLINE void write_data(GDisplay* g, uint16_t data) {
 static GFXINLINE void write_cmd(GDisplay* g, uint16_t cmd) {
 	(void) g;
 	(void) cmd;
-}
-static GFXINLINE void setreadmode(GDisplay *g) {
-	(void) g;
-}
-
-static GFXINLINE void setwritemode(GDisplay *g) {
-	(void) g;
-}
-
-static GFXINLINE uint16_t read_data(GDisplay *g) {
-	(void) g;
-	return 0;
 }

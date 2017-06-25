@@ -51,8 +51,10 @@
   /* Includes ------------------------------------------------------------------*/
 
 /* USER CODE BEGIN Includes */
+
 #include "gfx.h"
-#include <stm32f1xx_hal.h>
+#include "math.h"
+
 
 /* USER CODE END Includes */
 
@@ -60,6 +62,7 @@
 
 /* USER CODE BEGIN Private defines */
 void ugfx_driver_init(void);
+void* get_display_spi_handle(void); 
 /* USER CODE END Private defines */
 
 void _Error_Handler(char *, int);

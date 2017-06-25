@@ -47,7 +47,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-//#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal.h"
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
@@ -210,10 +210,10 @@ static void MX_SPI1_Init(void)
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
+  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -261,7 +261,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|GPIO_PIN_6, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PC13 PC14 PC15 */
   GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
@@ -274,18 +274,16 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA0 PA1 PA2 PA3 
-                           PA4 PA8 PA9 PA10 
-                           PA11 PA12 PA13 PA14 
-                           PA15 */
+                           PA8 PA9 PA10 PA11 
+                           PA12 PA15 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3 
-                          |GPIO_PIN_4|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10 
-                          |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14 
-                          |GPIO_PIN_15;
+                          |GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11 
+                          |GPIO_PIN_12|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
+  /*Configure GPIO pins : PA4 PA6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -310,13 +308,94 @@ static void MX_GPIO_Init(void)
 void ugfx_driver_init(void) {
 
 }
+void* get_display_spi_handle(void) {
+	return &hspi1;
+}
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
-void StartDefaultTask(void const * argument){
+void StartDefaultTask(void const * argument)
+{
 
   /* USER CODE BEGIN 5 */
 	gfxInit();
+	// A set of data points that will be displayed in the graph
+	static const point data[5] = {
+		{ -40, -40 },
+		{ 70, 40 },
+		{ 140, 60 },
+		{ 210, 60 },
+		{ 280, 200 }
+	};
+ 
+	 // The graph object
+	static GGraphObject g;
+ 
+	 // A graph styling
+	static GGraphStyle GraphStyle1 = {
+		{ GGRAPH_POINT_DOT, 0, Blue },          // Point
+		{ GGRAPH_LINE_NONE, 2, Gray },          // Line
+		{ GGRAPH_LINE_SOLID, 0, White },        // X axis
+		{ GGRAPH_LINE_SOLID, 0, White },        // Y axis
+		{ GGRAPH_LINE_DASH, 5, Gray, 50 },      // X grid
+		{ GGRAPH_LINE_DOT, 7, Yellow, 50 },     // Y grid
+		GWIN_GRAPH_STYLE_POSITIVE_AXIS_ARROWS   // Flags
+	};
+ 
+	 // Another graph styling 
+	static const GGraphStyle GraphStyle2 = {
+		{ GGRAPH_POINT_SQUARE, 5, Red },        // Point
+		{ GGRAPH_LINE_DOT, 2, Pink },           // Line
+		{ GGRAPH_LINE_SOLID, 0, White },        // X axis
+		{ GGRAPH_LINE_SOLID, 0, White },        // Y axis
+		{ GGRAPH_LINE_DASH, 5, Gray, 50 },      // X grid
+		{ GGRAPH_LINE_DOT, 7, Yellow, 50 },     // Y grid
+		GWIN_GRAPH_STYLE_POSITIVE_AXIS_ARROWS   // Flags
+	};
+	GHandle     gh;
+	uint16_t    i;
+	// Create the graph window
+	{
+		GWindowInit wi;
+ 
+		wi.show = TRUE;
+		wi.x = wi.y = 0;
+		wi.width = gdispGetWidth();
+		wi.height = gdispGetHeight();
+		gh = gwinGraphCreate(&g, &wi);
+	}
+ 
+    // Set the graph origin and style
+	gwinGraphSetOrigin(gh, gwinGetWidth(gh) / 2, gwinGetHeight(gh) / 2);
+	gwinGraphSetStyle(gh, &GraphStyle1);
+	gwinGraphDrawAxis(gh);
+ 
+    // Draw a sine wave
+	for (i = 0; i < gwinGetWidth(gh); i++) {
+		gwinGraphDrawPoint(gh, i - gwinGetWidth(gh) / 2, 80*sin(2 * 0.2*M_PI*i / 180));
+	}
+	 // Modify the style
+	gwinGraphStartSet(gh);
+	GraphStyle1.point.color = Green;
+	gwinGraphSetStyle(gh, &GraphStyle1);
+ 
+    // Draw a different sine wave
+	for (i = 0; i < gwinGetWidth(gh) * 5; i++) {
+		gwinGraphDrawPoint(gh, i / 5 - gwinGetWidth(gh) / 2, 95*sin(2 * 0.2*M_PI*i / 180));
+	}
+ 
+    // Change to a completely different style
+	gwinGraphStartSet(gh);
+	gwinGraphSetStyle(gh, &GraphStyle2);
+ 
+    // Draw a set of points
+	gwinGraphDrawPoints(gh, data, sizeof(data) / sizeof(data[0]));
+ 
+	while (TRUE) {
+		gfxSleepMilliseconds(100);
+	}
+	
+	
 
   /* USER CODE END 5 */ 
 }
