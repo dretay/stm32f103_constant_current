@@ -55,8 +55,9 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
 SPI_HandleTypeDef hspi1;
-DMA_HandleTypeDef hdma_spi1_tx;
 
 osThreadId defaultTaskHandle;
 
@@ -68,8 +69,8 @@ osThreadId defaultTaskHandle;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_I2C1_Init(void);
 void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
@@ -106,8 +107,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_SPI1_Init();
+  MX_I2C1_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -202,6 +203,26 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
 }
 
+/* I2C1 init function */
+static void MX_I2C1_Init(void)
+{
+
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
 /* SPI1 init function */
 static void MX_SPI1_Init(void)
 {
@@ -213,7 +234,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
   hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -222,21 +243,6 @@ static void MX_SPI1_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
-
-}
-
-/** 
-  * Enable DMA controller clock
-  */
-static void MX_DMA_Init(void) 
-{
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA1_CLK_ENABLE();
-
-  /* DMA interrupt init */
-  /* DMA1_Channel3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
 }
 
@@ -291,11 +297,11 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : PB0 PB1 PB2 PB10 
                            PB11 PB12 PB13 PB14 
                            PB15 PB3 PB4 PB5 
-                           PB6 PB7 PB8 PB9 */
+                           PB8 PB9 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10 
                           |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14 
                           |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5 
-                          |GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
+                          |GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -314,87 +320,55 @@ void* get_display_spi_handle(void) {
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
+static void writeRegister(uint8_t i2cAddress, uint8_t reg, uint16_t value) {
+	uint8_t tx_buffer[3] = { (uint8_t)reg, (uint8_t)(value >> 8), (uint8_t)(value & 0xFF) };
+	HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, tx_buffer, 3, 4);	
+}
+static uint16_t readRegister(uint8_t i2cAddress, uint8_t reg) {
+	uint8_t tx_buffer[1] = { ADS1015_REG_POINTER_CONVERT };
+	uint8_t rx_buffer[2] = { 0, 0 };
+
+	HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, tx_buffer , 1, 4);
+	HAL_I2C_Master_Receive(&hi2c1, i2cAddress+1, rx_buffer, 2, 4);
+
+	return ((rx_buffer[0] << 8) | rx_buffer[1]);  
+}
 void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
-	gfxInit();
-	// A set of data points that will be displayed in the graph
-	static const point data[5] = {
-		{ -40, -40 },
-		{ 70, 40 },
-		{ 140, 60 },
-		{ 210, 60 },
-		{ 280, 200 }
-	};
- 
-	 // The graph object
-	static GGraphObject g;
- 
-	 // A graph styling
-	static GGraphStyle GraphStyle1 = {
-		{ GGRAPH_POINT_DOT, 0, Blue },          // Point
-		{ GGRAPH_LINE_NONE, 2, Gray },          // Line
-		{ GGRAPH_LINE_SOLID, 0, White },        // X axis
-		{ GGRAPH_LINE_SOLID, 0, White },        // Y axis
-		{ GGRAPH_LINE_DASH, 5, Gray, 50 },      // X grid
-		{ GGRAPH_LINE_DOT, 7, Yellow, 50 },     // Y grid
-		GWIN_GRAPH_STYLE_POSITIVE_AXIS_ARROWS   // Flags
-	};
- 
-	 // Another graph styling 
-	static const GGraphStyle GraphStyle2 = {
-		{ GGRAPH_POINT_SQUARE, 5, Red },        // Point
-		{ GGRAPH_LINE_DOT, 2, Pink },           // Line
-		{ GGRAPH_LINE_SOLID, 0, White },        // X axis
-		{ GGRAPH_LINE_SOLID, 0, White },        // Y axis
-		{ GGRAPH_LINE_DASH, 5, Gray, 50 },      // X grid
-		{ GGRAPH_LINE_DOT, 7, Yellow, 50 },     // Y grid
-		GWIN_GRAPH_STYLE_POSITIVE_AXIS_ARROWS   // Flags
-	};
-	GHandle     gh;
-	uint16_t    i;
-	// Create the graph window
-	{
-		GWindowInit wi;
- 
-		wi.show = TRUE;
-		wi.x = wi.y = 0;
-		wi.width = gdispGetWidth();
-		wi.height = gdispGetHeight();
-		gh = gwinGraphCreate(&g, &wi);
-	}
- 
-    // Set the graph origin and style
-	gwinGraphSetOrigin(gh, gwinGetWidth(gh) / 2, gwinGetHeight(gh) / 2);
-	gwinGraphSetStyle(gh, &GraphStyle1);
-	gwinGraphDrawAxis(gh);
- 
-    // Draw a sine wave
-	for (i = 0; i < gwinGetWidth(gh); i++) {
-		gwinGraphDrawPoint(gh, i - gwinGetWidth(gh) / 2, 80*sin(2 * 0.2*M_PI*i / 180));
-	}
-	 // Modify the style
-	gwinGraphStartSet(gh);
-	GraphStyle1.point.color = Green;
-	gwinGraphSetStyle(gh, &GraphStyle1);
- 
-    // Draw a different sine wave
-	for (i = 0; i < gwinGetWidth(gh) * 5; i++) {
-		gwinGraphDrawPoint(gh, i / 5 - gwinGetWidth(gh) / 2, 95*sin(2 * 0.2*M_PI*i / 180));
-	}
- 
-    // Change to a completely different style
-	gwinGraphStartSet(gh);
-	gwinGraphSetStyle(gh, &GraphStyle2);
- 
-    // Draw a set of points
-	gwinGraphDrawPoints(gh, data, sizeof(data) / sizeof(data[0]));
- 
-	while (TRUE) {
-		gfxSleepMilliseconds(100);
-	}
+	//gfxInit();
 	
+	
+	//dac
+	//int val = 2048;
+	//uint8_t output[] = {0x40, (val/16), ((val%16)<<4) };
+	//HAL_I2C_Master_Transmit(&hi2c1, 0xC4, output, 3, 4);
+
+	//adc
+	uint16_t config = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
+                    ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
+                    ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
+                    ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
+                    ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
+                    ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
+	// Set PGA/voltage range
+	config |= GAIN_TWOTHIRDS;
+
+	config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
+	
+	config |= ADS1015_REG_CONFIG_OS_SINGLE;
+	
+	writeRegister(0x90, ADS1015_REG_POINTER_CONFIG, config);
+	HAL_Delay(8);
+	uint16_t res = readRegister(0x90, ADS1015_REG_POINTER_CONVERT) >> 0;  
+
+	float voltage = (res * 0.1875) / 1000; 
+	while (1){
+		writeRegister(0x90, ADS1015_REG_POINTER_CONFIG, config);
+		HAL_Delay(8);
+		res = readRegister(0x90, ADS1015_REG_POINTER_CONVERT) >> 0;  
+	}
 	
 
   /* USER CODE END 5 */ 
