@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;../ugfx;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;../ugfx;../SEGGER_RTT_V614b/RTT;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -127,13 +127,19 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_fsmc.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_sdmmc.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h" />
+    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.h" />
+    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_Conf.h" />
     <ClInclude Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_config.h" />
+    <ClInclude Include="ads1115.h" />
     <ClInclude Include="board_KS0108.h" />
+    <ClInclude Include="defines.h" />
+    <ClInclude Include="encoder.h" />
     <ClInclude Include="gfxconf.h" />
     <ClInclude Include="Inc\FreeRTOSConfig.h" />
     <ClInclude Include="Inc\main.h" />
     <ClInclude Include="Inc\stm32f1xx_hal_conf.h" />
     <ClInclude Include="Inc\stm32f1xx_it.h" />
+    <ClInclude Include="mcp4725.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c" />
@@ -189,8 +195,13 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_fsmc.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_sdmmc.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_usb.c" />
+    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.c" />
+    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_printf.c" />
     <ClCompile Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_KS0108.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
+    <ClCompile Include="ads1115.c" />
+    <ClCompile Include="encoder.c" />
+    <ClCompile Include="mcp4725.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\stm32f1xx_hal_msp.c" />

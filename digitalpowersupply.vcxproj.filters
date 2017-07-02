@@ -59,6 +59,12 @@
     <Filter Include="Header files\Inc\hal">
       <UniqueIdentifier>{62d68ab0-f309-4619-8cb9-14a68cca40da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\Src\segger">
+      <UniqueIdentifier>{c36bf7b7-755c-45c9-9080-35257ba07ee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\segger">
+      <UniqueIdentifier>{89e103d7-cd87-4ffe-b5bb-739980f751b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\FreeRTOSConfig.h">
@@ -325,6 +331,24 @@
     <ClInclude Include="Inc\stm32f1xx_it.h">
       <Filter>Header files\Inc\hal</Filter>
     </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>Header files\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="encoder.h">
+      <Filter>Header files\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.h">
+      <Filter>Header files\Inc\segger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_Conf.h">
+      <Filter>Header files\Inc\segger</Filter>
+    </ClInclude>
+    <ClInclude Include="mcp4725.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="ads1115.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\freertos.c">
@@ -509,6 +533,21 @@
     </ClCompile>
     <ClCompile Include="Src\system_stm32f1xx.c">
       <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="encoder.c">
+      <Filter>Source files\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.c">
+      <Filter>Source files\Src\segger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_printf.c">
+      <Filter>Source files\Src\segger</Filter>
+    </ClCompile>
+    <ClCompile Include="ads1115.c">
+      <Filter>Source files\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="mcp4725.c">
+      <Filter>Source files\Src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -76,7 +76,7 @@ static void reset_display(void) {
 	HAL_Delay(50);
 }
 void sendLcd(uint8_t data1, uint8_t data2) {
-	SPI_HandleTypeDef* hspi1 = (SPI_HandleTypeDef*)get_display_spi_handle();
+	SPI_HandleTypeDef* hspi1 = (SPI_HandleTypeDef*)get_hspi1();
 	uint8_t data[] = { data1, (data2 & 0xF0), (data2 << 4 ) };
 	HAL_SPI_Transmit(hspi1, data, 3, 1);
 	while (HAL_SPI_GetState(hspi1) == HAL_SPI_STATE_BUSY);
