@@ -120,6 +120,8 @@ const unsigned char ttable[7][4] = {
 };
 #endif
 
+uint8_t encoder_counter = 0;
+
 void initialize(void) {
 	state = R_START;
 }
@@ -134,14 +136,10 @@ uint8_t process(void) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	unsigned char result = process();
-	data.idx = 1;
-	
 	if (result == DIR_CW) {		
-		counter++;
+		encoder_counter++;
 	}
 	else if (result == DIR_CCW) {
-		counter--;		
+		encoder_counter--;		
 	}  
-	data.val = counter;
-	//xQueueSend()
 }

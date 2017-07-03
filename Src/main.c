@@ -64,10 +64,10 @@ TIM_HandleTypeDef htim2;
 
 osThreadId defaultTaskHandle;
 osThreadId graphicsTaskHandle;
+osThreadId dacTaskHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
 
 /* USER CODE END PV */
 
@@ -79,6 +79,7 @@ static void MX_I2C1_Init(void);
 static void MX_TIM2_Init(void);
 void StartDefaultTask(void const * argument);
 void StartGraphicsTask(void const * argument);
+void StartDacTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -144,6 +145,10 @@ int main(void)
   /* definition and creation of graphicsTask */
   osThreadDef(graphicsTask, StartGraphicsTask, osPriorityNormal, 0, 128);
   graphicsTaskHandle = osThreadCreate(osThread(graphicsTask), NULL);
+
+  /* definition and creation of dacTask */
+  osThreadDef(dacTask, StartDacTask, osPriorityNormal, 0, 128);
+  dacTaskHandle = osThreadCreate(osThread(dacTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -268,9 +273,9 @@ static void MX_TIM2_Init(void)
   TIM_MasterConfigTypeDef sMasterConfig;
 
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 15;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 7999;
+  htim2.Init.Period = 49999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
@@ -345,10 +350,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB0 PB2 PB10 PB11 
                            PB12 PB13 PB14 PB15 
-                           PB3 PB6 PB7 */
+                           PB3 PB8 PB9 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11 
                           |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15 
-                          |GPIO_PIN_3|GPIO_PIN_6|GPIO_PIN_7;
+                          |GPIO_PIN_3|GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -400,8 +405,14 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
-  
-
+	int val = 0;
+	uint8_t output[] = { 0x40, (val / 16), ((val % 16) << 4) };
+	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, 0xC4, output, 3, 4);
+	//vTaskDelete(NULL);
+	while (1)
+	{
+		
+	}
 
   /* USER CODE END 5 */ 
 }
@@ -410,9 +421,30 @@ void StartDefaultTask(void const * argument)
 void StartGraphicsTask(void const * argument)
 {
   /* USER CODE BEGIN StartGraphicsTask */
-	gfxInit();
+	//gfxInit();
+	while (1){
+		
+	}
 
   /* USER CODE END StartGraphicsTask */
+}
+
+/* StartDacTask function */
+void StartDacTask(void const * argument)
+{
+  /* USER CODE BEGIN StartDacTask */
+  
+  uint8_t old_val = encoder_counter;
+  for(;;){
+	  if (old_val != encoder_counter)
+	  {
+		  set_dac(encoder_counter);
+		  old_val = encoder_counter;
+	  }	  
+	  
+	  osDelay(100);	
+  }
+  /* USER CODE END StartDacTask */
 }
 
 /**

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "stm32f1xx_hal.h"
+#include "cmsis_os.h"
+
 
 // Values returned by 'process'
 // No complete step yet.
@@ -10,14 +12,16 @@
 // Anti-clockwise step.
 #define DIR_CCW 0x20
 
-int counter = 0;
 
-struct encoderData
+typedef struct
 {
 	uint8_t idx;
 	uint8_t val;
 
-} data;
+} T_ENCODER_READING;
+
+extern uint8_t encoder_counter;
+
 
 void initialize(void);
 uint8_t process(void);
