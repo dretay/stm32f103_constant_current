@@ -37,6 +37,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>Inc;../ugfx;../SEGGER_RTT_V614b/RTT;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
+      <InputLanguage>C</InputLanguage>
     </ClCompile>
     <Link>
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
@@ -131,6 +132,7 @@
     <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_Conf.h" />
     <ClInclude Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_config.h" />
     <ClInclude Include="ads1115.h" />
+    <ClInclude Include="application.h" />
     <ClInclude Include="board_KS0108.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="encoder.h" />
@@ -139,6 +141,7 @@
     <ClInclude Include="Inc\main.h" />
     <ClInclude Include="Inc\stm32f1xx_hal_conf.h" />
     <ClInclude Include="Inc\stm32f1xx_it.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="mcp4725.h" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +203,7 @@
     <ClCompile Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_KS0108.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
     <ClCompile Include="ads1115.c" />
+    <ClCompile Include="application.c" />
     <ClCompile Include="encoder.c" />
     <ClCompile Include="mcp4725.c" />
     <ClCompile Include="Src\freertos.c" />

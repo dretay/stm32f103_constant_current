@@ -54,21 +54,15 @@
 
 #include "gfx.h"
 #include "math.h"
-#include "SEGGER_RTT.h"
 #include "encoder.h"
 #include "ads1115.h"
 #include "mcp4725.h"
+#include "log.h"
+#include "application.h"
 
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
-
-/* USER CODE BEGIN Private defines */
-#if DEBUG == 1
-#define LOG(...) SEGGER_RTT_printf(0, __VA_ARGS__)
-#else
-#define LOG(...)
-#endif
 
 void ugfx_driver_init(void);
 void* get_hspi1(void); 

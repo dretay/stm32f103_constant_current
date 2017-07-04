@@ -65,6 +65,7 @@ TIM_HandleTypeDef htim2;
 osThreadId defaultTaskHandle;
 osThreadId graphicsTaskHandle;
 osThreadId dacTaskHandle;
+osTimerId encoderPollHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -80,6 +81,7 @@ static void MX_TIM2_Init(void);
 void StartDefaultTask(void const * argument);
 void StartGraphicsTask(void const * argument);
 void StartDacTask(void const * argument);
+void encoderCallback(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -132,8 +134,14 @@ int main(void)
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
+  /* Create the timer(s) */
+  /* definition and creation of encoderPoll */
+  osTimerDef(encoderPoll, encoderCallback);
+  encoderPollHandle = osTimerCreate(osTimer(encoderPoll), osTimerPeriodic, NULL);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
+  osTimerStart(encoderPollHandle, 100);
   HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END RTOS_TIMERS */
 
@@ -405,14 +413,20 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
-	int val = 0;
-	uint8_t output[] = { 0x40, (val / 16), ((val % 16) << 4) };
-	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, 0xC4, output, 3, 4);
+	init();
+	Application application1 = make(1);
+	Application application2 = make(2);	
+	work(application1);
+	work(application2);
+
+	//int val = 0;
+	//uint8_t output[] = { 0x40, (val / 16), ((val % 16) << 4) };
+	//HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, 0xC4, output, 3, 4);
 	//vTaskDelete(NULL);
-	while (1)
-	{
-		
-	}
+//	while (1)
+//	{
+//		
+//	}
 
   /* USER CODE END 5 */ 
 }
@@ -445,6 +459,14 @@ void StartDacTask(void const * argument)
 	  osDelay(100);	
   }
   /* USER CODE END StartDacTask */
+}
+
+/* encoderCallback function */
+void encoderCallback(void const * argument)
+{
+  /* USER CODE BEGIN encoderCallback */
+  
+  /* USER CODE END encoderCallback */
 }
 
 /**

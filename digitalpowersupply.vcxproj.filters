@@ -349,12 +349,15 @@
     <ClInclude Include="ads1115.h">
       <Filter>Header files</Filter>
     </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Header files\Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\freertos.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\main.c">
       <Filter>Source files\Src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
@@ -548,6 +551,12 @@
     </ClCompile>
     <ClCompile Include="mcp4725.c">
       <Filter>Source files\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\main.c">
+      <Filter>Source files\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="application.c">
+      <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
