@@ -413,11 +413,17 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
-	init();
-	Application application1 = make(1);
-	Application application2 = make(2);	
-	work(application1);
-	work(application2);
+	initCircle();
+	void* p = new(Point, 1, 2);
+	void* p2 = new(Circle, 1, 2, 3);
+	draw(p);
+	draw(p2);
+	LOG("HI!");
+//	init();
+//	Application application1 = make(1);
+//	Application application2 = make(2);		
+//	work(application1);
+//	work(application2);
 
 	//int val = 0;
 	//uint8_t output[] = { 0x40, (val / 16), ((val % 16) << 4) };

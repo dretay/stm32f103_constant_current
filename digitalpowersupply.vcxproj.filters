@@ -13,17 +13,11 @@
       <UniqueIdentifier>{0ec065ab-42d8-4fb0-b373-b8de3a56d241}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="Source files\Inc">
-      <UniqueIdentifier>{22581096-8b74-4092-8092-a341b475f9de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header files\Inc">
       <UniqueIdentifier>{d76cfb33-4eb6-461e-8806-ce780a43adb6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source files\Src">
       <UniqueIdentifier>{7643b202-75fb-4b2a-86ba-c0e4b5eb507f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header files\Src">
-      <UniqueIdentifier>{1ba5dfe0-1bed-43cb-b4b8-bc8e6b10f065}</UniqueIdentifier>
     </Filter>
     <Filter Include="VisualGDB settings">
       <UniqueIdentifier>{9844d1e3-7daa-4cf9-9b03-96a3fc7b1e23}</UniqueIdentifier>
@@ -65,12 +59,21 @@
     <Filter Include="Header files\Inc\segger">
       <UniqueIdentifier>{89e103d7-cd87-4ffe-b5bb-739980f751b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header files\os">
+      <UniqueIdentifier>{dc72a08e-91fc-4e55-b8f5-aec33ad6c0a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\os">
+      <UniqueIdentifier>{1e6018f6-4b08-4496-8d7d-e7bfdb4e32a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\ooc">
+      <UniqueIdentifier>{9dfff2b6-03fe-4137-85dc-c33461fd9e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\ooc">
+      <UniqueIdentifier>{3596fbdf-116f-4cd9-9aa9-fdbe81eee0ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\FreeRTOSConfig.h">
-      <Filter>Header files\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\main.h">
       <Filter>Header files\Inc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h">
@@ -334,26 +337,44 @@
     <ClInclude Include="defines.h">
       <Filter>Header files\Inc</Filter>
     </ClInclude>
-    <ClInclude Include="encoder.h">
-      <Filter>Header files\Inc</Filter>
-    </ClInclude>
     <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.h">
       <Filter>Header files\Inc\segger</Filter>
     </ClInclude>
     <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_Conf.h">
       <Filter>Header files\Inc\segger</Filter>
     </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Header files\Inc</Filter>
+    </ClInclude>
     <ClInclude Include="mcp4725.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\main.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="ads1115.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="application.h">
+    <ClInclude Include="encoder.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="log.h">
-      <Filter>Header files\Inc</Filter>
+    <ClInclude Include="application.h">
+      <Filter>Header files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="controller.h">
+      <Filter>Header files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="view.h">
+      <Filter>Header files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusView.h">
+      <Filter>Header files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Header files\Inc\ooc</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle.h">
+      <Filter>Header files\Inc\ooc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -492,6 +513,57 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_usb.c">
       <Filter>Source files\Device-specific files\HAL</Filter>
     </ClCompile>
+    <ClCompile Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_KS0108.c">
+      <Filter>Source files\Src\ugfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ugfx\src\gfx_mk.c">
+      <Filter>Source files\Src\ugfx</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\stm32f1xx_hal_msp.c">
+      <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\stm32f1xx_hal_timebase_TIM.c">
+      <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\stm32f1xx_it.c">
+      <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\system_stm32f1xx.c">
+      <Filter>Source files\Src\hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.c">
+      <Filter>Source files\Src\segger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_printf.c">
+      <Filter>Source files\Src\segger</Filter>
+    </ClCompile>
+    <ClCompile Include="encoder.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="ads1115.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="mcp4725.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\main.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="application.c">
+      <Filter>Source files\os</Filter>
+    </ClCompile>
+    <ClCompile Include="controller.c">
+      <Filter>Source files\os</Filter>
+    </ClCompile>
+    <ClCompile Include="view.c">
+      <Filter>Source files\os</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.c">
+      <Filter>Source files\Src\ooc</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.c">
+      <Filter>Source files\Src\ooc</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\croutine.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </ClCompile>
@@ -519,44 +591,8 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\MemMang\heap_4.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </ClCompile>
-    <ClCompile Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_KS0108.c">
-      <Filter>Source files\Src\ugfx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ugfx\src\gfx_mk.c">
-      <Filter>Source files\Src\ugfx</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f1xx_hal_msp.c">
-      <Filter>Source files\Src\hal</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f1xx_hal_timebase_TIM.c">
-      <Filter>Source files\Src\hal</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stm32f1xx_it.c">
-      <Filter>Source files\Src\hal</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\system_stm32f1xx.c">
-      <Filter>Source files\Src\hal</Filter>
-    </ClCompile>
-    <ClCompile Include="encoder.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.c">
-      <Filter>Source files\Src\segger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_printf.c">
-      <Filter>Source files\Src\segger</Filter>
-    </ClCompile>
-    <ClCompile Include="ads1115.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="mcp4725.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\main.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
-    <ClCompile Include="application.c">
-      <Filter>Source files</Filter>
+    <ClCompile Include="Circle.c">
+      <Filter>Source files\Src\ooc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -568,6 +604,18 @@
     </None>
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
+    </None>
+    <None Include="Object.h">
+      <Filter>Header files\Inc\ooc</Filter>
+    </None>
+    <None Include="Object.r">
+      <Filter>Header files\Inc\ooc</Filter>
+    </None>
+    <None Include="Point.r">
+      <Filter>Header files\Inc\ooc</Filter>
+    </None>
+    <None Include="Circle.r">
+      <Filter>Header files\Inc\ooc</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
