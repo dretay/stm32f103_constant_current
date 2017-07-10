@@ -328,9 +328,6 @@
     <ClInclude Include="Inc\stm32f1xx_it.h">
       <Filter>Header files\Inc\hal</Filter>
     </ClInclude>
-    <ClInclude Include="defines.h">
-      <Filter>Header files\Inc</Filter>
-    </ClInclude>
     <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.h">
       <Filter>Header files\Inc\segger</Filter>
     </ClInclude>

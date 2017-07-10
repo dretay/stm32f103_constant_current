@@ -121,6 +121,7 @@ const unsigned char ttable[7][4] = {
 #endif
 
 uint8_t encoder_counter = 0;
+uint8_t old_encoder_counter = 0;
 
 void initialize(void) {
 	state = R_START;
@@ -142,4 +143,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	else if (result == DIR_CCW) {
 		encoder_counter--;		
 	}  
+}
+void broadcast(void) {
+	osMessageQId* encoderQueueHandle = get_encoderQueueHandle();
+	if (old_encoder_counter != encoder_counter)
+	{
+		T_ENCODER_READING *reading = osPoolAlloc(*(osPoolId*)get_encoderMessagePool()) ;
+		reading->idx = 0;
+		reading->val = encoder_counter;		
+		osMessagePut(*(osMessageQId*)encoderQueueHandle, (uint32_t)reading, osWaitForever) ;
+		LOG("SENT!");
+	}
 }

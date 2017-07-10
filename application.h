@@ -3,6 +3,7 @@
 #include "cmsis_os.h"
 #include "log.h"
 #include "StatusView.h"
+#include "main.h"
 
 struct application
 {

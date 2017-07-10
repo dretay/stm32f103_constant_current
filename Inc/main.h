@@ -63,11 +63,16 @@
 
 /* Private define ------------------------------------------------------------*/
 
+/* USER CODE BEGIN Private defines */
+
 void ugfx_driver_init(void);
 void* get_hspi1(void); 
 void* get_hi2c1(void); 
 void* get_encoderUpdateQueueHandle(void);
 void* get_encoder_pool(void);
+void* get_encoderQueueHandle(void);
+void* get_encoderMessagePool(void);
+
 /* USER CODE END Private defines */
 
 void _Error_Handler(char *, int);

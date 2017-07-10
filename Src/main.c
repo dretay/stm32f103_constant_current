@@ -60,16 +60,16 @@ I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi1;
 
-TIM_HandleTypeDef htim2;
-
 osThreadId defaultTaskHandle;
 osThreadId graphicsTaskHandle;
 osThreadId dacTaskHandle;
-osTimerId encoderPollHandle;
+osMessageQId encoderQueueHandle;
+osTimerId encoderTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+osPoolDef(encoder_message_pool, 8, T_ENCODER_READING);
+osPoolId  encoder_message_pool;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,7 +77,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_TIM2_Init(void);
 void StartDefaultTask(void const * argument);
 void StartGraphicsTask(void const * argument);
 void StartDacTask(void const * argument);
@@ -119,7 +118,6 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_I2C1_Init();
-  MX_TIM2_Init();
 
   /* USER CODE BEGIN 2 */
 
@@ -135,35 +133,42 @@ int main(void)
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* Create the timer(s) */
-  /* definition and creation of encoderPoll */
-  osTimerDef(encoderPoll, encoderCallback);
-  encoderPollHandle = osTimerCreate(osTimer(encoderPoll), osTimerPeriodic, NULL);
+  /* definition and creation of encoderTimer */
+  osTimerDef(encoderTimer, encoderCallback);
+  encoderTimerHandle = osTimerCreate(osTimer(encoderTimer), osTimerPeriodic, NULL);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
-  osTimerStart(encoderPollHandle, 100);
-  HAL_TIM_Base_Start_IT(&htim2);
+  osTimerStart(encoderTimerHandle, 100);
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of graphicsTask */
-  osThreadDef(graphicsTask, StartGraphicsTask, osPriorityNormal, 0, 128);
+  osThreadDef(graphicsTask, StartGraphicsTask, osPriorityIdle, 0, 128);
   graphicsTaskHandle = osThreadCreate(osThread(graphicsTask), NULL);
 
   /* definition and creation of dacTask */
-  osThreadDef(dacTask, StartDacTask, osPriorityNormal, 0, 128);
+  osThreadDef(dacTask, StartDacTask, osPriorityIdle, 0, 128);
   dacTaskHandle = osThreadCreate(osThread(dacTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
+  /* Create the queue(s) */
+  /* definition and creation of encoderQueue */
+  osMessageQDef(encoderQueue, 8, T_ENCODER_READING);
+  encoderQueueHandle = osMessageCreate(osMessageQ(encoderQueue), NULL);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+  
+  encoder_message_pool = osPoolCreate(osPool(encoder_message_pool));	
+	
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -273,38 +278,6 @@ static void MX_SPI1_Init(void)
 
 }
 
-/* TIM2 init function */
-static void MX_TIM2_Init(void)
-{
-
-  TIM_ClockConfigTypeDef sClockSourceConfig;
-  TIM_MasterConfigTypeDef sMasterConfig;
-
-  htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 15;
-  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 49999;
-  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
 /** Configure pins as 
         * Analog 
         * Input 
@@ -404,6 +377,12 @@ void* get_hspi1(void) {
 void* get_hi2c1(void) {
 	return &hi2c1;
 }
+void* get_encoderQueueHandle(void) {
+	return &encoderQueueHandle;
+}
+void* get_encoderMessagePool(void) {
+	return &encoder_message_pool;
+}
 
 
 /* USER CODE END 4 */
@@ -418,7 +397,12 @@ void StartDefaultTask(void const * argument)
 //	draw(p);
 //	draw(p2);
 	Application.init();
-	Application.showView(0);	
+	while (1)
+	{
+		
+	}
+		
+	//Application.showView(0);	
 //	init();
 //	Application application1 = make(1);
 //	Application application2 = make(2);		
@@ -441,7 +425,7 @@ void StartDefaultTask(void const * argument)
 void StartGraphicsTask(void const * argument)
 {
   /* USER CODE BEGIN StartGraphicsTask */
-	//gfxInit();
+	gfxInit();
 	while (1){
 		
 	}
@@ -454,16 +438,20 @@ void StartDacTask(void const * argument)
 {
   /* USER CODE BEGIN StartDacTask */
   
-  uint8_t old_val = encoder_counter;
-  for(;;){
-	  if (old_val != encoder_counter)
-	  {
-		  set_dac(encoder_counter);
-		  old_val = encoder_counter;
-	  }	  
-	  
-	  osDelay(100);	
-  }
+//  uint8_t old_val = encoder_counter;
+//  for(;;){
+//	  if (old_val != encoder_counter)
+//	  {
+//		  set_dac(encoder_counter);
+//		  old_val = encoder_counter;
+//	  }	  
+//	  
+//	  osDelay(100);	
+//  }
+	while (1)
+	{
+		
+	}
   /* USER CODE END StartDacTask */
 }
 
@@ -471,7 +459,7 @@ void StartDacTask(void const * argument)
 void encoderCallback(void const * argument)
 {
   /* USER CODE BEGIN encoderCallback */
-  
+	broadcast();
   /* USER CODE END encoderCallback */
 }
 

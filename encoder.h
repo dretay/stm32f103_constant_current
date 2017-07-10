@@ -25,5 +25,6 @@ extern uint8_t encoder_counter;
 
 void initialize(void);
 uint8_t process(void);
+void broadcast(void);
 uint8_t state;
 
