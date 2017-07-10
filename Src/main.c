@@ -413,12 +413,12 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
-	initCircle();
-	void* p = new(Point, 1, 2);
-	void* p2 = new(Circle, 1, 2, 3);
-	draw(p);
-	draw(p2);
-	LOG("HI!");
+//	void* p = new(Point, 1, 2);
+//	void* p2 = new(Circle, 1, 2, 3);
+//	draw(p);
+//	draw(p2);
+	Application.init();
+	Application.showView(0);	
 //	init();
 //	Application application1 = make(1);
 //	Application application2 = make(2);		

@@ -23,7 +23,7 @@
 		<Link>
 			<LinkerScript Condition="'%(Link.LinkerScript)' == ''">$(BSP_ROOT)/STM32F1xxxx/LinkerScripts/STM32F103C8_flash.lds</LinkerScript>
 			<AdditionalLibraryNames>compactcpp;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-			<AdditionalOptions>--specs=nano.specs --specs=nosys.specs %(Link.AdditionalOptions)</AdditionalOptions>
+			<AdditionalOptions>--specs=nano.specs %(Link.AdditionalOptions)</AdditionalOptions>
 		</Link>
 	</ItemDefinitionGroup>
 	<PropertyGroup>

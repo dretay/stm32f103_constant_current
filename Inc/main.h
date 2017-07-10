@@ -58,8 +58,7 @@
 #include "ads1115.h"
 #include "mcp4725.h"
 #include "log.h"
-#include "Circle.h"
-
+#include "application.h"
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/

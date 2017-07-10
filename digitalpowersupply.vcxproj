@@ -134,7 +134,6 @@
     <ClInclude Include="ads1115.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="board_KS0108.h" />
-    <ClInclude Include="Circle.h" />
     <ClInclude Include="controller.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="encoder.h" />
@@ -145,7 +144,6 @@
     <ClInclude Include="Inc\stm32f1xx_it.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="mcp4725.h" />
-    <ClInclude Include="Point.h" />
     <ClInclude Include="StatusView.h" />
     <ClInclude Include="view.h" />
   </ItemGroup>
@@ -209,27 +207,21 @@
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
     <ClCompile Include="ads1115.c" />
     <ClCompile Include="application.c" />
-    <ClCompile Include="Circle.c" />
     <ClCompile Include="controller.c" />
     <ClCompile Include="encoder.c" />
     <ClCompile Include="mcp4725.c" />
-    <ClCompile Include="Object.c" />
-    <ClCompile Include="Point.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\stm32f1xx_hal_msp.c" />
     <ClCompile Include="Src\stm32f1xx_hal_timebase_TIM.c" />
     <ClCompile Include="Src\stm32f1xx_it.c" />
     <ClCompile Include="Src\system_stm32f1xx.c" />
+    <ClCompile Include="StatusView.c" />
     <ClCompile Include="view.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Circle.r" />
     <None Include="digitalpowersupply-Debug.vgdbsettings" />
     <None Include="digitalpowersupply-Release.vgdbsettings" />
-    <None Include="Object.h" />
-    <None Include="Object.r" />
-    <None Include="Point.r" />
     <None Include="stm32.props" />
   </ItemGroup>
   <ItemGroup>

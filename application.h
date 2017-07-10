@@ -2,16 +2,12 @@
 #include <stdint.h>
 #include "cmsis_os.h"
 #include "log.h"
-#include "view.h"
+#include "StatusView.h"
 
 struct application
 {
 	void(*init)(void);
-	void(*showView)(View);
+	void(*showView)(uint8_t idx);
 };
 
 extern const struct application Application;
-//typedef struct Application*Application;
-//void init(void);
-//Application make(uint8_t data);
-//void work(Application a);

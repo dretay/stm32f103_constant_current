@@ -65,12 +65,6 @@
     <Filter Include="Source files\os">
       <UniqueIdentifier>{1e6018f6-4b08-4496-8d7d-e7bfdb4e32a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header files\Inc\ooc">
-      <UniqueIdentifier>{9dfff2b6-03fe-4137-85dc-c33461fd9e18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source files\Src\ooc">
-      <UniqueIdentifier>{3596fbdf-116f-4cd9-9aa9-fdbe81eee0ff}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\FreeRTOSConfig.h">
@@ -370,12 +364,6 @@
     <ClInclude Include="StatusView.h">
       <Filter>Header files\os</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>Header files\Inc\ooc</Filter>
-    </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>Header files\Inc\ooc</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\freertos.c">
@@ -558,12 +546,6 @@
     <ClCompile Include="view.c">
       <Filter>Source files\os</Filter>
     </ClCompile>
-    <ClCompile Include="Object.c">
-      <Filter>Source files\Src\ooc</Filter>
-    </ClCompile>
-    <ClCompile Include="Point.c">
-      <Filter>Source files\Src\ooc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\croutine.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </ClCompile>
@@ -591,8 +573,8 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\MemMang\heap_4.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </ClCompile>
-    <ClCompile Include="Circle.c">
-      <Filter>Source files\Src\ooc</Filter>
+    <ClCompile Include="StatusView.c">
+      <Filter>Source files\os</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -604,18 +586,6 @@
     </None>
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
-    </None>
-    <None Include="Object.h">
-      <Filter>Header files\Inc\ooc</Filter>
-    </None>
-    <None Include="Object.r">
-      <Filter>Header files\Inc\ooc</Filter>
-    </None>
-    <None Include="Point.r">
-      <Filter>Header files\Inc\ooc</Filter>
-    </None>
-    <None Include="Circle.r">
-      <Filter>Header files\Inc\ooc</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
