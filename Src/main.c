@@ -61,15 +61,14 @@ I2C_HandleTypeDef hi2c1;
 SPI_HandleTypeDef hspi1;
 
 osThreadId defaultTaskHandle;
-osThreadId graphicsTaskHandle;
+osThreadId applicationTaskHandle;
 osThreadId dacTaskHandle;
-osMessageQId encoderQueueHandle;
 osTimerId encoderTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-osPoolDef(encoder_message_pool, 8, T_ENCODER_READING);
-osPoolId  encoder_message_pool;
+osMailQId mailId;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -78,9 +77,9 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 void StartDefaultTask(void const * argument);
-void StartGraphicsTask(void const * argument);
-void StartDacTask(void const * argument);
-void encoderCallback(void const * argument);
+extern void StartApplicationTask(void const * argument);
+extern void StartDacTask(void const * argument);
+extern void encoderCallback(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -147,28 +146,26 @@ int main(void)
   osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-  /* definition and creation of graphicsTask */
-  osThreadDef(graphicsTask, StartGraphicsTask, osPriorityIdle, 0, 128);
-  graphicsTaskHandle = osThreadCreate(osThread(graphicsTask), NULL);
+  /* definition and creation of applicationTask */
+  osThreadDef(applicationTask, StartApplicationTask, osPriorityIdle, 0, 128);
+  applicationTaskHandle = osThreadCreate(osThread(applicationTask), NULL);
 
   /* definition and creation of dacTask */
-  osThreadDef(dacTask, StartDacTask, osPriorityIdle, 0, 128);
+  osThreadDef(dacTask, StartDacTask, osPriorityNormal, 0, 128);
   dacTaskHandle = osThreadCreate(osThread(dacTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
-  /* Create the queue(s) */
-  /* definition and creation of encoderQueue */
-  osMessageQDef(encoderQueue, 8, T_ENCODER_READING);
-  encoderQueueHandle = osMessageCreate(osMessageQ(encoderQueue), NULL);
-
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  
-  encoder_message_pool = osPoolCreate(osPool(encoder_message_pool));	
-	
+  osMailQDef(ENCODER_MAILBOX, ENCODER_MAIL_SIZE, T_ENCODER_READING);
+  ENDCODER_MAILBOX_ID = osMailCreate(osMailQ(ENCODER_MAILBOX), NULL);
+
+  osMailQDef(SYSUPDATE_MAILBOX, SYSUPDATE_MAIL_SIZE, T_STATE_UPDATE);
+  SYSUPDATE_MAILBOX_ID = osMailCreate(osMailQ(SYSUPDATE_MAILBOX), NULL);
+
   /* USER CODE END RTOS_QUEUES */
  
 
@@ -377,12 +374,6 @@ void* get_hspi1(void) {
 void* get_hi2c1(void) {
 	return &hi2c1;
 }
-void* get_encoderQueueHandle(void) {
-	return &encoderQueueHandle;
-}
-void* get_encoderMessagePool(void) {
-	return &encoder_message_pool;
-}
 
 
 /* USER CODE END 4 */
@@ -392,75 +383,12 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
-//	void* p = new(Point, 1, 2);
-//	void* p2 = new(Circle, 1, 2, 3);
-//	draw(p);
-//	draw(p2);
-	Application.init();
 	while (1)
 	{
-		
-	}
-		
-	//Application.showView(0);	
-//	init();
-//	Application application1 = make(1);
-//	Application application2 = make(2);		
-//	work(application1);
-//	work(application2);
-
-	//int val = 0;
-	//uint8_t output[] = { 0x40, (val / 16), ((val % 16) << 4) };
-	//HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, 0xC4, output, 3, 4);
-	//vTaskDelete(NULL);
-//	while (1)
-//	{
-//		
-//	}
+		osThreadYield();	
+	}		
 
   /* USER CODE END 5 */ 
-}
-
-/* StartGraphicsTask function */
-void StartGraphicsTask(void const * argument)
-{
-  /* USER CODE BEGIN StartGraphicsTask */
-	gfxInit();
-	while (1){
-		
-	}
-
-  /* USER CODE END StartGraphicsTask */
-}
-
-/* StartDacTask function */
-void StartDacTask(void const * argument)
-{
-  /* USER CODE BEGIN StartDacTask */
-  
-//  uint8_t old_val = encoder_counter;
-//  for(;;){
-//	  if (old_val != encoder_counter)
-//	  {
-//		  set_dac(encoder_counter);
-//		  old_val = encoder_counter;
-//	  }	  
-//	  
-//	  osDelay(100);	
-//  }
-	while (1)
-	{
-		
-	}
-  /* USER CODE END StartDacTask */
-}
-
-/* encoderCallback function */
-void encoderCallback(void const * argument)
-{
-  /* USER CODE BEGIN encoderCallback */
-	broadcast();
-  /* USER CODE END encoderCallback */
 }
 
 /**

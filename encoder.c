@@ -144,14 +144,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		encoder_counter--;		
 	}  
 }
-void broadcast(void) {
-	osMessageQId* encoderQueueHandle = get_encoderQueueHandle();
+void encoderCallback(void const * argument) {
+	T_ENCODER_READING *reading;
 	if (old_encoder_counter != encoder_counter)
 	{
-		T_ENCODER_READING *reading = osPoolAlloc(*(osPoolId*)get_encoderMessagePool()) ;
+		old_encoder_counter = encoder_counter;
+		reading = osMailAlloc(ENDCODER_MAILBOX_ID, osWaitForever); /* Allocate memory */
 		reading->idx = 0;
 		reading->val = encoder_counter;		
-		osMessagePut(*(osMessageQId*)encoderQueueHandle, (uint32_t)reading, osWaitForever) ;
-		LOG("SENT!");
+		osMailPut(ENDCODER_MAILBOX_ID, reading);
 	}
 }

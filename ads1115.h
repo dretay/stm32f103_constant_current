@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stm32f1xx_hal.h"
+#include <stdint.h>
 
 
 #define ADS1015_REG_POINTER_MASK        (0x03)

@@ -52,7 +52,6 @@
 
 /* USER CODE BEGIN Includes */
 
-#include "gfx.h"
 #include "math.h"
 #include "encoder.h"
 #include "ads1115.h"
@@ -65,13 +64,14 @@
 
 /* USER CODE BEGIN Private defines */
 
-void ugfx_driver_init(void);
+#define ENCODER_MAIL_SIZE        (uint32_t) 1
+osMailQId ENDCODER_MAILBOX_ID;
+
+#define SYSUPDATE_MAIL_SIZE        (uint32_t) 10
+osMailQId SYSUPDATE_MAILBOX_ID;
+
 void* get_hspi1(void); 
 void* get_hi2c1(void); 
-void* get_encoderUpdateQueueHandle(void);
-void* get_encoder_pool(void);
-void* get_encoderQueueHandle(void);
-void* get_encoderMessagePool(void);
 
 /* USER CODE END Private defines */
 

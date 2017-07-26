@@ -1,9 +1,8 @@
 #MicroXplorer Configuration settings - do not modify
 FREERTOS.FootprintOK=true
-FREERTOS.IPParameters=Tasks01,FootprintOK,configUSE_PORT_OPTIMISED_TASK_SELECTION,configUSE_TIMERS,configTOTAL_HEAP_SIZE,Timers01,Queues01
-FREERTOS.Queues01=encoderQueue,8,T_ENCODER_READING,NULL,Dynamic,NULL,NULL
-FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;graphicsTask,0,128,StartGraphicsTask,Default,NULL,Dynamic,NULL,NULL;dacTask,0,128,StartDacTask,Default,NULL,Dynamic,NULL,NULL
-FREERTOS.Timers01=encoderTimer,encoderCallback,osTimerPeriodic,Default,NULL,Dynamic,NULL
+FREERTOS.IPParameters=Tasks01,FootprintOK,configUSE_PORT_OPTIMISED_TASK_SELECTION,configUSE_TIMERS,configTOTAL_HEAP_SIZE,Timers01
+FREERTOS.Tasks01=defaultTask,-3,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;applicationTask,-3,128,StartApplicationTask,As external,NULL,Dynamic,NULL,NULL;dacTask,0,128,StartDacTask,As external,NULL,Dynamic,NULL,NULL
+FREERTOS.Timers01=encoderTimer,encoderCallback,osTimerPeriodic,As external,NULL,Dynamic,NULL
 FREERTOS.configTOTAL_HEAP_SIZE=6144
 FREERTOS.configUSE_PORT_OPTIMISED_TASK_SELECTION=0
 FREERTOS.configUSE_TIMERS=1

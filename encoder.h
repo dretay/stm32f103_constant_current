@@ -2,6 +2,7 @@
 
 #include "stm32f1xx_hal.h"
 #include "cmsis_os.h"
+#include "events.h"
 
 
 // Values returned by 'process'
@@ -13,12 +14,7 @@
 #define DIR_CCW 0x20
 
 
-typedef struct
-{
-	uint8_t idx;
-	uint8_t val;
 
-} T_ENCODER_READING;
 
 extern uint8_t encoder_counter;
 
@@ -27,4 +23,7 @@ void initialize(void);
 uint8_t process(void);
 void broadcast(void);
 uint8_t state;
+
+//void encoderCallback(void const * argument);
+
 

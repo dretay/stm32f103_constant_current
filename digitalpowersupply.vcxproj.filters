@@ -361,6 +361,9 @@
     <ClInclude Include="StatusView.h">
       <Filter>Header files\os</Filter>
     </ClInclude>
+    <ClInclude Include="events.h">
+      <Filter>Header files\os</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\freertos.c">

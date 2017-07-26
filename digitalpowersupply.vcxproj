@@ -136,6 +136,7 @@
     <ClInclude Include="board_KS0108.h" />
     <ClInclude Include="controller.h" />
     <ClInclude Include="encoder.h" />
+    <ClInclude Include="events.h" />
     <ClInclude Include="gfxconf.h" />
     <ClInclude Include="Inc\FreeRTOSConfig.h" />
     <ClInclude Include="Inc\main.h" />
