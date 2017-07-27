@@ -5,5 +5,5 @@
 
 typedef struct {
 	void(*render)(void);
-	void(*on_update)(T_STATE_UPDATE*);
+	void(*on_update)(T_SYSTEM_UPDATE*);
 } View;

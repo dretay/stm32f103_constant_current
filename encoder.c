@@ -145,13 +145,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	}  
 }
 void encoderCallback(void const * argument) {
-	T_ENCODER_READING *reading;
+	T_SYSTEM_UPDATE *update;
 	if (old_encoder_counter != encoder_counter)
 	{
 		old_encoder_counter = encoder_counter;
-		reading = osMailAlloc(ENDCODER_MAILBOX_ID, osWaitForever); /* Allocate memory */
-		reading->idx = 0;
-		reading->val = encoder_counter;		
-		osMailPut(ENDCODER_MAILBOX_ID, reading);
+		update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, osWaitForever); /* Allocate memory */
+		update->idx = 0;
+		update->val = encoder_counter;		
+		osMailPut(SYS_UPDATE_MAILBOX_ID, update);
 	}
 }

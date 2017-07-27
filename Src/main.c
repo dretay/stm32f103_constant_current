@@ -67,7 +67,6 @@ osTimerId encoderTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-osMailQId mailId;
 
 /* USER CODE END PV */
 
@@ -147,11 +146,11 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of applicationTask */
-  osThreadDef(applicationTask, StartApplicationTask, osPriorityIdle, 0, 128);
+  osThreadDef(applicationTask, StartApplicationTask, osPriorityNormal, 0, 128);
   applicationTaskHandle = osThreadCreate(osThread(applicationTask), NULL);
 
   /* definition and creation of dacTask */
-  osThreadDef(dacTask, StartDacTask, osPriorityNormal, 0, 128);
+  osThreadDef(dacTask, StartDacTask, osPriorityIdle, 0, 128);
   dacTaskHandle = osThreadCreate(osThread(dacTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -160,12 +159,10 @@ int main(void)
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
-  osMailQDef(ENCODER_MAILBOX, ENCODER_MAIL_SIZE, T_ENCODER_READING);
-  ENDCODER_MAILBOX_ID = osMailCreate(osMailQ(ENCODER_MAILBOX), NULL);
+  osMailQDef(SYS_UPDATE_MAILBOX, SYS_UPDATE_MAIL_SIZE, T_SYSTEM_UPDATE);
+  SYS_UPDATE_MAILBOX_ID = osMailCreate(osMailQ(SYS_UPDATE_MAILBOX), NULL);
 
-  osMailQDef(SYSUPDATE_MAILBOX, SYSUPDATE_MAIL_SIZE, T_STATE_UPDATE);
-  SYSUPDATE_MAILBOX_ID = osMailCreate(osMailQ(SYSUPDATE_MAILBOX), NULL);
-
+  
   /* USER CODE END RTOS_QUEUES */
  
 

@@ -5,7 +5,7 @@
 #include "log.h"
 #include "gfx.h"
 #include <stm32f1xx_hal.h>
-
+#include <string.h>
 
 
 struct statusView {	

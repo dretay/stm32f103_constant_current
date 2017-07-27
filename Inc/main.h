@@ -64,11 +64,8 @@
 
 /* USER CODE BEGIN Private defines */
 
-#define ENCODER_MAIL_SIZE        (uint32_t) 1
-osMailQId ENDCODER_MAILBOX_ID;
-
-#define SYSUPDATE_MAIL_SIZE        (uint32_t) 10
-osMailQId SYSUPDATE_MAILBOX_ID;
+#define SYS_UPDATE_MAIL_SIZE        (uint32_t) 10
+osMailQId SYS_UPDATE_MAILBOX_ID;
 
 void* get_hspi1(void); 
 void* get_hi2c1(void); 

@@ -12,27 +12,26 @@ void set_dac(uint8_t value) {
 }
 
 void StartDacTask(void const * argument) {
-	osEvent event;	
-	T_ENCODER_READING *reading;
-	T_STATE_UPDATE *update;
-
+//	osEvent event;	
+	
 
 	while (1) {
-		event = osMailGet(ENDCODER_MAILBOX_ID, osWaitForever);
-		if (event.status == osEventMail)
-		{
-			reading = event.value.p;
-			set_dac(reading->val);	//maybe this should return voltage / current as float?
-						
-			update = osMailAlloc(SYSUPDATE_MAILBOX_ID, osWaitForever); 
-			update->idx = reading->idx;
-			update->measurement = CURRENT;
-			update->type = SETTING;
-			update->val = reading->val;
-			osMailPut(SYSUPDATE_MAILBOX_ID, update);
-			
-					
-		}				
-		osMailFree(ENDCODER_MAILBOX_ID, reading);		
+		osThreadYield();
+//		event = osMailGet(ENDCODER_MAILBOX_ID, osWaitForever);
+//		if (event.status == osEventMail)
+//		{
+//			reading = event.value.p;
+//			set_dac(reading->val);	//maybe this should return voltage / current as float?
+//						
+//			update = osMailAlloc(SYSUPDATE_MAILBOX_ID, osWaitForever); 
+//			update->idx = reading->idx;
+//			update->measurement = CURRENT;
+//			update->type = SETTING;
+//			update->val = reading->val;
+//			osMailPut(SYSUPDATE_MAILBOX_ID, update);
+//			
+//					
+//		}				
+//		osMailFree(ENDCODER_MAILBOX_ID, reading);		
 	}
 }
