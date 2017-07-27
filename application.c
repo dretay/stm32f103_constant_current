@@ -2,7 +2,7 @@
 
 View* views[5];
 
-void StartApplicationTask(void const * argument) {
+void StartSysUpdateTask(void const * argument) {
 	osEvent event;	
 	T_SYSTEM_UPDATE *update;
 
@@ -16,6 +16,13 @@ void StartApplicationTask(void const * argument) {
 		}				
 		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
 	
+	}
+}
+void StartGuiUpdateTask(void const * argument) {
+	osEvent event;
+	while (1){
+		event = osSignalWait(0, osWaitForever);
+		views[0]->render();
 	}
 }
 static void showView(uint8_t idx) {

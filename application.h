@@ -6,6 +6,9 @@
 #include "gfx.h"
 #include "main.h"
 
+static void showView(uint8_t);
+
+
 struct application
 {
 	void(*showView)(uint8_t idx);

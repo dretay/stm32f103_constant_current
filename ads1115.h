@@ -74,3 +74,9 @@ typedef enum {
 
 static void writeRegister(uint8_t i2cAddress, uint8_t reg, uint16_t value);
 static uint16_t readRegister(uint8_t i2cAddress, uint8_t reg);
+
+struct ads1115 {
+	float(*convert)(void);
+};
+
+extern const struct ads1115 ADS1115;

@@ -16,29 +16,29 @@ static uint16_t readRegister(uint8_t i2cAddress, uint8_t reg) {
 	return ((rx_buffer[0] << 8) | rx_buffer[1]);  
 }
 
-void convert() {
+float convert() {
 //adc
-//	uint16_t config = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
-//                    ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
-//                    ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
-//                    ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
-//                    ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
-//                    ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
-//	// Set PGA/voltage range
-//	config |= GAIN_TWOTHIRDS;
-//
-//	config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
-//	
-//	config |= ADS1015_REG_CONFIG_OS_SINGLE;
-//	
-//	writeRegister(0x90, ADS1015_REG_POINTER_CONFIG, config);
-//	HAL_Delay(8);
-//	uint16_t res = readRegister(0x90, ADS1015_REG_POINTER_CONVERT) >> 0;  
-//
-//	float voltage = (res * 0.1875) / 1000; 
-//	while (1){
-//		writeRegister(0x90, ADS1015_REG_POINTER_CONFIG, config);
-//		HAL_Delay(8);
-//		res = readRegister(0x90, ADS1015_REG_POINTER_CONVERT) >> 0;  
-//	}
+	uint16_t config = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
+                    ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
+                    ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
+                    ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
+                    ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
+                    ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
+	// Set PGA/voltage range
+	config |= GAIN_TWOTHIRDS;
+
+	config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
+	
+	config |= ADS1015_REG_CONFIG_OS_SINGLE;
+	
+	writeRegister(0x90, ADS1015_REG_POINTER_CONFIG, config);
+	HAL_Delay(8);
+	uint16_t res = readRegister(0x90, ADS1015_REG_POINTER_CONVERT) >> 0;  
+
+	return (res * 0.1875) / 1000; 
+	
 }
+
+const struct ads1115 ADS1115 = { 
+	.convert = convert
+};

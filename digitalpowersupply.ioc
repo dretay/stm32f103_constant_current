@@ -1,7 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
 FREERTOS.FootprintOK=true
 FREERTOS.IPParameters=Tasks01,FootprintOK,configUSE_PORT_OPTIMISED_TASK_SELECTION,configUSE_TIMERS,configTOTAL_HEAP_SIZE,Timers01
-FREERTOS.Tasks01=defaultTask,-3,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;applicationTask,0,128,StartApplicationTask,As external,NULL,Dynamic,NULL,NULL;dacTask,-3,128,StartDacTask,As external,NULL,Dynamic,NULL,NULL
+FREERTOS.Tasks01=defaultTask,-3,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;sysUpdateTask,0,128,StartSysUpdateTask,As external,NULL,Dynamic,NULL,NULL;guiUpdateTask,0,128,StartGuiUpdateTask,As external,NULL,Dynamic,NULL,NULL
 FREERTOS.Timers01=encoderTimer,encoderCallback,osTimerPeriodic,As external,NULL,Dynamic,NULL
 FREERTOS.configTOTAL_HEAP_SIZE=6144
 FREERTOS.configUSE_PORT_OPTIMISED_TASK_SELECTION=0

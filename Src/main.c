@@ -61,8 +61,8 @@ I2C_HandleTypeDef hi2c1;
 SPI_HandleTypeDef hspi1;
 
 osThreadId defaultTaskHandle;
-osThreadId applicationTaskHandle;
-osThreadId dacTaskHandle;
+osThreadId sysUpdateTaskHandle;
+osThreadId guiUpdateTaskHandle;
 osTimerId encoderTimerHandle;
 
 /* USER CODE BEGIN PV */
@@ -76,8 +76,8 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 void StartDefaultTask(void const * argument);
-extern void StartApplicationTask(void const * argument);
-extern void StartDacTask(void const * argument);
+extern void StartSysUpdateTask(void const * argument);
+extern void StartGuiUpdateTask(void const * argument);
 extern void encoderCallback(void const * argument);
 
 /* USER CODE BEGIN PFP */
@@ -145,13 +145,13 @@ int main(void)
   osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-  /* definition and creation of applicationTask */
-  osThreadDef(applicationTask, StartApplicationTask, osPriorityNormal, 0, 128);
-  applicationTaskHandle = osThreadCreate(osThread(applicationTask), NULL);
+  /* definition and creation of sysUpdateTask */
+  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 128);
+  sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
 
-  /* definition and creation of dacTask */
-  osThreadDef(dacTask, StartDacTask, osPriorityIdle, 0, 128);
-  dacTaskHandle = osThreadCreate(osThread(dacTask), NULL);
+  /* definition and creation of guiUpdateTask */
+  osThreadDef(guiUpdateTask, StartGuiUpdateTask, osPriorityNormal, 0, 128);
+  guiUpdateTaskHandle = osThreadCreate(osThread(guiUpdateTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -371,7 +371,9 @@ void* get_hspi1(void) {
 void* get_hi2c1(void) {
 	return &hi2c1;
 }
-
+void* get_guiUpdateTaskHandle(void) {
+	return &guiUpdateTaskHandle;
+}
 
 /* USER CODE END 4 */
 

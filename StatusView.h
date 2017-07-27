@@ -7,7 +7,7 @@
 #include <stm32f1xx_hal.h>
 #include <string.h>
 
-
+uint8_t my_encoder_val;
 struct statusView {	
 	View*(*init)(void);
 };

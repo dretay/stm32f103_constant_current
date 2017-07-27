@@ -69,6 +69,7 @@ osMailQId SYS_UPDATE_MAILBOX_ID;
 
 void* get_hspi1(void); 
 void* get_hi2c1(void); 
+void* get_guiUpdateTaskHandle(void);
 
 /* USER CODE END Private defines */
 

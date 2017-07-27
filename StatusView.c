@@ -29,10 +29,17 @@ void itoa(int n, char s[]) {
 }
 
 static void on_update(T_SYSTEM_UPDATE* update) {
+	osThreadId threadId = *(osThreadId*)get_guiUpdateTaskHandle() ;
+	my_encoder_val = update->val;	
+	set_dac(update->val);
+	osSignalSet(threadId, 0);
+}
+
+static void render(void) {
 	char input[10];
 	font_t font;
 	coord_t height, width, rx, ry, rcx, rcy;
-	itoa(update->val, input);
+	itoa(my_encoder_val, input);
 
 
 	width = gdispGetWidth();
@@ -41,12 +48,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 	HAL_Delay(100);//this needs to be fixed...:(
 
 	gdispDrawStringBox(0, 0, width, 20, input, font, Black, justifyCenter);
-
-	set_dac(update->val);
-}
-
-static void render(void) {
-	LOG("RENDER!!!");
+	HAL_Delay(100);
 }
 
 //should this be implemented in view somehow?
