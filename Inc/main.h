@@ -58,7 +58,7 @@
 /* Private define ------------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-
+#define USE_FULL_ASSERT 1
 /* USER CODE END Private defines */
 
 void _Error_Handler(char *, int);

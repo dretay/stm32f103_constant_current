@@ -62,7 +62,6 @@ SPI_HandleTypeDef hspi1;
 
 osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
-osThreadId guiUpdateTaskHandle;
 osTimerId encoderTimerHandle;
 osTimerId adcTimerHandle;
 
@@ -78,7 +77,6 @@ static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
-extern void StartGuiUpdateTask(void const * argument);
 extern void encoderCallback(void const * argument);
 extern void adcCallback(void const * argument);
 
@@ -155,10 +153,6 @@ int main(void)
   /* definition and creation of sysUpdateTask */
   osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 128);
   sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
-
-  /* definition and creation of guiUpdateTask */
-  osThreadDef(guiUpdateTask, StartGuiUpdateTask, osPriorityNormal, 0, 128);
-  guiUpdateTaskHandle = osThreadCreate(osThread(guiUpdateTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -438,6 +432,7 @@ void assert_failed(uint8_t* file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	LOG("Wrong parameters value: file %s on line %d\r\n", file, line);
   /* USER CODE END 6 */
 
 }

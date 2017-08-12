@@ -74,12 +74,15 @@ typedef enum {
 	GAIN_SIXTEEN   = ADS1015_REG_CONFIG_PGA_0_256V
 } adsGain_t;
 
-
-static void writeRegister(uint8_t i2cAddress, uint8_t reg, uint16_t value);
-static uint16_t readRegister(uint8_t i2cAddress, uint8_t reg);
+typedef struct {
+	I2C_HandleTypeDef* p_i2c;
+	uint8_t addr;
+} ADS1115_CONFIG;
 
 struct ads1115 {
-	float(*convert)(void);
+	void(*configure)(ADS1115_CONFIG* config, uint8_t cnt);	
+	float(*get_reading)(uint8_t idx);
+	uint8_t(*get_dac)(void);
 };
 
 extern const struct ads1115 ADS1115;
