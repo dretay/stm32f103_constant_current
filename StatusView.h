@@ -2,10 +2,11 @@
 
 #include "view.h"
 #include <stdint.h>
+#include <stm32f1xx_hal.h>
 #include "log.h"
 #include "gfx.h"
-#include <stm32f1xx_hal.h>
-#include <string.h>
+#include "mcp4725.h"
+#include "numtostring.h"
 
 uint8_t my_encoder_val;
 struct statusView {	

@@ -2,53 +2,65 @@
 
 View statusView;
 
-void reverse(s) char *s; {
-	char *j;
-	int c;
- 
-	j = s + strlen(s) - 1;
-	while (s < j) {
-		c = *s;
-		*s++ = *j;
-		*j-- = c;
-	}
-}
-void itoa(int n, char s[]) {
-	int i, sign;
- 
-	if ((sign = n) < 0)  /* record sign */
-		n = -n;          /* make n positive */
-	i = 0;
-	do {       /* generate digits in reverse order */
-		s[i++] = n % 10 + '0';   /* get next digit */
-	} while ((n /= 10) > 0);     /* delete it */
-	if (sign < 0)
-		s[i++] = '-';
-	s[i] = '\0';
-	reverse(s);
-}
 
+static float voltage_setting = 0.0;
+static float voltage_reading = 0.0;
+static float current_setting = 0.0;
+static float current_reading = 0.0;
+const static float voltage_multiplier = (5.0 / 4096.0);
 static void on_update(T_SYSTEM_UPDATE* update) {
-	osThreadId threadId = *(osThreadId*)get_guiUpdateTaskHandle() ;
-	my_encoder_val = update->val;	
-	set_dac(update->val);
-	osSignalSet(threadId, 0);
+	if (update->source == ENCODER)
+	{
+		if (update->parameter == VOLTAGE)
+		{			
+			voltage_setting = voltage_multiplier * update->val;
+			MCP4725.set_dac(0,update->val);
+		}
+		else
+		{
+			current_setting = voltage_multiplier * update->val;
+		}
+	}
+	else
+	{
+		if (update->parameter == VOLTAGE) {			
+			voltage_reading = update->val;
+		}
+	}
+//	osThreadId threadId = *(osThreadId*)get_guiUpdateTaskHandle() ;
+//	my_encoder_val = update->val;	
+//	set_dac(update->val);
+//	osSignalSet(threadId, 0);
 }
 
 static void render(void) {
-	char input[10];
+	char output1[10];
+	char output2[10];
 	font_t font;
 	coord_t height, width, rx, ry, rcx, rcy;
-	itoa(my_encoder_val, input);
+	//itoa(my_encoder_val, input);
 
 
 	width = gdispGetWidth();
-	font = gdispOpenFont("DEJAVUSANS10");
-	gdispClear(White);
-	HAL_Delay(100);//this needs to be fixed...:(
+	font = gdispOpenFont("DEJAVUSANS10");	
 
-	gdispDrawStringBox(0, 0, width, 20, input, font, Black, justifyCenter);
-	HAL_Delay(100);
+	ftos(output1, voltage_reading, 3);
+	output1[5] = ' ';
+	output1[6] = 'V';
+	output1[7] = '\0';
+
+	ftos(output2, voltage_setting, 3);
+	output2[5] = ' ';
+	output2[6] = 'V';
+	output2[7] = '\0';
+	
+	//todo: this should probably be its own fn
+	gdispClear(Black);
+	gdispDrawStringBox(0, 0, width, 20, output1, font, White, justifyCenter);	
+	gdispDrawStringBox(0, 13, width, 20, output2, font, White, justifyCenter);
+	gdispGFlush(gdispGetDisplay(0));
+
+
 }
 
 //should this be implemented in view somehow?

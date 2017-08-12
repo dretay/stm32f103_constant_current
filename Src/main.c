@@ -51,7 +51,7 @@
 #include "cmsis_os.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "application.h"
 
 /* USER CODE END Includes */
 
@@ -64,10 +64,11 @@ osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiUpdateTaskHandle;
 osTimerId encoderTimerHandle;
+osTimerId adcTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+osMailQId SYS_UPDATE_MAILBOX_ID;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,6 +80,7 @@ void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGuiUpdateTask(void const * argument);
 extern void encoderCallback(void const * argument);
+extern void adcCallback(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -135,9 +137,14 @@ int main(void)
   osTimerDef(encoderTimer, encoderCallback);
   encoderTimerHandle = osTimerCreate(osTimer(encoderTimer), osTimerPeriodic, NULL);
 
+  /* definition and creation of adcTimer */
+  osTimerDef(adcTimer, adcCallback);
+  adcTimerHandle = osTimerCreate(osTimer(adcTimer), osTimerPeriodic, NULL);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   osTimerStart(encoderTimerHandle, 100);
+  osTimerStart(adcTimerHandle, 1000);
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
@@ -363,17 +370,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-
-void* get_hspi1(void) {
-	return &hspi1;
-}
-void* get_hi2c1(void) {
-	return &hi2c1;
-}
-void* get_guiUpdateTaskHandle(void) {
-	return &guiUpdateTaskHandle;
-}
 
 /* USER CODE END 4 */
 

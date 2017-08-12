@@ -41,6 +41,8 @@ uint8_t row, column;
 uint8_t startRow, startCol, endRow, endCol; // coordinates of the dirty rectangle
 uint8_t image[(128 * 64) / 8];       
 
+extern SPI_HandleTypeDef hspi1;
+
 
 uint32_t getUs(void) {
 	uint32_t usTicks = HAL_RCC_GetSysClockFreq() / 1000000;
@@ -76,10 +78,10 @@ static void reset_display(void) {
 	HAL_Delay(50);
 }
 void sendLcd(uint8_t data1, uint8_t data2) {
-	SPI_HandleTypeDef* hspi1 = (SPI_HandleTypeDef*)get_hspi1();
+	//SPI_HandleTypeDef* hspi1 = (SPI_HandleTypeDef*)get_hspi1();
 	uint8_t data[] = { data1, (data2 & 0xF0), (data2 << 4 ) };
-	HAL_SPI_Transmit(hspi1, data, 3, 1);
-	while (HAL_SPI_GetState(hspi1) == HAL_SPI_STATE_BUSY);
+	HAL_SPI_Transmit(&hspi1, data, 3, 1);
+	while (HAL_SPI_GetState(&hspi1) == HAL_SPI_STATE_BUSY);
 	
 }
 void sendLcdCommand(uint8_t command) {

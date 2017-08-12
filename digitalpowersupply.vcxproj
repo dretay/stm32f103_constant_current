@@ -137,6 +137,7 @@
     <ClInclude Include="controller.h" />
     <ClInclude Include="encoder.h" />
     <ClInclude Include="events.h" />
+    <ClInclude Include="numtostring.h" />
     <ClInclude Include="gfxconf.h" />
     <ClInclude Include="Inc\FreeRTOSConfig.h" />
     <ClInclude Include="Inc\main.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="application.c" />
     <ClCompile Include="controller.c" />
     <ClCompile Include="encoder.c" />
+    <ClCompile Include="numtostring.c" />
     <ClCompile Include="mcp4725.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\main.c" />

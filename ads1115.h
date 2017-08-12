@@ -2,6 +2,9 @@
 
 #include "stm32f1xx_hal.h"
 #include <stdint.h>
+#include "events.h"
+
+extern I2C_HandleTypeDef hi2c1;
 
 
 #define ADS1015_REG_POINTER_MASK        (0x03)

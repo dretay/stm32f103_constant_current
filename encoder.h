@@ -4,7 +4,6 @@
 #include "cmsis_os.h"
 #include "events.h"
 
-
 // Values returned by 'process'
 // No complete step yet.
 #define DIR_NONE 0x0

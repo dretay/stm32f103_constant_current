@@ -1,17 +1,25 @@
 #include "ads1115.h"
 
 static void writeRegister(uint8_t i2cAddress, uint8_t reg, uint16_t value) {
-	I2C_HandleTypeDef* hi2c1 = (I2C_HandleTypeDef*)get_hi2c1();
+	
 	uint8_t tx_buffer[3] = { (uint8_t)reg, (uint8_t)(value >> 8), (uint8_t)(value & 0xFF) };
-	HAL_I2C_Master_Transmit(hi2c1, i2cAddress, tx_buffer, 3, 4);	
+	//HAL_I2C_Master_Transmit(hi2c1, i2cAddress, tx_buffer, 3, 4);	
+	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, tx_buffer, 3, 4);
+	if (status != HAL_OK) {
+		LOG("OOPS");
+	}
 }
 static uint16_t readRegister(uint8_t i2cAddress, uint8_t reg) {
-	I2C_HandleTypeDef* hi2c1 = (I2C_HandleTypeDef*)get_hi2c1();
+	
 	uint8_t tx_buffer[1] = { ADS1015_REG_POINTER_CONVERT };
 	uint8_t rx_buffer[2] = { 0, 0 };
 
-	HAL_I2C_Master_Transmit(hi2c1, i2cAddress, tx_buffer, 1, 4);
-	HAL_I2C_Master_Receive(hi2c1, i2cAddress + 1, rx_buffer, 2, 4);
+	//HAL_I2C_Master_Transmit(hi2c1, i2cAddress, tx_buffer, 1, 4);
+	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, tx_buffer, 1, 4);
+	if (status != HAL_OK) {
+		LOG("OOPS");
+	}
+	HAL_I2C_Master_Receive(&hi2c1, i2cAddress + 1, rx_buffer, 2, 4);
 
 	return ((rx_buffer[0] << 8) | rx_buffer[1]);  
 }
@@ -36,6 +44,17 @@ float convert() {
 	uint16_t res = readRegister(0x90, ADS1015_REG_POINTER_CONVERT) >> 0;  
 
 	return (res * 0.1875) / 1000; 
+	
+}
+void adcCallback(void const * argument) {
+	T_SYSTEM_UPDATE *update;
+		
+	update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, osWaitForever); /* Allocate memory */
+	update->idx = 0;
+	update->val = convert();	
+	update->source = ADC;
+	update->parameter = VOLTAGE;
+	osMailPut(SYS_UPDATE_MAILBOX_ID, update);
 	
 }
 

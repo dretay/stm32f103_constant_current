@@ -151,7 +151,9 @@ void encoderCallback(void const * argument) {
 		old_encoder_counter = encoder_counter;
 		update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, osWaitForever); /* Allocate memory */
 		update->idx = 0;
-		update->val = encoder_counter;		
+		update->val = encoder_counter;	
+		update->source = ENCODER;
+		update->parameter = VOLTAGE;
 		osMailPut(SYS_UPDATE_MAILBOX_ID, update);
 	}
 }

@@ -52,24 +52,12 @@
 
 /* USER CODE BEGIN Includes */
 
-#include "math.h"
-#include "encoder.h"
-#include "ads1115.h"
-#include "mcp4725.h"
 #include "log.h"
-#include "application.h"
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-
-#define SYS_UPDATE_MAIL_SIZE        (uint32_t) 10
-osMailQId SYS_UPDATE_MAILBOX_ID;
-
-void* get_hspi1(void); 
-void* get_hi2c1(void); 
-void* get_guiUpdateTaskHandle(void);
 
 /* USER CODE END Private defines */
 

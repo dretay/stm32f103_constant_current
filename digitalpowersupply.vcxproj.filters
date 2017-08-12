@@ -65,6 +65,12 @@
     <Filter Include="Source files\os">
       <UniqueIdentifier>{1e6018f6-4b08-4496-8d7d-e7bfdb4e32a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header files\Inc\util">
+      <UniqueIdentifier>{8370224e-b666-43ce-af41-65509c327dd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\util">
+      <UniqueIdentifier>{3bde4893-215f-4078-88d3-d16441078233}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\FreeRTOSConfig.h">
@@ -364,6 +370,9 @@
     <ClInclude Include="events.h">
       <Filter>Header files\os</Filter>
     </ClInclude>
+    <ClInclude Include="numtostring.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\freertos.c">
@@ -575,6 +584,9 @@
     </ClCompile>
     <ClCompile Include="StatusView.c">
       <Filter>Source files\os</Filter>
+    </ClCompile>
+    <ClCompile Include="numtostring.c">
+      <Filter>Source files\Src\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
