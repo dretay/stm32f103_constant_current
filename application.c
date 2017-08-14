@@ -18,12 +18,18 @@ void StartSysUpdateTask(void const * argument) {
 	ads1115_configs[0].addr = 0x90;
 	ads1115_configs[0].p_i2c = &hi2c1;
 
+	ROTARY_ENCODER_CONFIG encoder_configs[1];
+	encoder_configs[0].pin_a_bus = GPIOB;
+	encoder_configs[0].pin_a_idx = GPIO_PIN_4;
+	encoder_configs[0].pin_b_bus = GPIOB;
+	encoder_configs[0].pin_b_idx = GPIO_PIN_5;
+
 	gfxInit();
 	views[0] = StatusView.init();
-
-	
+		
 	MCP4725.configure(mcp4725_configs, 1);
 	ADS1115.configure(ads1115_configs, 1);
+	ROTARY_ENCODER.configure(encoder_configs, 1);
 
 	
 	while (1) {
@@ -32,13 +38,35 @@ void StartSysUpdateTask(void const * argument) {
 			update = event.value.p;		
 			views[0]->on_update(update);	
 		}				
-		views[0]->render();
+		
 		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
 
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 		uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
-#endif
+		LOG("App high water: %d\n", uxHighWaterMark);
+#endif
+
 		osThreadYield();	
+	}
+}
+void StartGUIDrawTask(void const * argument) {
+
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+	UBaseType_t uxHighWaterMark;
+#endif
+	while (1)
+	{
+	if (views[0]->dirty)
+	{
+		views[0]->render();	
+	}	
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+		HAL_Delay(500);
+		uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+		LOG("GUI high water: %d\n", uxHighWaterMark);
+#endif
+	osThreadYield();	
+	
 	}
 }
 

@@ -62,6 +62,7 @@ SPI_HandleTypeDef hspi1;
 
 osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
+osThreadId guiDrawTaskHandle;
 osTimerId encoderTimerHandle;
 osTimerId adcTimerHandle;
 
@@ -77,6 +78,7 @@ static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
+extern void StartGUIDrawTask(void const * argument);
 extern void encoderCallback(void const * argument);
 extern void adcCallback(void const * argument);
 
@@ -151,8 +153,12 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
-  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 256);
+  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 128);
   sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
+
+  /* definition and creation of guiDrawTask */
+  osThreadDef(guiDrawTask, StartGUIDrawTask, osPriorityBelowNormal, 0, 256);
+  guiDrawTaskHandle = osThreadCreate(osThread(guiDrawTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

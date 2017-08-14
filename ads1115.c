@@ -10,7 +10,7 @@ static void marshal(uint8_t idx, uint8_t reg, uint16_t value) {
 	uint8_t tx_buffer[3] = { (uint8_t)reg, (uint8_t)(value >> 8), (uint8_t)(value & 0xFF) };
 	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c1, addr, tx_buffer, 3, 4);
 	if (status != HAL_OK) {
-		LOG("OOPS");
+		LOG("ADS1115 Marshal Failed\n");
 	}
 }
 
@@ -24,7 +24,7 @@ static uint16_t unmarshal(uint8_t idx, uint8_t reg) {
 
 	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c1, addr, tx_buffer, 1, 4);
 	if (status != HAL_OK) {
-		LOG("OOPS");
+		LOG("ADS1115 Unmarshal Failed\n");
 	}
 	HAL_I2C_Master_Receive(hi2c1, addr + 1, rx_buffer, 2, 4);
 

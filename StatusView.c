@@ -8,6 +8,7 @@ static float voltage_reading = 0.0;
 static float current_setting = 0.0;
 static float current_reading = 0.0;
 const static float voltage_multiplier = (5.0 / 4096.0);
+
 static void on_update(T_SYSTEM_UPDATE* update) {
 	if (update->source == ENCODER)
 	{
@@ -15,6 +16,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 		{			
 			voltage_setting = voltage_multiplier * update->val;
 			MCP4725.set_dac(0,update->val);
+			statusView.dirty = true;
 		}
 		else
 		{
@@ -23,8 +25,9 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 	}
 	else
 	{
-		if (update->parameter == VOLTAGE) {			
+		if (update->parameter == VOLTAGE && update->val != voltage_reading) {			
 			voltage_reading = update->val;
+			statusView.dirty = true;
 		}
 	}
 }
@@ -61,6 +64,7 @@ static void render(void) {
 static View* init(void) {
 	statusView.render = render;
 	statusView.on_update = on_update;
+	statusView.dirty = false;
 	return &statusView;	
 }
 
