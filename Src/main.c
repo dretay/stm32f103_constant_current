@@ -151,7 +151,7 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
-  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 128);
+  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 256);
   sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

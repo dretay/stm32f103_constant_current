@@ -38,27 +38,20 @@ static void render(void) {
 	width = gdispGetWidth();
 	font = gdispOpenFont("DEJAVUSANS10");	
 
-//	ftos(output1, voltage_reading, 3);
-//	output1[5] = ' ';
-//	output1[6] = 'V';
-//	output1[7] = '\0';
-//
-//	ftos(output2, voltage_setting, 3);
-//	output2[5] = ' ';
-//	output2[6] = 'V';
-//	output2[7] = '\0';
-	output1[0] = 'h';
-//	output1[1] = 'e';
-//	output1[2] = 'l';
-//	output1[3] = 'l';
-//	output1[4] = 'o';
-	
-	
+	ftos(output1, voltage_reading, 3);
+	output1[5] = ' ';
+	output1[6] = 'V';
+	output1[7] = '\0';
+
+	ftos(output2, voltage_setting, 3);
+	output2[5] = ' ';
+	output2[6] = 'V';
+	output2[7] = '\0';
 	
 	//todo: this should probably be its own fn
 	gdispClear(Black);
 	gdispDrawStringBox(0, 0, width, 20, output1, font, White, justifyCenter);	
-	//gdispDrawStringBox(0, 13, width, 20, output2, font, White, justifyCenter);	
+	gdispDrawStringBox(0, 13, width, 20, output2, font, White, justifyCenter);	
 	gdispGFlush(gdispGetDisplay(0));
 
 

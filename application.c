@@ -5,6 +5,10 @@ View* views[5];
 void StartSysUpdateTask(void const * argument) {
 	osEvent event;	
 	T_SYSTEM_UPDATE *update;
+
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+	UBaseType_t uxHighWaterMark;
+#endif
 	
 	MCP4725_CONFIG mcp4725_configs[1];
 	mcp4725_configs[0].addr = 0xC4;
@@ -21,14 +25,20 @@ void StartSysUpdateTask(void const * argument) {
 	MCP4725.configure(mcp4725_configs, 1);
 	ADS1115.configure(ads1115_configs, 1);
 
+	
 	while (1) {
 		event = osMailGet(SYS_UPDATE_MAILBOX_ID, osWaitForever);
 		if (event.status == osEventMail) {
 			update = event.value.p;		
 			views[0]->on_update(update);	
 		}				
-		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
 		views[0]->render();
+		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
+
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+		uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+#endif
+		osThreadYield();	
 	}
 }
 

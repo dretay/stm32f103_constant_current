@@ -56,6 +56,7 @@
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
+#define INCLUDE_uxTaskGetStackHighWaterMark 1
 
 /* USER CODE BEGIN Private defines */
 #define USE_FULL_ASSERT 1

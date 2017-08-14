@@ -36,7 +36,7 @@
 //#define GFX_USE_OS_RAWRTOS                           FALSE
 //#define GFX_USE_OS_ARDUINO                           FALSE
 //#define GFX_USE_OS_KEIL                              FALSE
-//#define GFX_USE_OS_CMSIS                             FALSE
+//#define GFX_USE_OS_CMSIS                             TRUE
 //#define GFX_USE_OS_RAW32                             FALSE
 //#define GFX_USE_OS_NIOS                              FALSE
 //#define GFX_USE_OS_QT                                FALSE
