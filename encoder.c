@@ -1,7 +1,7 @@
 #include "encoder.h"
 
-ROTARY_ENCODER_CONFIG* config;
-uint8_t config_cnt = 0;
+static ROTARY_ENCODER_CONFIG* config;
+static uint8_t config_cnt = 0;
 
 void configure(ROTARY_ENCODER_CONFIG* config_in, uint8_t cnt_in) {
 	uint8_t i;

@@ -13,6 +13,11 @@ static void showView(uint8_t);
 
 extern I2C_HandleTypeDef hi2c1;
 
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+UBaseType_t SysUpdateTask_Watermark;
+UBaseType_t GUIDrawTask_Watermark;
+#endif
+
 struct application
 {
 	void(*showView)(uint8_t idx);

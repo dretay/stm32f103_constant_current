@@ -5,10 +5,6 @@ View* views[5];
 void StartSysUpdateTask(void const * argument) {
 	osEvent event;	
 	T_SYSTEM_UPDATE *update;
-
-#ifdef INCLUDE_uxTaskGetStackHighWaterMark
-	UBaseType_t uxHighWaterMark;
-#endif
 	
 	MCP4725_CONFIG mcp4725_configs[1];
 	mcp4725_configs[0].addr = 0xC4;
@@ -31,6 +27,8 @@ void StartSysUpdateTask(void const * argument) {
 	ADS1115.configure(ads1115_configs, 1);
 	ROTARY_ENCODER.configure(encoder_configs, 1);
 
+	//todo maybe set this by default on the first view?
+	views[0]->dirty = true;
 	
 	while (1) {
 		event = osMailGet(SYS_UPDATE_MAILBOX_ID, osWaitForever);
@@ -42,8 +40,8 @@ void StartSysUpdateTask(void const * argument) {
 		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
 
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
-		uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
-		LOG("App high water: %d\n", uxHighWaterMark);
+		SysUpdateTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
+
 #endif
 
 		osThreadYield();	
@@ -51,9 +49,7 @@ void StartSysUpdateTask(void const * argument) {
 }
 void StartGUIDrawTask(void const * argument) {
 
-#ifdef INCLUDE_uxTaskGetStackHighWaterMark
-	UBaseType_t uxHighWaterMark;
-#endif
+
 	while (1)
 	{
 	if (views[0]->dirty)
@@ -61,9 +57,7 @@ void StartGUIDrawTask(void const * argument) {
 		views[0]->render();	
 	}	
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
-		HAL_Delay(500);
-		uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
-		LOG("GUI high water: %d\n", uxHighWaterMark);
+		GUIDrawTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
 	osThreadYield();	
 	

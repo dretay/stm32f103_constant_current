@@ -1,7 +1,7 @@
 #include "mcp4725.h"
 
-MCP4725_CONFIG* config;
-uint8_t config_cnt;
+static MCP4725_CONFIG* config;
+static uint8_t config_cnt;
 
 //do conversion of data to send to device
 static void marshal(uint8_t idx, uint8_t value) {

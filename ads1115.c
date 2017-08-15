@@ -1,6 +1,6 @@
 #include "ads1115.h"
 
-ADS1115_CONFIG* config;
+static ADS1115_CONFIG* config;
 
 
 //do conversion of data to send to device
@@ -39,20 +39,20 @@ static void configure(ADS1115_CONFIG* config_in, uint8_t cnt_in) {
 
 static float get_reading(uint8_t idx) {
 //adc
-	uint16_t config = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
+	uint16_t value = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
                     ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
                     ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
                     ADS1015_REG_CONFIG_CMODE_TRAD   | // Traditional comparator (default val)
                     ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
                     ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
 	// Set PGA/voltage range
-	config |= GAIN_TWOTHIRDS;
+	value |= GAIN_TWOTHIRDS;
 
-	config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
+	value |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
 	
-	config |= ADS1015_REG_CONFIG_OS_SINGLE;
+	value |= ADS1015_REG_CONFIG_OS_SINGLE;
 	
-	marshal(idx, ADS1015_REG_POINTER_CONFIG, config);
+	marshal(idx, ADS1015_REG_POINTER_CONFIG, value);
 	HAL_Delay(8);
 	uint16_t res = unmarshal(idx, ADS1015_REG_POINTER_CONVERT) >> 0;  
 
