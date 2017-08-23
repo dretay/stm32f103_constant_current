@@ -11,7 +11,7 @@ typedef struct {
 
 struct mcp4725 {
 	void(*configure)(MCP4725_CONFIG* config, uint8_t cnt);	
-	void(*set_dac)(uint8_t idx, uint8_t value);
+	void(*set_dac)(uint8_t idx, uint16_t value);
 	uint8_t(*get_dac)(void);
 };
 

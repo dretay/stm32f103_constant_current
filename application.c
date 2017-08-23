@@ -6,9 +6,12 @@ void StartSysUpdateTask(void const * argument) {
 	osEvent event;	
 	T_SYSTEM_UPDATE *update;
 	
-	MCP4725_CONFIG mcp4725_configs[1];
+	uint8_t mcp4725_config_cnt = 2;
+	MCP4725_CONFIG mcp4725_configs[mcp4725_config_cnt];
 	mcp4725_configs[0].addr = 0xC4;
 	mcp4725_configs[0].p_i2c = &hi2c1;
+	mcp4725_configs[1].addr = 0xC6;
+	mcp4725_configs[1].p_i2c = &hi2c1;
 
 	ADS1115_CONFIG ads1115_configs[1];
 	ads1115_configs[0].addr = 0x90;
@@ -23,7 +26,7 @@ void StartSysUpdateTask(void const * argument) {
 	gfxInit();
 	views[0] = StatusView.init();
 		
-	MCP4725.configure(mcp4725_configs, 1);
+	MCP4725.configure(mcp4725_configs, mcp4725_config_cnt);	
 	ADS1115.configure(ads1115_configs, 1);
 	ROTARY_ENCODER.configure(encoder_configs, 1);
 
