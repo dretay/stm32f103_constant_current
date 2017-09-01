@@ -30,6 +30,11 @@ void StartSysUpdateTask(void const * argument) {
 	ADS1115.configure(ads1115_configs, 1);
 	ROTARY_ENCODER.configure(encoder_configs, 1);
 
+	//dac 0 = 0.64v
+	//dac 1 = 10v
+	MCP4725.set_dac(0, 4000);
+	MCP4725.set_dac(1, 4000);
+
 	//todo maybe set this by default on the first view?
 	views[0]->dirty = true;
 	

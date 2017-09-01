@@ -20,6 +20,7 @@ const uint8_t LcdSetDdramAddress = 0x80;    // add the address we want to set
 
 
 // LCD extended instructions
+const uint8_t LcdDisplayStandby = 0x01;
 const uint8_t LcdSetGdramAddress = 0x80;
 
 //const unsigned int LcdCommandDelayMicros = 72 - 24; // 72us required, less 24us time to send the command @ 1MHz
@@ -42,6 +43,7 @@ uint8_t startRow, startCol, endRow, endCol; // coordinates of the dirty rectangl
 uint8_t image[(128 * 64) / 8];       
 
 extern SPI_HandleTypeDef hspi1;
+extern TIM_HandleTypeDef htim3;
 
 
 uint32_t getUs(void) {
@@ -181,38 +183,31 @@ static GFXINLINE void init_board(GDisplay* g) {
 static GFXINLINE void post_init_board(GDisplay *g) {
 	(void) g;
 }
-static GFXINLINE void setpin_reset(GDisplay *g, bool_t state) {
-	(void) g;
-	(void) state;
-}
-static GFXINLINE void set_backlight(GDisplay *g, uint8_t percent) {
+
+#if GDISP_NEED_CONTROL
+static void board_backlight(GDisplay *g, uint8_t percent) {
+	// TODO: Can be an empty function if your hardware doesn't support this
 	(void) g;
 	(void) percent;
 }
 
-static GFXINLINE void acquire_bus(GDisplay *g) {
+static void board_contrast(GDisplay *g, uint8_t percent) {
+	// TODO: Can be an empty function if your hardware doesn't support this
 	(void) g;
+	(void) percent;
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, (htim3.Init.Period / 100) * (100-percent));
 }
 
-static GFXINLINE void release_bus(GDisplay *g) {
+static void board_power(GDisplay *g, powermode_t pwr) {
+	// TODO: Can be an empty function if your hardware doesn't support this
 	(void) g;
-	flush();
+	(void) pwr;
 }
-void KS0108_delay(uint16_t microsec) {
-	(void) microsec;
-}
+#endif /* GDISP_NEED_CONTROL */
 
 void gdisp_lld_flush(GDisplay *g){
 	(void) g;
 	enable();
 	flush();
 	disable();
-}
-static GFXINLINE void write_data(GDisplay* g, uint16_t data) {
-	(void) g;
-	(void) data;
-}
-static GFXINLINE void write_cmd(GDisplay* g, uint16_t cmd) {
-	(void) g;
-	(void) cmd;
 }

@@ -156,7 +156,7 @@
 
 //#define GDISP_TOTAL_DISPLAYS                         1
 
-#define GDISP_DRIVER_LIST                            GDISPVMT_KS0108
+#define GDISP_DRIVER_LIST                            GDISPVMT_ST7920
 #ifdef GDISP_DRIVER_LIST
         // For code and speed optimization define as TRUE or FALSE if all controllers have the same capability
 #define GDISP_HARDWARE_STREAM_WRITE          FALSE

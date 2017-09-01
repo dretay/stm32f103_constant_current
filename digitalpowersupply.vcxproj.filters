@@ -319,12 +319,6 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\portmacro.h">
       <Filter>Header files\Device-specific files\FreeRTOS</Filter>
     </ClInclude>
-    <ClInclude Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_config.h">
-      <Filter>Header files\Inc\ugfx</Filter>
-    </ClInclude>
-    <ClInclude Include="board_KS0108.h">
-      <Filter>Header files\Inc\ugfx</Filter>
-    </ClInclude>
     <ClInclude Include="gfxconf.h">
       <Filter>Header files\Inc\ugfx</Filter>
     </ClInclude>
@@ -372,6 +366,12 @@
     </ClInclude>
     <ClInclude Include="numtostring.h">
       <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
+    <ClInclude Include="board_ST7920.h">
+      <Filter>Header files\Inc\ugfx</Filter>
+    </ClInclude>
+    <ClInclude Include="gdisp_lld_config.h">
+      <Filter>Header files\Inc\ugfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -510,9 +510,6 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_usb.c">
       <Filter>Source files\Device-specific files\HAL</Filter>
     </ClCompile>
-    <ClCompile Include="..\ugfx\drivers\gdisp\KS0108\gdisp_lld_KS0108.c">
-      <Filter>Source files\Src\ugfx</Filter>
-    </ClCompile>
     <ClCompile Include="..\ugfx\src\gfx_mk.c">
       <Filter>Source files\Src\ugfx</Filter>
     </ClCompile>
@@ -587,6 +584,9 @@
     </ClCompile>
     <ClCompile Include="numtostring.c">
       <Filter>Source files\Src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="gdisp_lld_ST7920.c">
+      <Filter>Source files\Src\ugfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
