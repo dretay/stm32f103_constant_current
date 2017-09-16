@@ -56,16 +56,21 @@ void ftos(char* str, float f, uint8_t precision) {
 	obtained as quotient by dividing number by 10^k where k = (number of digit -1)
 	*/
 	
+	itoa(a, str);
+	if (a < 10)
+	{
+		str[i++] = '0';
+	}
 	for (l = k + 1; l > 0; l--) {
 		b = pow(10, l - 1);
 		c = a / b;
 		str[i++] = c + 48;
 		a %= b;
 	}
-	if (i == 0)
-	{
+	if (i == 1)
+	{		
 		str[i++] = '0';
-	}
+	}	
 	str[i++] = '.';
 	
 	/* extracting decimal digits till precision */

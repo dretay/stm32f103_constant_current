@@ -74,9 +74,17 @@ typedef enum {
 	GAIN_SIXTEEN   = ADS1015_REG_CONFIG_PGA_0_256V
 } adsGain_t;
 
+typedef struct {	
+	uint8_t idx;
+	float ratio;
+	Parameter parameter;
+} ADS1115_CHANNEL_CONFIG;
+
 typedef struct {
 	I2C_HandleTypeDef* p_i2c;
 	uint8_t addr;
+	uint8_t channel_cnt;
+	ADS1115_CHANNEL_CONFIG *channel_configs;
 } ADS1115_CONFIG;
 
 struct ads1115 {

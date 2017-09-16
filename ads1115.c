@@ -1,6 +1,8 @@
 #include "ads1115.h"
 
 static ADS1115_CONFIG* config;
+static uint8_t config_cnt;
+
 
 
 //do conversion of data to send to device
@@ -34,11 +36,13 @@ static uint16_t unmarshal(uint8_t idx, uint8_t reg) {
 
 static void configure(ADS1115_CONFIG* config_in, uint8_t cnt_in) {
 	config = config_in;
-	cnt_in = cnt_in;
+	config_cnt = cnt_in;
 }
 
+static uint16_t adc_channels[4] = { ADS1015_REG_CONFIG_MUX_SINGLE_0, ADS1015_REG_CONFIG_MUX_SINGLE_1, ADS1015_REG_CONFIG_MUX_SINGLE_2, ADS1015_REG_CONFIG_MUX_SINGLE_3 };
+
 static float get_reading(uint8_t idx) {
-//adc
+	//adc
 	uint16_t value = ADS1015_REG_CONFIG_CQUE_NONE    | // Disable the comparator (default val)
                     ADS1015_REG_CONFIG_CLAT_NONLAT  | // Non-latching (default val)
                     ADS1015_REG_CONFIG_CPOL_ACTVLOW | // Alert/Rdy active low   (default val)
@@ -46,15 +50,15 @@ static float get_reading(uint8_t idx) {
                     ADS1015_REG_CONFIG_DR_1600SPS   | // 1600 samples per second (default)
                     ADS1015_REG_CONFIG_MODE_SINGLE;   // Single-shot mode (default)
 	// Set PGA/voltage range
-	value |= GAIN_TWOTHIRDS;
+	value |= GAIN_TWOTHIRDS; //todo: this can  probably be set to a gain of "1" - 4v max
 
-	value |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
+	value |= adc_channels[idx];
 	
 	value |= ADS1015_REG_CONFIG_OS_SINGLE;
 	
-	marshal(idx, ADS1015_REG_POINTER_CONFIG, value);
+	marshal(0, ADS1015_REG_POINTER_CONFIG, value);
 	HAL_Delay(8);
-	uint16_t res = unmarshal(idx, ADS1015_REG_POINTER_CONVERT) >> 0;  
+	uint16_t res = unmarshal(0, ADS1015_REG_POINTER_CONVERT) >> 0;  
 
 	return (res * 0.1875) / 1000; 
 	
@@ -66,12 +70,21 @@ const struct ads1115 ADS1115 = {
 
 void adcCallback(void const * argument) {
 	T_SYSTEM_UPDATE *update;
+	ADS1115_CHANNEL_CONFIG channel_config;
+	int i = 0;
+	float reading;
 		
-	update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, osWaitForever); /* Allocate memory */
-	update->idx = 0;
-	update->val = get_reading(0);	
-	update->source = ADC;
-	update->parameter = VOLTAGE;
-	osMailPut(SYS_UPDATE_MAILBOX_ID, update);
+	for (i = 0; i < config->channel_cnt; i++) {
+		channel_config = config->channel_configs[i];
+		reading = get_reading(channel_config.idx);
+		update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, osWaitForever); /* Allocate memory */
+		update->idx = channel_config.idx;
+		update->val = reading * channel_config.ratio;	
+		update->source = ADC;
+		update->parameter = channel_config.parameter;
+		osMailPut(SYS_UPDATE_MAILBOX_ID, update);	
+		
+	}	
+	
 	
 }

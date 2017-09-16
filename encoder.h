@@ -134,9 +134,9 @@ static const unsigned char ttable[7][4] = {
 //todo: i wonder if it's worth trying to make the counter,state, and dirty vars private?
 typedef struct {
 	GPIO_TypeDef* pin_a_bus;
-	uint8_t pin_a_idx;
+	uint16_t pin_a_idx;
 	GPIO_TypeDef* pin_b_bus;
-	uint8_t pin_b_idx;
+	uint16_t pin_b_idx;
 	uint8_t counter;
 	uint8_t state;
 	bool dirty;
