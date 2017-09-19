@@ -10,32 +10,38 @@ static float current_setting = 0.0;
 static float current_reading = 0.0;
 static float wattage_reading = 0.0;
 
+static uint8_t scale = 0;
+
 //this are the raw "units" of the dac
-const static float voltage_multiplier = (5.0 / 4096.0);
+const static float voltage_multiplier = (5.0 / 4096.0) * 100;
 
 static void on_update(T_SYSTEM_UPDATE* update) {
 	if (update->source == ENCODER)
 	{
 		if (update->parameter == VOLTAGE)
 		{			
-			voltage_setting = voltage_multiplier * update->val;
-			MCP4725.set_dac(0,update->val);
+			voltage_setting = voltage_multiplier * update->int_val;
+			MCP4725.set_dac(0, update->int_val);
 			statusView.dirty = true;
+		}
+		else if (update->parameter == CURRENT)
+		{
+			current_setting = voltage_multiplier * update->int_val;
 		}
 		else
 		{
-			current_setting = voltage_multiplier * update->val;
+			scale++;
 		}
 	}
 	else
 	{
-		if (update->parameter == VOLTAGE && update->val != voltage_reading) {			
-			voltage_reading = update->val;
+		if (update->parameter == VOLTAGE && update->float_val != voltage_reading) {			
+			voltage_reading = update->float_val;
 			wattage_reading = voltage_reading * current_reading;
 			statusView.dirty = true;
 		}
-		else if (update->parameter == CURRENT && update->val != current_reading) {			
-			current_reading = update->val;
+		else if (update->parameter == CURRENT && update->float_val != current_reading) {			
+			current_reading = update->float_val;
 			wattage_reading = voltage_reading * current_reading;
 			statusView.dirty = true;
 		}
@@ -72,13 +78,22 @@ static void render_setting(uint8_t idx, float setting, char *units) {
 	buffer[6] = units[0];
 
 	gdispDrawStringBox(DisplayWidth-gdispGetStringWidth(buffer, DejaVuSans10)-1,
-		11 + (9*idx),
+		10 + (11*idx),
 		gdispGetStringWidth(buffer, DejaVuSans10)+2,
 		gdispGetFontMetric(DejaVuSans10, fontHeight),
 		buffer,
 		DejaVuSans10,
 		White,
 		justifyLeft);	
+
+	//digit being manipulated
+	//uint8_t scale = 0;
+	static uint8_t scale_offsets[4] = {0, 6, 15, 21 };
+	gdispDrawLine(DisplayWidth-gdispGetStringWidth(buffer, DejaVuSans10)+1 + (scale_offsets[scale]), 
+		10 + (11*idx)+gdispGetFontMetric(DejaVuSans10, fontHeight), 
+		DisplayWidth-gdispGetStringWidth(buffer, DejaVuSans10)+5+ (scale_offsets[scale]), 
+		10 + (11*idx)+gdispGetFontMetric(DejaVuSans10, fontHeight), 
+		White);
 }
 static void render_status(char *status) {
 	gdispDrawStringBox(DisplayWidth-gdispGetStringWidth(status, DejaVuSans20)+1,
@@ -91,8 +106,8 @@ static void render_status(char *status) {
 		justifyCenter);
 }
 static void render_settings_outline(void) {
-	static const char setting_str[10] = "SETTING";
-	static const char status_str[10] = "STATUS";
+	static const char setting_str[9] = "SETTING";
+	static const char status_str[7] = "STATUS";
 	
 	//line that separates the readings from the settings
 	gdispDrawLine(DisplayWidth - 4 - gdispGetStringWidth(setting_str, Fixed_5x8), 
@@ -144,13 +159,13 @@ static void render(void) {
 	//render status
 	render_status("OFF");
 	
-	//manually flush at then end - otherwise you end up redrawing each time you you call a g* command
+	//manually flush at then end - otherwise you end up redrawing each time you you call a gdisp* command
 	gdispGFlush(gdispGetDisplay(0));
 
 
 }
 
-//should this be implemented in view somehow?
+//should the association w/ implementing method this be implemented in view somehow?
 static View* init(void) {
 	statusView.render = render;
 	statusView.on_update = on_update;

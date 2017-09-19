@@ -79,7 +79,8 @@ void adcCallback(void const * argument) {
 		reading = get_reading(channel_config.idx);
 		update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, osWaitForever); /* Allocate memory */
 		update->idx = channel_config.idx;
-		update->val = reading * channel_config.ratio;	
+		update->float_val = reading * channel_config.ratio;	
+		update->val_type = type_float;
 		update->source = ADC;
 		update->parameter = channel_config.parameter;
 		osMailPut(SYS_UPDATE_MAILBOX_ID, update);	

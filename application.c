@@ -31,15 +31,21 @@ void StartSysUpdateTask(void const * argument) {
 
 	//todo: maybe use an add fn rather than hard-coding all this nonsense?
 	ROTARY_ENCODER_CONFIG encoder_configs[2];
+	encoder_configs[0].switch_bus = GPIOB;
+	encoder_configs[0].switch_idx = GPIO_PIN_3;
 	encoder_configs[0].pin_a_bus = GPIOB;
 	encoder_configs[0].pin_a_idx = GPIO_PIN_4;
 	encoder_configs[0].pin_b_bus = GPIOB;
-	encoder_configs[0].pin_b_idx = GPIO_PIN_5;
+	encoder_configs[0].pin_b_idx = GPIO_PIN_5;	
+	encoder_configs[0].parameter = VOLTAGE;
 
+	encoder_configs[1].switch_bus = GPIOB;
+	encoder_configs[1].switch_idx = GPIO_PIN_14;
 	encoder_configs[1].pin_a_bus = GPIOB;
 	encoder_configs[1].pin_a_idx = GPIO_PIN_12;
 	encoder_configs[1].pin_b_bus = GPIOB;
 	encoder_configs[1].pin_b_idx = GPIO_PIN_13;
+	encoder_configs[1].parameter = CURRENT;
 
 	gfxInit();
 	gdispSetContrast(95);

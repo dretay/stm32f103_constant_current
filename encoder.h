@@ -131,15 +131,20 @@ static const unsigned char ttable[7][4] = {
 };
 #endif
 
-//todo: i wonder if it's worth trying to make the counter,state, and dirty vars private?
+//todo: i wonder if the encoder switch should be in its own struct?
 typedef struct {
 	GPIO_TypeDef* pin_a_bus;
 	uint16_t pin_a_idx;
 	GPIO_TypeDef* pin_b_bus;
 	uint16_t pin_b_idx;
-	uint8_t counter;
+	GPIO_TypeDef* switch_bus;
+	uint16_t switch_idx;
+	uint16_t counter;
 	uint8_t state;
-	bool dirty;
+	Parameter parameter;
+	bool button_state;
+	bool button_dirty;
+	bool encoder_dirty;
 } ROTARY_ENCODER_CONFIG;
 
 struct rotary_encoder {
