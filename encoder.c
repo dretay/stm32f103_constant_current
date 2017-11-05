@@ -31,10 +31,12 @@ void handle_rotary_spin(uint8_t idx) {
 
 	if (result == DIR_CW) {		
 		config[idx].counter++;
+		config[idx].positive_inertia = true;	
 		config[idx].encoder_dirty = true;
 	}
 	else if (result == DIR_CCW && config[idx].counter > 0) {
 		config[idx].counter--;	
+		config[idx].positive_inertia = false;	
 		config[idx].encoder_dirty = true;
 	} 
 }
@@ -64,7 +66,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		}
 		else if (GPIO_Pin == config[i].switch_idx)
 		{
-			handle_rotary_click(i);
+			handle_rotary_click(i);//todo: this should have a max so it doesn't just overflow?
 		}
 	} 
 }
@@ -81,8 +83,8 @@ void encoderCallback(void const * argument) {
 
 			update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, osWaitForever); /* Allocate memory */
 			update->idx = i;
-			update->int_val = config[i].counter;	
-			update->val_type = type_int;
+			update->int_val = config[i].positive_inertia;	
+			update->val_type = type_bool;
 			update->source = ENCODER;
 			update->parameter = config[i].parameter;
 			osMailPut(SYS_UPDATE_MAILBOX_ID, update);

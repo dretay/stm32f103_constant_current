@@ -37,7 +37,7 @@ void StartSysUpdateTask(void const * argument) {
 	encoder_configs[0].pin_a_idx = GPIO_PIN_4;
 	encoder_configs[0].pin_b_bus = GPIOB;
 	encoder_configs[0].pin_b_idx = GPIO_PIN_5;	
-	encoder_configs[0].parameter = VOLTAGE;
+	encoder_configs[0].parameter = CURRENT;
 
 	encoder_configs[1].switch_bus = GPIOB;
 	encoder_configs[1].switch_idx = GPIO_PIN_14;
@@ -45,10 +45,11 @@ void StartSysUpdateTask(void const * argument) {
 	encoder_configs[1].pin_a_idx = GPIO_PIN_12;
 	encoder_configs[1].pin_b_bus = GPIOB;
 	encoder_configs[1].pin_b_idx = GPIO_PIN_13;
-	encoder_configs[1].parameter = CURRENT;
+	encoder_configs[1].parameter = VOLTAGE;
 
 	gfxInit();
 	gdispSetContrast(95);
+
 	views[0] = StatusView.init();
 		
 	MCP4725.configure(mcp4725_configs, mcp4725_config_cnt);	
@@ -57,8 +58,8 @@ void StartSysUpdateTask(void const * argument) {
 
 	//dac 0 = 0.64v
 	//dac 1 = 10v
-	//MCP4725.set_dac(0, 4000);
-	MCP4725.set_dac(1, 4000);
+	MCP4725.set_dac(0, 2000);
+	MCP4725.set_dac(1, 2000);
 
 	//todo maybe set this by default on the first view?
 	views[0]->dirty = true;
@@ -85,7 +86,8 @@ void StartGUIDrawTask(void const * argument) {
 
 	while (1)
 	{
-	if (views[0]->dirty)
+	//if (views[0]->dirty)
+	if (true)
 	{
 		views[0]->dirty = false;
 		views[0]->render();	

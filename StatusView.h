@@ -7,6 +7,7 @@
 #include "gfx.h"
 #include "mcp4725.h"
 #include "numtostring.h"
+#include "math.h"
 
 uint8_t my_encoder_val;
 struct statusView {	

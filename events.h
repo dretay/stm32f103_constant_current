@@ -16,7 +16,7 @@ typedef struct {
 	union
 	{
 		float float_val;
-		uint32_t int_val;	
+		int32_t int_val;	
 		bool bool_val;
 	};
 	enum

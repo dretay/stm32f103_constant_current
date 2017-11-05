@@ -23,11 +23,6 @@ const uint8_t LcdSetDdramAddress = 0x80;    // add the address we want to set
 const uint8_t LcdDisplayStandby = 0x01;
 const uint8_t LcdSetGdramAddress = 0x80;
 
-//const unsigned int LcdCommandDelayMicros = 72 - 24; // 72us required, less 24us time to send the command @ 1MHz
-const unsigned int LcdCommandDelayMicros = 2;
-const unsigned int LcdDataDelayMicros = 2;// 10;         // Delay between sending data bytes
-const unsigned int LcdDisplayClearDelayMillis = 2;  // 1.6ms should be enough
-
 const unsigned int numRows = 64;
 const unsigned int numCols = 128;
 
@@ -45,32 +40,21 @@ uint8_t image[(128 * 64) / 8];
 extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim3;
 
-
-uint32_t getUs(void) {
-	uint32_t usTicks = HAL_RCC_GetSysClockFreq() / 1000000;
-	register uint32_t ms, cycle_cnt;
-	do {
-		ms = HAL_GetTick();
-		cycle_cnt = SysTick->VAL;
-	} while (ms != HAL_GetTick());
-	return (ms * 1000) + (usTicks * 1000 - cycle_cnt) / usTicks;
-}
- 
-void delay_us(uint16_t micros) {
-	uint32_t start = getUs();
-	while (getUs() - start < (uint32_t) micros) {
-		asm("nop");
+//this is super ghetto and basically the count has to be tweaked 
+//per spi prescaler / fsb combo 
+void delay_2us() {	
+	uint8_t i = 0;
+	for (; i < 120; i++)
+	{
+		asm("nop");		
 	}
 }
 
 static void enable(void) {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET); 
-	HAL_Delay(5);
 }
 static void disable(void) {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET); 
-	HAL_Delay(5);
-
 }
 
 static void reset_display(void) {
@@ -93,36 +77,41 @@ void sendLcdCommand(uint8_t command) {
 void sendLcdData(uint8_t command) {
 	sendLcd(0xFA, command);
 }
-void commandDelay() {
-	delay_us(LcdCommandDelayMicros);
-}
 
 void setGraphicsAddress(unsigned int r, unsigned int c) {
 	sendLcdCommand(LcdSetGdramAddress | (r & 31));
 	//commandDelay();  // don't seem to need this one
 	sendLcdCommand(LcdSetGdramAddress | c | ((r & 32) >> 2));
-	commandDelay();    // we definitely need this one
+	delay_2us();    // we definitely need this one
 }
 
 void flush() {
+	uint8_t startColNum;
+	uint8_t endColNum;
+	uint8_t row;
+	uint8_t col;
+	uint8_t *ptr;
+	enable();
 	if (endCol > startCol && endRow > startRow) {
-		uint8_t startColNum = startCol / 16;
-		uint8_t endColNum = (endCol + 15) / 16;
-		for (uint8_t r = startRow; r < endRow; ++r) {
-			setGraphicsAddress(r, startColNum);
-			uint8_t *ptr = image + ((16 * r) + (2 * startColNum));
-			for (uint8_t i = startColNum; i < endColNum; ++i) {      
+		startColNum = startCol / 16;
+		endColNum = (endCol + 15) / 16;
+		row = startRow;		
+		for (; row < endRow; ++row) {
+			__disable_irq();
+			setGraphicsAddress(row, startColNum);
+			ptr = image + ((16 * row) + (2 * startColNum));
+			for (col = startColNum; col < endColNum; ++col) {      				
 				sendLcdData(*ptr++);
-				//commandDelay();    // don't seem to need a delay here
 				sendLcdData(*ptr++);
-				//commandDelay();    // don't seem to need as long a delay as this
-				delay_us(LcdDataDelayMicros);
+				delay_2us();				
 			}
+			__enable_irq();
 		}
 		startRow = numRows;
 		startCol = numCols;
 		endCol = endRow = 0;
 	}
+	disable();
 }
 void clear() {
 	memset(image, 0, sizeof(image));
@@ -164,17 +153,17 @@ static GFXINLINE void init_board(GDisplay* g) {
 	enable();
 		
 	sendLcdCommand(LcdFunctionSetBasicAlpha);
-	delay_us(1);
+	delay_2us();
 	sendLcdCommand(LcdFunctionSetBasicAlpha);
-	commandDelay();
+	delay_2us();
 	sendLcdCommand(LcdEntryModeSet);
-	commandDelay();
+	delay_2us();
 	
 	sendLcdCommand(LcdFunctionSetExtendedGraphic);
 	clear();
 	
 	sendLcdCommand(LcdDisplayOn);
-	commandDelay();
+	delay_2us();
 
 	disable();
 	
@@ -206,8 +195,6 @@ static void board_power(GDisplay *g, powermode_t pwr) {
 #endif /* GDISP_NEED_CONTROL */
 
 void gdisp_lld_flush(GDisplay *g){
-	(void) g;
-	enable();
-	flush();
-	disable();
+	(void) g;	
+	flush();	
 }

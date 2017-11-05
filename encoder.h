@@ -145,6 +145,7 @@ typedef struct {
 	bool button_state;
 	bool button_dirty;
 	bool encoder_dirty;
+	bool positive_inertia;
 } ROTARY_ENCODER_CONFIG;
 
 struct rotary_encoder {

@@ -10,30 +10,43 @@ static float current_setting = 0.0;
 static float current_reading = 0.0;
 static float wattage_reading = 0.0;
 
-static uint8_t scale = 0;
+static uint8_t voltage_scale = 0;
+static uint8_t current_scale = 0;
 
 //this are the raw "units" of the dac
-const static float voltage_multiplier = (5.0 / 4096.0) * 100;
+const static float voltage_multiplier = (4096 / 30);
+const static float current_multiplier = (4096 / 2);
 
 static void on_update(T_SYSTEM_UPDATE* update) {
-	if (update->source == ENCODER)
-	{
-		if (update->parameter == VOLTAGE)
-		{			
-			voltage_setting = voltage_multiplier * update->int_val;
-			MCP4725.set_dac(0, update->int_val);
-			statusView.dirty = true;
+	static float multiplier;
+	if (update->source == ENCODER) {
+		if (update->parameter == OTHER) {
+			//todo: this is bad - needs to be fixed!
+			if (update->idx  == 0)
+			{
+				current_scale = (current_scale + 1) % 4;
+			}
+			else
+			{
+				voltage_scale = (voltage_scale + 1) % 4;
+			}
 		}
-		else if (update->parameter == CURRENT)
-		{
-			current_setting = voltage_multiplier * update->int_val;
+		else {
+			//todo: is there a way of combining the calls to set_dac since only the multiplier changes?
+			if (update->parameter == VOLTAGE) {
+				multiplier = 10 / pow(10, voltage_scale); 
+				voltage_setting += update->bool_val ? multiplier : (-1 * multiplier);
+				MCP4725.set_dac(update->idx, 4096-floor(voltage_setting*voltage_multiplier));
+			}
+			else {
+				multiplier = 10 / pow(10, current_scale); 
+				current_setting += update->bool_val ? multiplier : (-1 * multiplier);
+				MCP4725.set_dac(update->idx, 4096-floor(current_setting*current_multiplier));
+			}			
 		}
-		else
-		{
-			scale++;
-		}
+		statusView.dirty = true;	
 	}
-	else
+	else if (update->source == ADC)
 	{
 		if (update->parameter == VOLTAGE && update->float_val != voltage_reading) {			
 			voltage_reading = update->float_val;
@@ -54,7 +67,7 @@ static void render_reading(uint8_t idx, float reading, char *units) {
 	ftos(buffer, reading, 2);	
 
 	gdispDrawStringBox(-2,
-		gdispGetFontMetric(LargeNumbers, fontHeight) * idx-2,
+		gdispGetFontMetric(LargeNumbers, fontHeight) * idx -(idx==0?2:3),
 		gdispGetStringWidth(buffer, LargeNumbers),
 		gdispGetFontMetric(LargeNumbers, fontHeight),
 		buffer,
@@ -71,7 +84,7 @@ static void render_reading(uint8_t idx, float reading, char *units) {
 		White,
 		justifyCenter);	
 }
-static void render_setting(uint8_t idx, float setting, char *units) {
+static void render_setting(uint8_t idx, float setting, char *units, uint8_t scale) {
 	static char buffer[7];	
 	ftos(buffer, setting, 2);	
 	buffer[5] = ' ';
@@ -150,8 +163,8 @@ static void render(void) {
 	render_reading(2, wattage_reading, "W");
 
 	//render out settings
-	render_setting(0, voltage_setting, "V");
-	render_setting(1, current_setting, "A");
+	render_setting(0, voltage_setting, "V", voltage_scale);
+	render_setting(1, current_setting, "A", current_scale);
 	
 	//render display category outline
 	render_settings_outline();
