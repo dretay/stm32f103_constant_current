@@ -2,7 +2,7 @@
 <EmbeddedProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
   <BspID>com.sysprogs.arm.stm32</BspID>
-  <BspVersion>4.3</BspVersion>
+  <BspVersion>4.5R2</BspVersion>
   <McuID>STM32F103CB</McuID>
   <MCUDefinitionFile>STM32F1xxxx/DeviceDefinitions/stm32f103xb.xml</MCUDefinitionFile>
   <MCUProperties>
@@ -43,7 +43,7 @@
       </KeyValue>
       <KeyValue>
         <Key>com.sysprogs.bspoptions.stm32.hal_legacy</Key>
-        <Value>USE_HAL_LEGACY </Value>
+        <Value>USE_HAL_LEGACY</Value>
       </KeyValue>
     </Entries>
   </FrameworkProperties>

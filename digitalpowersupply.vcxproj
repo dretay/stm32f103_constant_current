@@ -157,6 +157,7 @@
     <ClInclude Include="Inc\stm32f1xx_it.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="mcp4725.h" />
+    <ClInclude Include="serialcommand.h" />
     <ClInclude Include="StatusView.h" />
     <ClInclude Include="view.h" />
   </ItemGroup>
@@ -224,6 +225,7 @@
     <ClCompile Include="gdisp_lld_ST7920.c" />
     <ClCompile Include="numtostring.c" />
     <ClCompile Include="mcp4725.c" />
+    <ClCompile Include="serialcommand.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\stm32f1xx_hal_msp.c" />

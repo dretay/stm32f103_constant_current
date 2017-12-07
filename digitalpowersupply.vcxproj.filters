@@ -373,6 +373,9 @@
     <ClInclude Include="gdisp_lld_config.h">
       <Filter>Header files\Inc\ugfx</Filter>
     </ClInclude>
+    <ClInclude Include="serialcommand.h">
+      <Filter>Header files\Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\freertos.c">
@@ -587,6 +590,9 @@
     </ClCompile>
     <ClCompile Include="gdisp_lld_ST7920.c">
       <Filter>Source files\Src\ugfx</Filter>
+    </ClCompile>
+    <ClCompile Include="serialcommand.c">
+      <Filter>Source files\Src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

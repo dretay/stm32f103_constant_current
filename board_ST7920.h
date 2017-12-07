@@ -184,7 +184,7 @@ static void board_contrast(GDisplay *g, uint8_t percent) {
 	// TODO: Can be an empty function if your hardware doesn't support this
 	(void) g;
 	(void) percent;
-	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, (htim3.Init.Period / 100) * (100-percent));
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, (htim3.Init.Period / 100) * percent);
 }
 
 static void board_power(GDisplay *g, powermode_t pwr) {
