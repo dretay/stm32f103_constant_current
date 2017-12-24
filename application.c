@@ -2,49 +2,20 @@
 
 View* views[5];
 
-void setdac() {	
-	uint8_t idx = atoi(SerialCommand.next());
-	uint16_t val = atoi(SerialCommand.next());
-	MCP4725.set_dac(idx, val);
-}
+
 void StartSysUpdateTask(void const * argument) {
 	osEvent event;	
 	T_SYSTEM_UPDATE *update;
+	
 
-	uint8_t serialcommands_cnt = 1;
-	
-	SerialCommand_Command serialcommands[serialcommands_cnt];
-	serialcommands[0].command = "dac";
-	serialcommands[0].function = &setdac;
-	
-	SerialCommand_Config serialcommand_config;
-	serialcommand_config.command_cnt = serialcommands_cnt;
-	serialcommand_config.p_uart = &huart1;
-	serialcommand_config.commands = serialcommands;
 
-	SerialCommand.configure(&serialcommand_config, 1);
-	
+
 	uint8_t mcp4725_config_cnt = 2;
 	MCP4725_CONFIG mcp4725_configs[mcp4725_config_cnt];
 	mcp4725_configs[1].addr = 0xC4;
 	mcp4725_configs[1].p_i2c = &hi2c2;
 	mcp4725_configs[0].addr = 0xC6;
 	mcp4725_configs[0].p_i2c = &hi2c2;
-		
-	ADS1115_CHANNEL_CONFIG ads1115_channel_configs[2];
-	ads1115_channel_configs[0].idx = 0;
-	ads1115_channel_configs[0].ratio = 3.125;
-	ads1115_channel_configs[0].parameter = CURRENT; //todo: is this really appropriate to encode here? even if it is probably should promote from internal enum
-	ads1115_channel_configs[1].idx = 1;
-	ads1115_channel_configs[1].ratio = 8.0645;
-	ads1115_channel_configs[1].parameter = VOLTAGE;
-
-
-	ADS1115_CONFIG ads1115_configs[1];
-	ads1115_configs[0].addr = 0x90;
-	ads1115_configs[0].p_i2c = &hi2c1;
-	ads1115_configs[0].channel_cnt = 2;
-	ads1115_configs[0].channel_configs = ads1115_channel_configs;
 	
 
 	//todo: maybe use an add fn rather than hard-coding all this nonsense?
@@ -66,12 +37,11 @@ void StartSysUpdateTask(void const * argument) {
 	encoder_configs[1].parameter = VOLTAGE;
 
 	gfxInit();
-	gdispSetContrast(60);
+	gdispSetContrast(90);
 
 	views[0] = StatusView.init();
-		
+	
 	MCP4725.configure(mcp4725_configs, mcp4725_config_cnt);	
-	//ADS1115.configure(ads1115_configs, 1);
 	ROTARY_ENCODER.configure(encoder_configs, 2);
 
 	//dac 0 = 0.64v
@@ -81,39 +51,42 @@ void StartSysUpdateTask(void const * argument) {
 
 	//todo maybe set this by default on the first view?
 	views[0]->dirty = true;
-	
+	xTaskNotify(guiDrawTaskHandle, 0x01, eSetBits);
+
 	while (1) {
 		event = osMailGet(SYS_UPDATE_MAILBOX_ID, osWaitForever);
 		if (event.status == osEventMail) {
 			update = event.value.p;		
 			views[0]->on_update(update);	
-		}				
+		}	
+		xTaskNotify(guiDrawTaskHandle, 0x01, eSetBits);
 		
 		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
 
+
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 		SysUpdateTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
-
 #endif
-
 		osThreadYield();	
 	}
 }
-void StartGUIDrawTask(void const * argument) {
-
+void StartGUIDrawTask(void const * argument) {	
 
 	while (1)
 	{
-	if (views[0]->dirty)
-	{
-		views[0]->dirty = false;
-		views[0]->render();	
-	}	
+		xTaskNotifyWait( pdFALSE,    /* Don't clear bits on entry. */
+			ULONG_MAX,        /* Clear all bits on exit. */
+			NULL, /* Stores the notified value. */
+			osWaitForever);
+		if (views[0]->dirty)
+		{
+			views[0]->dirty = false;
+			views[0]->render();	
+		}	
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 		GUIDrawTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
-	osThreadYield();	
-	
+		osThreadYield();	
 	}
 }
 

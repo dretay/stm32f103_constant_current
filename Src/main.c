@@ -53,6 +53,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "application.h"
+#include "uartadc.h"
 
 /* USER CODE END Includes */
 
@@ -66,13 +67,13 @@ SPI_HandleTypeDef hspi2;
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
+DMA_HandleTypeDef hdma_usart1_rx;
 
 osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
+osThreadId adcPollTaskHandle;
 osTimerId encoderTimerHandle;
-osTimerId adcTimerHandle;
-osTimerId uartPollTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -82,6 +83,7 @@ osMailQId SYS_UPDATE_MAILBOX_ID;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM3_Init(void);
@@ -91,9 +93,8 @@ static void MX_USART1_UART_Init(void);
 void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
+extern void StartAdcPollTask(void const * argument);
 extern void encoderCallback(void const * argument);
-extern void adcCallback(void const * argument);
-extern void uartCallback(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
                                 
@@ -132,6 +133,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   MX_I2C1_Init();
   MX_TIM3_Init();
@@ -157,19 +159,9 @@ int main(void)
   osTimerDef(encoderTimer, encoderCallback);
   encoderTimerHandle = osTimerCreate(osTimer(encoderTimer), osTimerPeriodic, NULL);
 
-  /* definition and creation of adcTimer */
-  osTimerDef(adcTimer, adcCallback);
-  adcTimerHandle = osTimerCreate(osTimer(adcTimer), osTimerPeriodic, NULL);
-
-  /* definition and creation of uartPollTimer */
-  osTimerDef(uartPollTimer, uartCallback);
-  uartPollTimerHandle = osTimerCreate(osTimer(uartPollTimer), osTimerPeriodic, NULL);
-
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   osTimerStart(encoderTimerHandle, 50);
-  osTimerStart(adcTimerHandle, 1000);
-  osTimerStart(uartPollTimerHandle, 50);
 
 	TIM_OC_InitTypeDef sConfigOC;
   
@@ -188,12 +180,16 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
-  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 300);
+  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 128);
   sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
 
   /* definition and creation of guiDrawTask */
   osThreadDef(guiDrawTask, StartGUIDrawTask, osPriorityBelowNormal, 0, 256);
   guiDrawTaskHandle = osThreadCreate(osThread(guiDrawTask), NULL);
+
+  /* definition and creation of adcPollTask */
+  osThreadDef(adcPollTask, StartAdcPollTask, osPriorityLow, 0, 128);
+  adcPollTaskHandle = osThreadCreate(osThread(adcPollTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -405,7 +401,7 @@ static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 1200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -416,6 +412,21 @@ static void MX_USART1_UART_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
+
+}
+
+/** 
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void) 
+{
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
 }
 

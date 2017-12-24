@@ -13,7 +13,6 @@
     <ProjectFile>digitalpowersupply.vcxproj</ProjectFile>
     <RemoteBuildEnvironment>
       <Records />
-      <EnvironmentSetupFiles />
     </RemoteBuildEnvironment>
     <ParallelJobCount>1</ParallelJobCount>
   </Build>
@@ -53,7 +52,7 @@
       <Entries>
         <KeyValue>
           <Key>com.sysprogs.jlink.root</Key>
-          <Value>D:\Program Files (x86)\SEGGER\JLink_V614b</Value>
+          <Value>D:\Program Files (x86)\SEGGER\JLink_V622d</Value>
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.jlink.connection</Key>
@@ -102,6 +101,10 @@
         <KeyValue>
           <Key>com.sysprogs.jlink.commands.afterload</Key>
           <Value />
+        </KeyValue>
+        <KeyValue>
+          <Key>SYS:DESIGN_MODE</Key>
+          <Value>1</Value>
         </KeyValue>
       </Entries>
     </DebugMethodProperties>

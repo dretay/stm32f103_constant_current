@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;../ugfx;../SEGGER_RTT_V614b/RTT;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;../ugfx;D:/Program Files (x86)/SEGGER/JLink_V622d/Samples/RTT/SEGGER_RTT_V622d/RTT;../nanopb-0.3.9-windows-x86;../mcp4725;../stm32_isolated_adc;../st7920;../encoder;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/device;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/drivers_nrf/nrf_soc_nosd;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/libraries/util;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/examples/802_15_4/experimental/wireless_uart/first/pca10056/blank/config;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/external/segger_rtt;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <InputLanguage>C</InputLanguage>
     </ClCompile>
@@ -48,7 +48,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;../ugfx;../SEGGER_RTT_V614b/RTT;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;../ugfx;D:/Program Files (x86)/SEGGER/JLink_V622d/Samples/RTT/SEGGER_RTT_V622d/RTT;../nanopb-0.3.9-windows-x86;../mcp4725;../stm32_isolated_adc;../encoder;../st7920;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/device;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/drivers_nrf/nrf_soc_nosd;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/libraries/util;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/examples/802_15_4/experimental/wireless_uart/first/pca10056/blank/config;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/external/segger_rtt;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -140,15 +140,20 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_fsmc.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_sdmmc.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h" />
-    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.h" />
-    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_Conf.h" />
-    <ClInclude Include="ads1115.h" />
+    <ClInclude Include="..\encoder\encoder.h" />
+    <ClInclude Include="..\mcp4725\mcp4725.h" />
+    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb.h" />
+    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb_common.h" />
+    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb_decode.h" />
+    <ClInclude Include="..\st7920\board_ST7920.h" />
+    <ClInclude Include="..\st7920\gdisp_lld_config.h" />
+    <ClInclude Include="..\stm32_isolated_adc\adc_reading.pb.h" />
+    <ClInclude Include="uartadc.h" />
     <ClInclude Include="application.h" />
-    <ClInclude Include="board_ST7920.h" />
     <ClInclude Include="controller.h" />
-    <ClInclude Include="encoder.h" />
+    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.h" />
+    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_Conf.h" />
     <ClInclude Include="events.h" />
-    <ClInclude Include="gdisp_lld_config.h" />
     <ClInclude Include="numtostring.h" />
     <ClInclude Include="gfxconf.h" />
     <ClInclude Include="Inc\FreeRTOSConfig.h" />
@@ -156,8 +161,6 @@
     <ClInclude Include="Inc\stm32f1xx_hal_conf.h" />
     <ClInclude Include="Inc\stm32f1xx_it.h" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="mcp4725.h" />
-    <ClInclude Include="serialcommand.h" />
     <ClInclude Include="StatusView.h" />
     <ClInclude Include="view.h" />
   </ItemGroup>
@@ -215,17 +218,19 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_fsmc.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_sdmmc.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_usb.c" />
-    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.c" />
-    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_printf.c" />
+    <ClCompile Include="..\encoder\encoder.c" />
+    <ClCompile Include="..\mcp4725\mcp4725.c" />
+    <ClCompile Include="..\nanopb-0.3.9-windows-x86\pb_common.c" />
+    <ClCompile Include="..\nanopb-0.3.9-windows-x86\pb_decode.c" />
+    <ClCompile Include="..\st7920\gdisp_lld_ST7920.c" />
+    <ClCompile Include="..\stm32_isolated_adc\adc_reading.pb.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
-    <ClCompile Include="ads1115.c" />
+    <ClCompile Include="uartadc.c" />
     <ClCompile Include="application.c" />
     <ClCompile Include="controller.c" />
-    <ClCompile Include="encoder.c" />
-    <ClCompile Include="gdisp_lld_ST7920.c" />
+    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.c" />
+    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_printf.c" />
     <ClCompile Include="numtostring.c" />
-    <ClCompile Include="mcp4725.c" />
-    <ClCompile Include="serialcommand.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\main.c" />
     <ClCompile Include="Src\stm32f1xx_hal_msp.c" />

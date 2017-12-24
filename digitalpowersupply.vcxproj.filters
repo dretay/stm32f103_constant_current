@@ -59,9 +59,6 @@
     <Filter Include="Header files\Inc\segger">
       <UniqueIdentifier>{89e103d7-cd87-4ffe-b5bb-739980f751b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header files\os">
-      <UniqueIdentifier>{dc72a08e-91fc-4e55-b8f5-aec33ad6c0a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source files\os">
       <UniqueIdentifier>{1e6018f6-4b08-4496-8d7d-e7bfdb4e32a5}</UniqueIdentifier>
     </Filter>
@@ -71,11 +68,32 @@
     <Filter Include="Source files\Src\util">
       <UniqueIdentifier>{3bde4893-215f-4078-88d3-d16441078233}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\Src\app">
+      <UniqueIdentifier>{eb7a0558-61ad-4ac3-938e-f970019fbe82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\app">
+      <UniqueIdentifier>{dc72a08e-91fc-4e55-b8f5-aec33ad6c0a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\nanopb">
+      <UniqueIdentifier>{85fd88a7-6c1e-4158-a689-a038d59b6338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\nanopb">
+      <UniqueIdentifier>{ded9ed67-e88a-4d29-9938-f3ac7dc0f474}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\model">
+      <UniqueIdentifier>{d7b8d929-5e7e-4c35-982a-eb12e246c538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\perhiperal">
+      <UniqueIdentifier>{1d3bec0d-85a0-4d8c-b47c-cd315173dedf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\perhiperal">
+      <UniqueIdentifier>{d505cc85-0472-408c-9fa1-94c2deabc11a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\model">
+      <UniqueIdentifier>{9da2b4b4-67a0-4ede-9e5f-1309384f370c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Inc\FreeRTOSConfig.h">
-      <Filter>Header files\Inc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h">
       <Filter>Header files\Device-specific files\HAL</Filter>
     </ClInclude>
@@ -328,59 +346,68 @@
     <ClInclude Include="Inc\stm32f1xx_it.h">
       <Filter>Header files\Inc\hal</Filter>
     </ClInclude>
-    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.h">
-      <Filter>Header files\Inc\segger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_Conf.h">
-      <Filter>Header files\Inc\segger</Filter>
-    </ClInclude>
-    <ClInclude Include="log.h">
-      <Filter>Header files\Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="mcp4725.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\main.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="ads1115.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="encoder.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="application.h">
-      <Filter>Header files\os</Filter>
+      <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="controller.h">
-      <Filter>Header files\os</Filter>
+      <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="view.h">
-      <Filter>Header files\os</Filter>
+      <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="StatusView.h">
-      <Filter>Header files\os</Filter>
+      <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="events.h">
-      <Filter>Header files\os</Filter>
+      <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="numtostring.h">
       <Filter>Header files\Inc\util</Filter>
     </ClInclude>
-    <ClInclude Include="board_ST7920.h">
+    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.h">
+      <Filter>Header files\Inc\segger</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_Conf.h">
+      <Filter>Header files\Inc\segger</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\FreeRTOSConfig.h">
+      <Filter>Header files\Inc\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb_common.h">
+      <Filter>Header files\Inc\nanopb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb_decode.h">
+      <Filter>Header files\Inc\nanopb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb.h">
+      <Filter>Header files\Inc\nanopb</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\main.h">
+      <Filter>Header files\Inc\app</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\stm32_isolated_adc\adc_reading.pb.h">
+      <Filter>Header files\Inc\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mcp4725\mcp4725.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\encoder\encoder.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="uartadc.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\st7920\gdisp_lld_config.h">
       <Filter>Header files\Inc\ugfx</Filter>
     </ClInclude>
-    <ClInclude Include="gdisp_lld_config.h">
+    <ClInclude Include="..\st7920\board_ST7920.h">
       <Filter>Header files\Inc\ugfx</Filter>
-    </ClInclude>
-    <ClInclude Include="serialcommand.h">
-      <Filter>Header files\Inc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\freertos.c">
-      <Filter>Source files\Src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
@@ -528,24 +555,6 @@
     <ClCompile Include="Src\system_stm32f1xx.c">
       <Filter>Source files\Src\hal</Filter>
     </ClCompile>
-    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT.c">
-      <Filter>Source files\Src\segger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SEGGER_RTT_V614b\RTT\SEGGER_RTT_printf.c">
-      <Filter>Source files\Src\segger</Filter>
-    </ClCompile>
-    <ClCompile Include="encoder.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="ads1115.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="mcp4725.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\main.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="application.c">
       <Filter>Source files\os</Filter>
     </ClCompile>
@@ -588,11 +597,38 @@
     <ClCompile Include="numtostring.c">
       <Filter>Source files\Src\util</Filter>
     </ClCompile>
-    <ClCompile Include="gdisp_lld_ST7920.c">
-      <Filter>Source files\Src\ugfx</Filter>
+    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.c">
+      <Filter>Source files\Src\segger</Filter>
     </ClCompile>
-    <ClCompile Include="serialcommand.c">
-      <Filter>Source files\Src</Filter>
+    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_printf.c">
+      <Filter>Source files\Src\segger</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\freertos.c">
+      <Filter>Source files\Src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\main.c">
+      <Filter>Source files\Src\app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nanopb-0.3.9-windows-x86\pb_common.c">
+      <Filter>Source files\Src\nanopb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nanopb-0.3.9-windows-x86\pb_decode.c">
+      <Filter>Source files\Src\nanopb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mcp4725\mcp4725.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\encoder\encoder.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\stm32_isolated_adc\adc_reading.pb.c">
+      <Filter>Source files\Src\model</Filter>
+    </ClCompile>
+    <ClCompile Include="uartadc.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\st7920\gdisp_lld_ST7920.c">
+      <Filter>Source files\Src\ugfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
