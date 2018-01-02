@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2017 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -69,6 +69,8 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
 
+PCD_HandleTypeDef hpcd_USB_FS;
+
 osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
@@ -78,6 +80,16 @@ osTimerId encoderTimerHandle;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 osMailQId SYS_UPDATE_MAILBOX_ID;
+
+USBD_HandleTypeDef USBD_Device;
+void SysTick_Handler(void);
+void OTG_FS_IRQHandler(void);
+void OTG_HS_IRQHandler(void);
+extern PCD_HandleTypeDef hpcd;
+int VCP_read(void *pBuffer, int size);
+int VCP_write(const void *pBuffer, int size);
+extern char g_VCPInitialized;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,6 +102,7 @@ static void MX_TIM3_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_USB_PCD_Init(void);
 void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
@@ -128,6 +141,11 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+	USBD_Device.pDesc = &VCP_Desc;
+	USBD_Device.dev_state  = USBD_STATE_DEFAULT;
+	USBD_Device.id = 0;
+	hpcd_USB_FS.pData = &USBD_Device;
+	USBD_Device.pData = &hpcd_USB_FS;
 
   /* USER CODE END SysInit */
 
@@ -140,10 +158,17 @@ int main(void)
   MX_I2C2_Init();
   MX_SPI2_Init();
   MX_USART1_UART_Init();
+  MX_USB_PCD_Init();
 
   /* USER CODE BEGIN 2 */
 
-  
+	HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x00, PCD_SNG_BUF, 0x18);
+	HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x80, PCD_SNG_BUF, 0x58);
+	HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x81, PCD_SNG_BUF, 0x100);
+
+	USBD_RegisterClass(&USBD_Device, &USBD_CDC);
+	USBD_CDC_RegisterInterface(&USBD_Device, &USBD_CDC_stm32usbdemo_fops);
+	USBD_Start(&USBD_Device);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -229,6 +254,7 @@ void SystemClock_Config(void)
 
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
     /**Initializes the CPU, AHB and APB busses clocks 
     */
@@ -257,6 +283,15 @@ void SystemClock_Config(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
+
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  HAL_RCC_MCOConfig(RCC_MCO, RCC_MCO1SOURCE_HSE, RCC_MCODIV_1);
 
     /**Configure the Systick interrupt time 
     */
@@ -401,7 +436,7 @@ static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 1200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -409,6 +444,24 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* USB init function */
+static void MX_USB_PCD_Init(void)
+{
+
+  hpcd_USB_FS.Instance = USB;
+  hpcd_USB_FS.Init.dev_endpoints = 8;
+  hpcd_USB_FS.Init.speed = PCD_SPEED_FULL;
+  hpcd_USB_FS.Init.ep0_mps = DEP0CTL_MPS_8;
+  hpcd_USB_FS.Init.low_power_enable = DISABLE;
+  hpcd_USB_FS.Init.lpm_enable = DISABLE;
+  hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
+  if (HAL_PCD_Init(&hpcd_USB_FS) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
@@ -438,6 +491,7 @@ static void MX_DMA_Init(void)
         * EXTI
         * Free pins are configured automatically as Analog (this feature is enabled through 
         * the Code Generation settings)
+     PA8   ------> RCC_MCO
 */
 static void MX_GPIO_Init(void)
 {
@@ -490,8 +544,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA8 PA11 PA12 PA15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_15;
+  /*Configure GPIO pin : PA8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -534,9 +594,15 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
+	char byte;
+
 	while (1)
 	{
-		osThreadYield();	
+		if (VCP_read(&byte, 1) != 1)
+			continue;
+		VCP_write("\r\nYou typed ", 12);
+		VCP_write(&byte, 1);
+		VCP_write("\r\n", 2);
 	}		
 
   /* USER CODE END 5 */ 

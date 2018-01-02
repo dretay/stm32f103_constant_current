@@ -6,4 +6,4 @@
 //based on https://gist.github.com/psych0der/6319244
 
 void ftos(char* str, float f, uint8_t precision);
-void itoa(int n, char s[]);
+//void itoa(int n, char s[]);

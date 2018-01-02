@@ -24,8 +24,8 @@
   <config>
     <name>digitalpowersupply</name>				
     <device>STM32F103C8Tx</device>		 
-    <heapSize>0x200</heapSize>
-    <stackSize>0x400</stackSize>
+    <heapSize>0x600</heapSize>
+    <stackSize>0x800</stackSize>
     
     	<board>custom</board>
 			
@@ -128,6 +128,15 @@
 						</file>
 						<file>
 							<name>C:\Users\drew\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.0\Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c</name>
+						</file>
+						<file>
+							<name>C:\Users\drew\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.0\Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c</name>
+						</file>
+						<file>
+							<name>C:\Users\drew\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.0\Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c</name>
+						</file>
+						<file>
+							<name>C:\Users\drew\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.0\Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c</name>
 						</file>
 						<file>
 							<name>C:\Users\drew\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.0\Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c</name>

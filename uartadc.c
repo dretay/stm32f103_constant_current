@@ -56,28 +56,30 @@ static void unmarshal(void) {
 }
 void StartAdcPollTask(void const * argument) {		
 	//suspend until config is passed in and thread is resumed
-	//vTaskSuspend(NULL);		
+	vTaskSuspend(NULL);		
 	
 	while (true) {
-		if (UartReady == SET) {
-			UartReady = RESET;
-			HAL_StatusTypeDef status;
-			status = HAL_UART_Transmit(&huart1, &poll_char, 1, 1000);
-			if (status != HAL_OK) {
-				Error_Handler();
-			}		
-			if (HAL_UART_Receive_DMA(&huart1, (uint8_t *)rx_buffer, 32) != HAL_OK) {
-				Error_Handler();
-			}
-			while (UartReady == RESET)
-			{
-				
-			}
-			unmarshal();
-#ifdef INCLUDE_uxTaskGetStackHighWaterMark
-			AdcPollTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
-#endif
-		}
+//		if (UartReady == SET) {
+//			UartReady = RESET;
+//			HAL_StatusTypeDef status;
+//			status = HAL_UART_Transmit(&huart1, &poll_char, 1, 1000);
+//			if (status != HAL_OK) {
+//				Error_Handler();
+//			}		
+//			if (HAL_UART_Receive_DMA(&huart1, (uint8_t *)rx_buffer, 32) != HAL_OK) {
+//				Error_Handler();
+//			}
+//			todo: this needs to be reimplemented using a task notification so it doesn't eat everythign!!!!
+//			while (UartReady == RESET)
+//			{
+//				
+//			}
+//			unmarshal();
+//#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+//			AdcPollTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
+//#endif
+//		}
+		HAL_Delay(1000);
 		osThreadYield();	
 	}
 	

@@ -11,6 +11,11 @@
 #include "uartadc.h"
 #include "limits.h"
 
+#include <usbd_core.h>
+#include <usbd_cdc.h>
+#include "usbd_cdc_if.h"
+#include <usbd_desc.h>
+
 static void showView(uint8_t);
 
 extern I2C_HandleTypeDef hi2c1;
