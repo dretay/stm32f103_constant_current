@@ -59,9 +59,6 @@
     <Filter Include="Header files\Inc\segger">
       <UniqueIdentifier>{89e103d7-cd87-4ffe-b5bb-739980f751b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source files\os">
-      <UniqueIdentifier>{1e6018f6-4b08-4496-8d7d-e7bfdb4e32a5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header files\Inc\util">
       <UniqueIdentifier>{8370224e-b666-43ce-af41-65509c327dd1}</UniqueIdentifier>
     </Filter>
@@ -97,6 +94,12 @@
     </Filter>
     <Filter Include="Header files\Device-specific files\USB Device">
       <UniqueIdentifier>{27be5fba-851e-4c95-8fdb-9671f202e296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\os">
+      <UniqueIdentifier>{29ec79b9-506c-46a0-9466-0f554b294014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\os">
+      <UniqueIdentifier>{1e6018f6-4b08-4496-8d7d-e7bfdb4e32a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,21 +159,6 @@
     </ClInclude>
     <ClInclude Include="Inc\stm32f1xx_it.h">
       <Filter>Header files\Inc\hal</Filter>
-    </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Header files\Inc\app</Filter>
-    </ClInclude>
-    <ClInclude Include="controller.h">
-      <Filter>Header files\Inc\app</Filter>
-    </ClInclude>
-    <ClInclude Include="view.h">
-      <Filter>Header files\Inc\app</Filter>
-    </ClInclude>
-    <ClInclude Include="StatusView.h">
-      <Filter>Header files\Inc\app</Filter>
-    </ClInclude>
-    <ClInclude Include="events.h">
-      <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="numtostring.h">
       <Filter>Header files\Inc\util</Filter>
@@ -496,6 +484,24 @@
     <ClInclude Include="usbd_cdc_if.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
+    <ClInclude Include="controller.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusView.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
+    <ClInclude Include="view.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
+    <ClInclude Include="events.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
+    <ClInclude Include="usbserialcommand.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
@@ -517,13 +523,13 @@
       <Filter>Source files\Src\hal</Filter>
     </ClCompile>
     <ClCompile Include="application.c">
-      <Filter>Source files\os</Filter>
+      <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="controller.c">
-      <Filter>Source files\os</Filter>
+      <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="view.c">
-      <Filter>Source files\os</Filter>
+      <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\croutine.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
@@ -553,7 +559,7 @@
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </ClCompile>
     <ClCompile Include="StatusView.c">
-      <Filter>Source files\os</Filter>
+      <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="numtostring.c">
       <Filter>Source files\Src\util</Filter>
@@ -785,6 +791,9 @@
     </ClCompile>
     <ClCompile Include="usbd_cdc_if.c">
       <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="usbserialcommand.c">
+      <Filter>Source files\Src\os</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

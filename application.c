@@ -2,12 +2,22 @@
 
 View* views[5];
 
-
+void setdat() {
+	LOG("POOP!");
+}
 void StartSysUpdateTask(void const * argument) {
 	osEvent event;	
 	T_SYSTEM_UPDATE *update;
 	
+	UsbSerialCommand_Command serialcommands[1];
+	serialcommands[0].command = "dac";
+	serialcommands[0].function = &setdat;
+	
+	UsbSerialCommand_Config serialcommand_config;
+	serialcommand_config.command_cnt = 1;
+	serialcommand_config.commands = serialcommands;
 
+	UsbSerialCommand.configure(&serialcommand_config, 1);
 
 
 	uint8_t mcp4725_config_cnt = 2;

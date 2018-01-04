@@ -10,18 +10,13 @@
 #include "strings.h"
 #include "uartadc.h"
 #include "limits.h"
-
-#include <usbd_core.h>
-#include <usbd_cdc.h>
-#include "usbd_cdc_if.h"
-#include <usbd_desc.h>
+#include "usbserialcommand.h"
 
 static void showView(uint8_t);
 
 extern I2C_HandleTypeDef hi2c1;
 extern I2C_HandleTypeDef hi2c2;
 extern UART_HandleTypeDef huart1;
-extern osThreadId adcPollTaskHandle;
 extern osThreadId guiDrawTaskHandle;
 
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark

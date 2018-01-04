@@ -6,6 +6,9 @@
 #include "adc_reading.pb.h"
 #include <stdint.h>
 #include "events.h"
+#include "limits.h"
+
+extern osThreadId adcPollTaskHandle;
 
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 UBaseType_t AdcPollTask_Watermark;

@@ -75,20 +75,14 @@ osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
 osThreadId adcPollTaskHandle;
+osThreadId serialCmdTaskHandle;
 osTimerId encoderTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 osMailQId SYS_UPDATE_MAILBOX_ID;
 
-USBD_HandleTypeDef USBD_Device;
-void SysTick_Handler(void);
-void OTG_FS_IRQHandler(void);
-void OTG_HS_IRQHandler(void);
-extern PCD_HandleTypeDef hpcd;
-int VCP_read(void *pBuffer, int size);
-int VCP_write(const void *pBuffer, int size);
-extern char g_VCPInitialized;
+
 
 /* USER CODE END PV */
 
@@ -107,6 +101,7 @@ void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
 extern void StartAdcPollTask(void const * argument);
+extern void StartSerialCmdTask(void const * argument);
 extern void encoderCallback(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -141,11 +136,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-	USBD_Device.pDesc = &VCP_Desc;
-	USBD_Device.dev_state  = USBD_STATE_DEFAULT;
-	USBD_Device.id = 0;
-	hpcd_USB_FS.pData = &USBD_Device;
-	USBD_Device.pData = &hpcd_USB_FS;
+
 
   /* USER CODE END SysInit */
 
@@ -162,13 +153,6 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 
-	HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x00, PCD_SNG_BUF, 0x18);
-	HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x80, PCD_SNG_BUF, 0x58);
-	HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x81, PCD_SNG_BUF, 0x100);
-
-	USBD_RegisterClass(&USBD_Device, &USBD_CDC);
-	USBD_CDC_RegisterInterface(&USBD_Device, &USBD_CDC_stm32usbdemo_fops);
-	USBD_Start(&USBD_Device);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -205,16 +189,20 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
-  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityNormal, 0, 128);
+  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityAboveNormal, 0, 136);
   sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
 
   /* definition and creation of guiDrawTask */
-  osThreadDef(guiDrawTask, StartGUIDrawTask, osPriorityBelowNormal, 0, 256);
+  osThreadDef(guiDrawTask, StartGUIDrawTask, osPriorityNormal, 0, 176);
   guiDrawTaskHandle = osThreadCreate(osThread(guiDrawTask), NULL);
 
   /* definition and creation of adcPollTask */
-  osThreadDef(adcPollTask, StartAdcPollTask, osPriorityLow, 0, 128);
+  osThreadDef(adcPollTask, StartAdcPollTask, osPriorityLow, 0, 130);
   adcPollTaskHandle = osThreadCreate(osThread(adcPollTask), NULL);
+
+  /* definition and creation of serialCmdTask */
+  osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityIdle, 0, 128);
+  serialCmdTaskHandle = osThreadCreate(osThread(serialCmdTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -436,7 +424,7 @@ static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
+  huart1.Init.BaudRate = 115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -594,15 +582,9 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
-	char byte;
-
 	while (1)
 	{
-		if (VCP_read(&byte, 1) != 1)
-			continue;
-		VCP_write("\r\nYou typed ", 12);
-		VCP_write(&byte, 1);
-		VCP_write("\r\n", 2);
+		osThreadYield();
 	}		
 
   /* USER CODE END 5 */ 

@@ -173,6 +173,7 @@
     <ClInclude Include="..\st7920\board_ST7920.h" />
     <ClInclude Include="..\st7920\gdisp_lld_config.h" />
     <ClInclude Include="..\stm32_isolated_adc\adc_reading.pb.h" />
+    <ClInclude Include="usbserialcommand.h" />
     <ClInclude Include="uartadc.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="controller.h" />
@@ -272,6 +273,7 @@
     <ClCompile Include="..\st7920\gdisp_lld_ST7920.c" />
     <ClCompile Include="..\stm32_isolated_adc\adc_reading.pb.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
+    <ClCompile Include="usbserialcommand.c" />
     <ClCompile Include="uartadc.c" />
     <ClCompile Include="application.c" />
     <ClCompile Include="controller.c" />

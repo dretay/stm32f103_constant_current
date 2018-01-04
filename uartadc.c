@@ -1,23 +1,27 @@
 #include "uartadc.h"
 
 static const uint8_t RXBUFFERSIZE = 12;
-static uint8_t rx_buffer[32];
+static uint8_t rx_buffer[33];
  
 static uint8_t poll_char = 'x';
-__IO ITStatus UartReady = SET;
 
 //do conversion of data to send to device
 static void marshal(uint8_t idx, uint16_t value) {
 	
 } 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle) {
-  /* Set transmission flag: trasfer complete*/
-	UartReady = SET;
+	BaseType_t xHigherPriorityTaskWoken;  
+	/* Set transmission flag: trasfer complete*/	
+	xTaskNotifyFromISR(adcPollTaskHandle, 0x01, eSetBits, &xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	
 }
 //do conversion from device response
-static void unmarshal(void) {
+static void unmarshal(void) {	
 	AdcReadings message = AdcReadings_init_default; 
-	pb_istream_t stream = pb_istream_from_buffer(rx_buffer, RXBUFFERSIZE);
+	
+	pb_istream_t stream = pb_istream_from_buffer(&rx_buffer[1], rx_buffer[0]);
+	
 	T_SYSTEM_UPDATE *update;
 	int i;
 	bool status = true;
@@ -56,33 +60,28 @@ static void unmarshal(void) {
 }
 void StartAdcPollTask(void const * argument) {		
 	//suspend until config is passed in and thread is resumed
-	vTaskSuspend(NULL);		
+	//vTaskSuspend(NULL);		
+	HAL_StatusTypeDef status;
 	
 	while (true) {
-//		if (UartReady == SET) {
-//			UartReady = RESET;
-//			HAL_StatusTypeDef status;
-//			status = HAL_UART_Transmit(&huart1, &poll_char, 1, 1000);
-//			if (status != HAL_OK) {
-//				Error_Handler();
-//			}		
-//			if (HAL_UART_Receive_DMA(&huart1, (uint8_t *)rx_buffer, 32) != HAL_OK) {
-//				Error_Handler();
-//			}
-//			todo: this needs to be reimplemented using a task notification so it doesn't eat everythign!!!!
-//			while (UartReady == RESET)
-//			{
-//				
-//			}
-//			unmarshal();
-//#ifdef INCLUDE_uxTaskGetStackHighWaterMark
-//			AdcPollTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
-//#endif
-//		}
-		HAL_Delay(1000);
-		osThreadYield();	
+		status = HAL_UART_Transmit(&huart1, &poll_char, 1, 1000);
+		if (status != HAL_OK) {
+			Error_Handler();
+		}		
+		if (HAL_UART_Receive_DMA(&huart1, (uint8_t *)rx_buffer, 32) != HAL_OK) {
+			Error_Handler();
+		}
+
+		// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
+		xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
+		unmarshal();
+
+		#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+		AdcPollTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
+		#endif
+		//HAL_Delay(1000);
+		osThreadYield();		
 	}
-	
 }
 
 
