@@ -62,7 +62,6 @@ void StartAdcPollTask(void const * argument) {
 	//suspend until config is passed in and thread is resumed
 	//vTaskSuspend(NULL);		
 	HAL_StatusTypeDef status;
-	
 	while (true) {
 		status = HAL_UART_Transmit(&huart1, &poll_char, 1, 1000);
 		if (status != HAL_OK) {
@@ -79,7 +78,6 @@ void StartAdcPollTask(void const * argument) {
 		#ifdef INCLUDE_uxTaskGetStackHighWaterMark
 		AdcPollTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 		#endif
-		//HAL_Delay(1000);
 		osThreadYield();		
 	}
 }

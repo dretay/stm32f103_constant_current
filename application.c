@@ -64,10 +64,10 @@ static void configure_graphics() {
 void StartSysUpdateTask(void const * argument) {
 	osEvent event;	
 	T_SYSTEM_UPDATE *update;
-	
 	configure_usb_serial_commands();
 	configure_dac();
-	configure_rotary_encoders();
+	//configure_rotary_encoders();
+	configure_graphics();
 
 	while (1) {
 		event = osMailGet(SYS_UPDATE_MAILBOX_ID, osWaitForever);
@@ -87,7 +87,6 @@ void StartSysUpdateTask(void const * argument) {
 	}
 }
 void StartGUIDrawTask(void const * argument) {	
-
 	while (1)
 	{
 		// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.

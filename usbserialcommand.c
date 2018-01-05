@@ -40,7 +40,6 @@ void StartSerialCmdTask(void const * argument) {
 	// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
 	xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
 
-	/* USER CODE BEGIN 5 */
 	char byte;
 	uint32_t buffptr;
 	uint32_t buffsize;
