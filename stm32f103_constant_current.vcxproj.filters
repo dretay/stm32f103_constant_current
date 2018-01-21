@@ -71,23 +71,11 @@
     <Filter Include="Header files\Inc\app">
       <UniqueIdentifier>{dc72a08e-91fc-4e55-b8f5-aec33ad6c0a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source files\Src\nanopb">
-      <UniqueIdentifier>{85fd88a7-6c1e-4158-a689-a038d59b6338}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header files\Inc\nanopb">
-      <UniqueIdentifier>{ded9ed67-e88a-4d29-9938-f3ac7dc0f474}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header files\Inc\model">
-      <UniqueIdentifier>{d7b8d929-5e7e-4c35-982a-eb12e246c538}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header files\Inc\perhiperal">
       <UniqueIdentifier>{1d3bec0d-85a0-4d8c-b47c-cd315173dedf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source files\Src\perhiperal">
       <UniqueIdentifier>{d505cc85-0472-408c-9fa1-94c2deabc11a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source files\Src\model">
-      <UniqueIdentifier>{9da2b4b4-67a0-4ede-9e5f-1309384f370c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source files\Device-specific files\USB Device">
       <UniqueIdentifier>{e9e8e33f-ee96-4658-a027-d6b6df962a52}</UniqueIdentifier>
@@ -172,31 +160,16 @@
     <ClInclude Include="Inc\FreeRTOSConfig.h">
       <Filter>Header files\Inc\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb_common.h">
-      <Filter>Header files\Inc\nanopb</Filter>
-    </ClInclude>
-    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb_decode.h">
-      <Filter>Header files\Inc\nanopb</Filter>
-    </ClInclude>
-    <ClInclude Include="..\nanopb-0.3.9-windows-x86\pb.h">
-      <Filter>Header files\Inc\nanopb</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\main.h">
       <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="log.h">
       <Filter>Header files\Inc\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\stm32_isolated_adc\adc_reading.pb.h">
-      <Filter>Header files\Inc\model</Filter>
-    </ClInclude>
     <ClInclude Include="..\mcp4725\mcp4725.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
     <ClInclude Include="..\encoder\encoder.h">
-      <Filter>Header files\Inc\perhiperal</Filter>
-    </ClInclude>
-    <ClInclude Include="uartadc.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
     <ClInclude Include="..\st7920\gdisp_lld_config.h">
@@ -576,22 +549,10 @@
     <ClCompile Include="Src\main.c">
       <Filter>Source files\Src\app</Filter>
     </ClCompile>
-    <ClCompile Include="..\nanopb-0.3.9-windows-x86\pb_common.c">
-      <Filter>Source files\Src\nanopb</Filter>
-    </ClCompile>
-    <ClCompile Include="..\nanopb-0.3.9-windows-x86\pb_decode.c">
-      <Filter>Source files\Src\nanopb</Filter>
-    </ClCompile>
     <ClCompile Include="..\mcp4725\mcp4725.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
     <ClCompile Include="..\encoder\encoder.c">
-      <Filter>Source files\Src\perhiperal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\stm32_isolated_adc\adc_reading.pb.c">
-      <Filter>Source files\Src\model</Filter>
-    </ClCompile>
-    <ClCompile Include="uartadc.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
     <ClCompile Include="..\st7920\gdisp_lld_ST7920.c">

@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/drew/Source/Repos/digitalpowersupply/Inc
+HeaderPath=C:/Users/drew/Source/Repos/stm32f103_constant_current/Inc
 HeaderFiles=FreeRTOSConfig.h;stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;
-SourcePath=C:/Users/drew/Source/Repos/digitalpowersupply/Src
+SourcePath=C:/Users/drew/Source/Repos/stm32f103_constant_current/Src
 SourceFiles=FreeRTOSConfig.h;stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;freertos.c;stm32f1xx_it.c;stm32f1xx_hal_msp.c;stm32f1xx_hal_timebase_TIM.c;main.c;
 
 [PreviousLibFiles]

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>C:\Users\drew\Source\Repos\digitalpowersupply\\digitalpowersupply</ProjectName>
+<ProjectName>C:\Users\drew\Source\Repos\stm32f103_constant_current\\stm32f103_constant_current</ProjectName>
 <CMSIS>C:\Users\drew\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.0\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\drew\STM32Cube\Repository\STM32Cube_FW_F1_V1.6.0\Drivers\CMSIS</HAL_Driver>
 
@@ -22,7 +22,7 @@
 
 <configs>
   <config>
-    <name>digitalpowersupply</name>				
+    <name>stm32f103_constant_current</name>				
     <device>STM32F103C8Tx</device>		 
     <heapSize>0x800</heapSize>
     <stackSize>0x1000</stackSize>

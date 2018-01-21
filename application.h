@@ -8,7 +8,6 @@
 #include "encoder.h"
 #include "mcp4725.h"
 #include "strings.h"
-#include "uartadc.h"
 #include "limits.h"
 #include "usbserialcommand.h"
 
