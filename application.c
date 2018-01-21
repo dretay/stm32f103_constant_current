@@ -2,33 +2,17 @@
 
 View* views[5];
 
-void setdat() {
-	LOG("POOP!");
+void setdac() {
+	char* arg = UsbSerialCommand.next();
+	uint16_t value = atoi(arg);
+	MCP4725.set_dac(0, value);
 }
 static void configure_usb_serial_commands() {
-	UsbSerialCommand_Command serialcommands[1];
-	serialcommands[0].command = "dac";
-	serialcommands[0].function = &setdat;
-	
-	UsbSerialCommand_Config serialcommand_config;
-	serialcommand_config.command_cnt = 1;
-	serialcommand_config.commands = serialcommands;
-
-	UsbSerialCommand.configure(&serialcommand_config, 1);
+	UsbSerialCommand.register_command(0, "dac", &setdac);
+	UsbSerialCommand.configure();
 }
 static void configure_dac() {
-	uint8_t mcp4725_config_cnt = 2;
-	MCP4725_CONFIG mcp4725_configs[mcp4725_config_cnt];
-	mcp4725_configs[1].addr = 0xC4;
-	mcp4725_configs[1].p_i2c = &hi2c2;
-	mcp4725_configs[0].addr = 0xC6;
-	mcp4725_configs[0].p_i2c = &hi2c2;
-	MCP4725.configure(mcp4725_configs, mcp4725_config_cnt);	
-
-	//dac 0 = 0.64v
-	//dac 1 = 10v
-//	MCP4725.set_dac(0, 2000);
-//	MCP4725.set_dac(1, 2000);
+	MCP4725.add_dac(0, &hi2c1, 0xC6);	
 }
 static void configure_rotary_encoders() {
 	//todo: maybe use an add fn rather than hard-coding all this nonsense?

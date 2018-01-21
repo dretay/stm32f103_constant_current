@@ -1,7 +1,8 @@
 #pragma once
 
 #include "stm32f1xx_hal.h"
-#include "string.h"
+//#include "string.h"
+//#include "strlcpy.h"
 #include "stdbool.h"
 #include "cmsis_os.h"
 #include <limits.h>
@@ -13,12 +14,13 @@
 
 
 #define RX_DATA_SIZE  32
+#define USB_SERIAL_COMMAND_CNT 1
     
 extern PCD_HandleTypeDef hpcd_USB_FS;	                    
 extern osThreadId serialCmdTaskHandle;						         
 
 typedef struct {
-	const char* command;
+	char command[8];
 	void(*function)();
 } UsbSerialCommand_Command;
 
@@ -28,7 +30,8 @@ typedef struct {
 } UsbSerialCommand_Config;
 
 struct usbserialcommand {
-	void(*configure)(UsbSerialCommand_Config* config_in, uint8_t cnt_in);	
+	void(*configure)(void);	
+	void(*register_command)(uint8_t idx, char* command_in, void* function_in);	
 	char*(*next)(void);	
 };
 

@@ -1,7 +1,6 @@
 #include "usbserialcommand.h"
 
-static UsbSerialCommand_Config* config;
-static uint8_t command_cnt;
+static UsbSerialCommand_Command commands[USB_SERIAL_COMMAND_CNT];
 
 USBD_HandleTypeDef USBD_Device;
 void SysTick_Handler(void);
@@ -29,9 +28,9 @@ static void process_command(void) {
 	uint8_t i;
 
 	token = strtok_r(UartRxBuffer, " ", &last);
-	for (i = 0; i < command_cnt; i++) {
-		if (strncmp(token, config->commands[i].command, strlen(config->commands[i].command)) == 0) {
-			config->commands[i].function();	
+	for (i = 0; i < USB_SERIAL_COMMAND_CNT; i++) {
+		if (strncmp(token, commands[i].command, strlen(commands[i].command)) == 0) {
+			commands[i].function();	
 		}
 	}
 }
@@ -84,10 +83,8 @@ void StartSerialCmdTask(void const * argument) {
 	}	
 }
 
-static void configure(UsbSerialCommand_Config* config_in, uint8_t cnt_in) {
-	config = config_in;
-	command_cnt = cnt_in;
-
+static void configure(void) {
+	
 	USBD_Device.pDesc = &VCP_Desc;
 	USBD_Device.dev_state  = USBD_STATE_DEFAULT;
 	USBD_Device.id = 0;
@@ -105,12 +102,40 @@ static void configure(UsbSerialCommand_Config* config_in, uint8_t cnt_in) {
 	xTaskNotify(serialCmdTaskHandle, 0x01, eSetBits);
 
 }
+static size_t my_strlcpy(char *dst, const char *src, size_t size) {
+	size_t bytes = 0;
+	char *q = dst;
+	const char *p = src;
+	char ch;
+
+	while ((ch = *p++)) {
+		if (bytes + 1 < size)
+			*q++ = ch;
+
+		bytes++;
+	}
+
+	/* If size == 0 there is no space for a final null... */
+	if (size)
+		*q = '\0';
+
+	return bytes;
+}
+static void register_command(uint8_t idx, char* command_in, void* function_in) {
+	if (idx <= USB_SERIAL_COMMAND_CNT)
+	{	
+		strncpy(commands[idx].command , command_in, 8);
+		commands[idx].function = function_in;
+		
+	}
+}
 static char* next() {
 	char *nextToken;
 	nextToken = strtok_r(NULL, " ", &last); 
 	return nextToken; 
 }
 const struct usbserialcommand UsbSerialCommand = { 
+	.register_command = register_command,
 	.configure = configure,	
 	.next = next	
 };
