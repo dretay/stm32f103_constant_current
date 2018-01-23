@@ -7,10 +7,9 @@
 #define SYS_UPDATE_MAIL_SIZE        (uint32_t) 10
 extern osMailQId SYS_UPDATE_MAILBOX_ID;
 
-typedef enum { VOLTAGE, CURRENT, OTHER } Parameter;
+
 typedef struct {
-	enum { ENCODER, ADC } source;
-	Parameter parameter;
+	enum { ENCODER_BUTTON, ENCODER_SPIN, ADC } source;
 
 	uint8_t idx;
 	union

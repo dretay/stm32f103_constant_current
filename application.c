@@ -14,29 +14,23 @@ static void configure_usb_serial_commands() {
 static void configure_dac() {
 	MCP4725.add_dac(0, &hi2c1, 0xC6);	
 }
-static void configure_rotary_encoders() {
-	//todo: maybe use an add fn rather than hard-coding all this nonsense?
-	ROTARY_ENCODER_CONFIG encoder_configs[2];
+static void configure_rotary_encoders() {		
+	ROTARY_ENCODER_CONFIG encoder_configs[1];
 	encoder_configs[0].switch_bus = GPIOA;
-	encoder_configs[0].switch_idx = GPIO_PIN_0;
-	encoder_configs[0].pin_a_bus = GPIOA;
-	encoder_configs[0].pin_a_idx = GPIO_PIN_2;
-	encoder_configs[0].pin_b_bus = GPIOA;
-	encoder_configs[0].pin_b_idx = GPIO_PIN_1;	
-	encoder_configs[0].parameter = CURRENT;
+	encoder_configs[0].switch_idx = GPIO_PIN_15;
+	encoder_configs[0].pin_a_bus = GPIOB;
+	encoder_configs[0].pin_a_idx = GPIO_PIN_3;
+	encoder_configs[0].pin_b_bus = GPIOB;
+	encoder_configs[0].pin_b_idx = GPIO_PIN_4;	
+	
 
-	encoder_configs[1].switch_bus = GPIOC;
-	encoder_configs[1].switch_idx = GPIO_PIN_13;
-	encoder_configs[1].pin_a_bus = GPIOC;
-	encoder_configs[1].pin_a_idx = GPIO_PIN_14;
-	encoder_configs[1].pin_b_bus = GPIOC;
-	encoder_configs[1].pin_b_idx = GPIO_PIN_15;
-	encoder_configs[1].parameter = VOLTAGE;
-	ROTARY_ENCODER.configure(encoder_configs, 2);
+	ROTARY_ENCODER.configure(encoder_configs, 1);
+
+
 }
 static void configure_graphics() {
 	gfxInit();
-	gdispSetContrast(90);
+	gdispSetContrast(100);
 	views[0] = StatusView.init();
 	
 	//todo: maybe set this by default on the first view?
@@ -50,7 +44,7 @@ void StartSysUpdateTask(void const * argument) {
 	T_SYSTEM_UPDATE *update;
 	configure_usb_serial_commands();
 	configure_dac();
-	//configure_rotary_encoders();
+	configure_rotary_encoders();
 	configure_graphics();
 
 	while (1) {
