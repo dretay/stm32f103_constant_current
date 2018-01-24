@@ -30,7 +30,7 @@ static void configure_rotary_encoders() {
 }
 static void configure_graphics() {
 	gfxInit();
-	gdispSetContrast(100);
+	gdispSetContrast(90);
 	views[0] = StatusView.init();
 	
 	//todo: maybe set this by default on the first view?

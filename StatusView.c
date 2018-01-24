@@ -132,7 +132,7 @@ static void render_settings_label() {
 
 	gdispDrawLine(DisplayWidth - 7, 6 + offset, DisplayWidth, 6 + offset, Black);
 
-	gdispDrawLine(10, 99, DisplayWidth-10, 99, White);
+	gdispDrawLine(0, 99, DisplayWidth, 99, White);
 
 }
 static void render_setting(uint8_t idx, float setting, char *units, uint8_t scale) {
@@ -152,10 +152,10 @@ static void render_setting(uint8_t idx, float setting, char *units, uint8_t scal
 
 	//digit being manipulated
 	//uint8_t scale = 0;
-	static uint8_t scale_offsets[4] = {9, 17, 30, 38 };
+	static uint8_t scale_offsets[4] = {8, 16, 29, 37 };
 	gdispDrawLine(scale_offsets[scale], 
 		75 + (10*idx)+gdispGetFontMetric(DejaVuSans10, fontHeight), 
-		scale_offsets[scale]+4, 
+		scale_offsets[scale]+6, 
 		75 + (10*idx)+gdispGetFontMetric(DejaVuSans10, fontHeight), 
 		White);
 }
