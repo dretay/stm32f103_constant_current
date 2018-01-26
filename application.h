@@ -9,6 +9,7 @@
 #include "mcp4725.h"
 #include "strings.h"
 #include "limits.h"
+#include "adc.h"
 #include "usbserialcommand.h"
 
 static void showView(uint8_t);
@@ -16,6 +17,7 @@ static void showView(uint8_t);
 extern I2C_HandleTypeDef hi2c1;
 extern I2C_HandleTypeDef hi2c2;
 extern UART_HandleTypeDef huart1;
+extern ADC_HandleTypeDef hadc1;
 extern osThreadId guiDrawTaskHandle;
 
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark

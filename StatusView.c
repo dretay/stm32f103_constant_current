@@ -35,25 +35,24 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 		current_setting += (update->int_val * multiplier);
 		MCP4725.set_dac(update->idx, 4096-floor(current_setting*current_multiplier));
 		break;
-	case ADC:
+	case ADC_READING:
+		switch (update->idx)
+		{
+		case 0:
+			voltage_reading = update->float_val;
+			wattage_reading = voltage_reading * current_reading;
+			statusView.dirty = true;
+			break;
+		case 1:
+			current_reading = update->float_val;
+			wattage_reading = voltage_reading * current_reading;
+			statusView.dirty = true;
+			break;
+		}
 		break;
 		
 	}
 	statusView.dirty = true;	
-	
-//	else if (update->source == ADC)
-//	{
-//		if (update->parameter == VOLTAGE && update->float_val != voltage_reading) {			
-//			voltage_reading = update->float_val;
-//			wattage_reading = voltage_reading * current_reading;
-//			statusView.dirty = true;
-//		}
-//		else if (update->parameter == CURRENT && update->float_val != current_reading) {			
-//			current_reading = update->float_val;
-//			wattage_reading = voltage_reading * current_reading;
-//			statusView.dirty = true;
-//		}
-//	}
 }
 
 

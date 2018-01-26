@@ -475,6 +475,9 @@
     <ClInclude Include="..\encoder\encoder.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
+    <ClInclude Include="adc.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
@@ -754,6 +757,9 @@
       <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="..\encoder\encoder.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="adc.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
   </ItemGroup>

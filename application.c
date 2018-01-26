@@ -25,8 +25,9 @@ static void configure_rotary_encoders() {
 	
 
 	ROTARY_ENCODER.configure(encoder_configs, 1);
-
-
+}
+static void configure_adc() {
+	ADC.configure(&hadc1);
 }
 static void configure_graphics() {
 	gfxInit();
@@ -44,6 +45,7 @@ void StartSysUpdateTask(void const * argument) {
 	T_SYSTEM_UPDATE *update;
 	configure_usb_serial_commands();
 	configure_dac();
+	configure_adc();
 	configure_rotary_encoders();
 	configure_graphics();
 
