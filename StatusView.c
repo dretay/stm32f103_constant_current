@@ -33,18 +33,18 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 	case ENCODER_SPIN:
 		multiplier = 10 / pow(10, current_scale); 
 		current_setting += (update->int_val * multiplier);
-		MCP4725.set_dac(update->idx, 4096-floor(current_setting*current_multiplier));
+		MCP4725.set_dac(update->idx, floor(current_setting*current_multiplier));
 		break;
 	case ADC_READING:
 		switch (update->idx)
 		{
 		case 0:
-			voltage_reading = update->float_val;
+			voltage_reading = update->int_val/100;
 			wattage_reading = voltage_reading * current_reading;
 			statusView.dirty = true;
 			break;
 		case 1:
-			current_reading = update->float_val;
+			current_reading = abs(update->int_val-2512)/185.0f;
 			wattage_reading = voltage_reading * current_reading;
 			statusView.dirty = true;
 			break;

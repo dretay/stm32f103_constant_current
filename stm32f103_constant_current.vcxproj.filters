@@ -89,6 +89,12 @@
     <Filter Include="Source files\Src\os">
       <UniqueIdentifier>{1e6018f6-4b08-4496-8d7d-e7bfdb4e32a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\Src\tasks">
+      <UniqueIdentifier>{8a20dd78-8de2-4c86-a081-680accc1a48f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\tasks">
+      <UniqueIdentifier>{c5feeade-005e-46e9-9e6e-6342a6d284b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h">
@@ -454,9 +460,6 @@
     <ClInclude Include="usbd_cdc_if.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Header files\Inc\os</Filter>
-    </ClInclude>
     <ClInclude Include="controller.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
@@ -469,14 +472,32 @@
     <ClInclude Include="events.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
-    <ClInclude Include="usbserialcommand.h">
-      <Filter>Header files\Inc\os</Filter>
-    </ClInclude>
     <ClInclude Include="..\encoder\encoder.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
     <ClInclude Include="adc.h">
+      <Filter>Header files\Inc\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="usbserialcommand.h">
+      <Filter>Header files\Inc\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Header files\Inc\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mcp4725\MCP4725Data.h">
       <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="IRQDispatcher.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
+    <ClInclude Include="pintoidx.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
+    <ClInclude Include="bithelper.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
+    <ClInclude Include="DebouncingDispatcher.h">
+      <Filter>Header files\Inc\os</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -497,9 +518,6 @@
     </ClCompile>
     <ClCompile Include="Src\system_stm32f1xx.c">
       <Filter>Source files\Src\hal</Filter>
-    </ClCompile>
-    <ClCompile Include="application.c">
-      <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="controller.c">
       <Filter>Source files\Src\os</Filter>
@@ -753,14 +771,26 @@
     <ClCompile Include="usbd_cdc_if.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
-    <ClCompile Include="usbserialcommand.c">
-      <Filter>Source files\Src\os</Filter>
-    </ClCompile>
     <ClCompile Include="..\encoder\encoder.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
+    <ClCompile Include="application.c">
+      <Filter>Source files\Src\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="usbserialcommand.c">
+      <Filter>Source files\Src\tasks</Filter>
+    </ClCompile>
     <ClCompile Include="adc.c">
-      <Filter>Source files\Src\perhiperal</Filter>
+      <Filter>Source files\Src\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="IRQDispatcher.c">
+      <Filter>Source files\Src\os</Filter>
+    </ClCompile>
+    <ClCompile Include="pintoidx.c">
+      <Filter>Source files\Src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="DebouncingDispatcher.c">
+      <Filter>Source files\Src\os</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -167,9 +167,14 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h" />
     <ClInclude Include="..\encoder\encoder.h" />
     <ClInclude Include="..\mcp4725\mcp4725.h" />
+    <ClInclude Include="..\mcp4725\MCP4725Data.h" />
     <ClInclude Include="..\st7920\board_ST7920.h" />
     <ClInclude Include="..\st7920\gdisp_lld_config.h" />
     <ClInclude Include="adc.h" />
+    <ClInclude Include="bithelper.h" />
+    <ClInclude Include="DebouncingDispatcher.h" />
+    <ClInclude Include="IRQDispatcher.h" />
+    <ClInclude Include="pintoidx.h" />
     <ClInclude Include="usbserialcommand.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="controller.h" />
@@ -267,6 +272,9 @@
     <ClCompile Include="..\st7920\gdisp_lld_ST7920.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
     <ClCompile Include="adc.c" />
+    <ClCompile Include="DebouncingDispatcher.c" />
+    <ClCompile Include="IRQDispatcher.c" />
+    <ClCompile Include="pintoidx.c" />
     <ClCompile Include="usbserialcommand.c" />
     <ClCompile Include="application.c" />
     <ClCompile Include="controller.c" />

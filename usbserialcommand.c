@@ -79,6 +79,9 @@ void StartSerialCmdTask(void const * argument) {
 				}			
 			}
 		}
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+		SerialCmdTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
+#endif
 		osThreadYield();
 	}	
 }

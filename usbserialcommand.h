@@ -18,6 +18,7 @@
     
 extern PCD_HandleTypeDef hpcd_USB_FS;	                    
 extern osThreadId serialCmdTaskHandle;						         
+UBaseType_t SerialCmdTask_Watermark;
 
 typedef struct {
 	char command[8];

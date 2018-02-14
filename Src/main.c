@@ -75,8 +75,7 @@ osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
 osThreadId serialCmdTaskHandle;
-osThreadId adcTaskHandle;
-osTimerId encoderTimerHandle;
+osTimerId buttonDispatchTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -98,8 +97,7 @@ void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
 extern void StartSerialCmdTask(void const * argument);
-extern void StartAdcTask(void const * argument);
-extern void encoderCallback(void const * argument);
+extern void buttonDispatchCallback(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
                                 
@@ -160,13 +158,13 @@ int main(void)
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* Create the timer(s) */
-  /* definition and creation of encoderTimer */
-  osTimerDef(encoderTimer, encoderCallback);
-  encoderTimerHandle = osTimerCreate(osTimer(encoderTimer), osTimerPeriodic, NULL);
+  /* definition and creation of buttonDispatchTimer */
+  osTimerDef(buttonDispatchTimer, buttonDispatchCallback);
+  buttonDispatchTimerHandle = osTimerCreate(osTimer(buttonDispatchTimer), osTimerPeriodic, NULL);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
-	osTimerStart(encoderTimerHandle, 50);
+	osTimerStart(buttonDispatchTimerHandle, 200);
 	TIM_OC_InitTypeDef sConfigOC;
   
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -194,10 +192,6 @@ int main(void)
   /* definition and creation of serialCmdTask */
   osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityIdle, 0, 128);
   serialCmdTaskHandle = osThreadCreate(osThread(serialCmdTask), NULL);
-
-  /* definition and creation of adcTask */
-  osThreadDef(adcTask, StartAdcTask, osPriorityIdle, 0, 128);
-  adcTaskHandle = osThreadCreate(osThread(adcTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -311,7 +305,7 @@ static void MX_ADC1_Init(void)
     */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_71CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -506,10 +500,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB1 PB2 PB10 PB11 
                            PB12 PB13 PB14 PB15 
-                           PB5 PB8 PB9 */
+                           PB5 PB8 */
   GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11 
                           |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15 
-                          |GPIO_PIN_5|GPIO_PIN_8|GPIO_PIN_9;
+                          |GPIO_PIN_5|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -531,9 +525,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
