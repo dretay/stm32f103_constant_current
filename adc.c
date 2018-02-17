@@ -41,7 +41,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 				update->idx = i;			
 				update->int_val = COMPUTATION_DIGITAL_12BITS_TO_VOLTAGE(ADC_Converted_Values_Avg[i]);
 				update->val_type = type_int;
-				update->source = ADC_READING;
+				update->source = ADC_READING_EVENT;
 				osMailPut(SYS_UPDATE_MAILBOX_ID, update);
 				ADC_Converted_Values_Avg[i] = 0;				
 			}

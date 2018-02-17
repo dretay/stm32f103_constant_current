@@ -6,6 +6,7 @@
 #include "gfx.h"
 #include "stm32f1xx_hal.h"
 #include "encoder.h"
+#include "ToggleSwitch.h"
 #include "mcp4725.h"
 #include "strings.h"
 #include "limits.h"

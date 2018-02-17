@@ -9,6 +9,7 @@ static float voltage_reading = 0.0;
 static float current_setting = 0.0;
 static float current_reading = 0.0;
 static float wattage_reading = 0.0;
+static char* status = "OFF";
 
 static uint8_t voltage_scale = 0;
 static uint8_t current_scale = 0;
@@ -22,7 +23,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 	static float temp_setting;
 	switch (update->source)
 	{
-	case ENCODER_BUTTON:
+	case ENCODER_BUTTON_EVENT:
 		//todo: this is bad - needs to be fixed?
 		if (update->idx  == 0) {
 			current_scale = (current_scale + 1) % 4;
@@ -31,7 +32,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 			voltage_scale = (voltage_scale + 1) % 4;
 		}
 		break;
-	case ENCODER_SPIN:
+	case ENCODER_SPIN_EVENT:
 		multiplier = 10 / pow(10, current_scale); 
 		temp_setting += (update->int_val * multiplier);
 		if (temp_setting > 0.f)
@@ -40,7 +41,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 			MCP4725.set_dac(update->idx, floor(current_setting*current_multiplier));
 		}
 		break;
-	case ADC_READING:
+	case ADC_READING_EVENT:
 		switch (update->idx)
 		{
 		case 0:
@@ -55,6 +56,17 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 			break;
 		}
 		break;
+	case TOGGLE_SWITCH_EVENT:
+		if (update->bool_val)
+		{
+			status = "ON";
+		}
+		else
+		{
+			status = "OFF";			
+		}
+		break;
+
 		
 	}
 	statusView.dirty = true;	
@@ -190,7 +202,7 @@ static void render(void) {
 	render_setting(1, current_setting, "A", current_scale);
 
 	//render status
-	render_status("OFF");
+	render_status(status);
 	
 	//manually flush at then end - otherwise you end up redrawing each time you you call a gdisp* command
 	gdispGFlush(gdispGetDisplay(0));

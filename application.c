@@ -38,6 +38,13 @@ static void configure_graphics() {
 	views[0]->dirty = true;
 	xTaskNotify(guiDrawTaskHandle, 0x01, eSetBits);
 }
+static void configure_toggle_switches() {
+	TOGGLE_SWITCH_CONFIG switch_configs[1];
+	switch_configs[0].pin_bus = GPIOB;
+	switch_configs[0].pin_idx = GPIO_PIN_9;
+
+	TOGGLE_SWITCH.configure(switch_configs, 1);
+}
 
 
 void StartSysUpdateTask(void const * argument) {
@@ -47,6 +54,7 @@ void StartSysUpdateTask(void const * argument) {
 	configure_dac();
 	configure_adc();
 	configure_rotary_encoders();
+	configure_toggle_switches();
 	configure_graphics();
 
 	while (1) {

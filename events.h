@@ -9,7 +9,7 @@ extern osMailQId SYS_UPDATE_MAILBOX_ID;
 
 
 typedef struct {
-	enum { ENCODER_BUTTON, ENCODER_SPIN, ADC_READING } source;
+	enum { ENCODER_BUTTON_EVENT, ENCODER_SPIN_EVENT, ADC_READING_EVENT, TOGGLE_SWITCH_EVENT } source;
 
 	uint8_t idx;
 	union
