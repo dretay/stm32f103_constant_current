@@ -174,7 +174,6 @@
     <ClInclude Include="bithelper.h" />
     <ClInclude Include="DebouncingDispatcher.h" />
     <ClInclude Include="IRQDispatcher.h" />
-    <ClInclude Include="pintoidx.h" />
     <ClInclude Include="usbserialcommand.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="controller.h" />
@@ -274,7 +273,6 @@
     <ClCompile Include="adc.c" />
     <ClCompile Include="DebouncingDispatcher.c" />
     <ClCompile Include="IRQDispatcher.c" />
-    <ClCompile Include="pintoidx.c" />
     <ClCompile Include="usbserialcommand.c" />
     <ClCompile Include="application.c" />
     <ClCompile Include="controller.c" />
@@ -297,6 +295,7 @@
     <None Include="digitalpowersupply-Debug.vgdbsettings" />
     <None Include="digitalpowersupply-Release.vgdbsettings" />
     <None Include="stm32.props" />
+    <None Include="stm32f103_constant_current.ioc" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="stm32.xml" />

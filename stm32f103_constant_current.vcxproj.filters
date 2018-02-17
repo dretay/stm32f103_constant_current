@@ -490,9 +490,6 @@
     <ClInclude Include="IRQDispatcher.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
-    <ClInclude Include="pintoidx.h">
-      <Filter>Header files\Inc\util</Filter>
-    </ClInclude>
     <ClInclude Include="bithelper.h">
       <Filter>Header files\Inc\util</Filter>
     </ClInclude>
@@ -786,9 +783,6 @@
     <ClCompile Include="IRQDispatcher.c">
       <Filter>Source files\Src\os</Filter>
     </ClCompile>
-    <ClCompile Include="pintoidx.c">
-      <Filter>Source files\Src\util</Filter>
-    </ClCompile>
     <ClCompile Include="DebouncingDispatcher.c">
       <Filter>Source files\Src\os</Filter>
     </ClCompile>
@@ -803,6 +797,7 @@
     <None Include="stm32.props">
       <Filter>Source files\Device-specific files</Filter>
     </None>
+    <None Include="stm32f103_constant_current.ioc" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="stm32.xml">

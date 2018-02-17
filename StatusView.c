@@ -19,6 +19,7 @@ const static float current_multiplier = (4096 / 2);
 
 static void on_update(T_SYSTEM_UPDATE* update) {
 	static float multiplier;
+	static float temp_setting;
 	switch (update->source)
 	{
 	case ENCODER_BUTTON:
@@ -32,8 +33,12 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 		break;
 	case ENCODER_SPIN:
 		multiplier = 10 / pow(10, current_scale); 
-		current_setting += (update->int_val * multiplier);
-		MCP4725.set_dac(update->idx, floor(current_setting*current_multiplier));
+		temp_setting += (update->int_val * multiplier);
+		if (temp_setting > 0.f)
+		{
+			current_setting = temp_setting;
+			MCP4725.set_dac(update->idx, floor(current_setting*current_multiplier));
+		}
 		break;
 	case ADC_READING:
 		switch (update->idx)
