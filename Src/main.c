@@ -75,7 +75,7 @@ osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
 osThreadId serialCmdTaskHandle;
-osTimerId buttonDispatchTimerHandle;
+osTimerId debouncingDispatchTimerHandle;
 osTimerId encoderTimerHandle;
 
 /* USER CODE BEGIN PV */
@@ -98,7 +98,7 @@ void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
 extern void StartSerialCmdTask(void const * argument);
-extern void buttonDispatchCallback(void const * argument);
+extern void debouncingDispatchCallback(void const * argument);
 extern void encoderCallback(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -160,18 +160,18 @@ int main(void)
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* Create the timer(s) */
-  /* definition and creation of buttonDispatchTimer */
-  osTimerDef(buttonDispatchTimer, buttonDispatchCallback);
-  buttonDispatchTimerHandle = osTimerCreate(osTimer(buttonDispatchTimer), osTimerPeriodic, NULL);
+  /* definition and creation of debouncingDispatchTimer */
+  osTimerDef(debouncingDispatchTimer, debouncingDispatchCallback);
+  debouncingDispatchTimerHandle = osTimerCreate(osTimer(debouncingDispatchTimer), osTimerPeriodic, NULL);
 
   /* definition and creation of encoderTimer */
   osTimerDef(encoderTimer, encoderCallback);
   encoderTimerHandle = osTimerCreate(osTimer(encoderTimer), osTimerPeriodic, NULL);
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-	osTimerStart(buttonDispatchTimerHandle, 20);
+  /* start timers, add new ones, ... */	
 	osTimerStart(encoderTimerHandle, 200);
+	//osTimerStart(debouncingDispatchTimerHandle, 20);
 	TIM_OC_InitTypeDef sConfigOC;
   
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;

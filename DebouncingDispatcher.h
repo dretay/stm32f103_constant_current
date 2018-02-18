@@ -3,7 +3,7 @@
 #include "stm32f1xx_hal.h"
 #include "IRQDispatcher.h"
 #include "bithelper.h"
-
+#include "cmsis_os.h"
 
 #define DD_NUM_BUTTONS 4
 #define DD_COUNTER_TOP 5
@@ -25,6 +25,7 @@ struct debouncingdispatcher {
 	uint8_t(*get_state)(uint32_t GPIO_Pin);	
 };
 
+extern osTimerId debouncingDispatchTimerHandle;
 static void signalStateChanged(uint32_t);
 
 extern const struct debouncingdispatcher DebouncingDispatcher;

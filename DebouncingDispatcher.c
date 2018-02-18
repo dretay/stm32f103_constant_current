@@ -29,8 +29,9 @@ static int8_t find_gpio_pin(uint16_t GPIO_Pin) {
 	return -1;
 }
 
-void buttonDispatchCallback(void const * argument) {
-	uint8_t i =0, old_state = 0, state=0;
+void debouncingDispatchCallback(void const * argument) {	
+	unsigned short int i = 0, state, old_state;
+	bool work_done = false;
 	
 	for (i = 0; i < DD_NUM_BUTTONS; i++) {
 		//Skip items that have been idle
@@ -38,12 +39,12 @@ void buttonDispatchCallback(void const * argument) {
 		{
 			continue;			
 		}
+		work_done = true;
 		//If debounce period has elapsed
 		if (--buttons[i].counter == 0)
 		{
 			state = bitRead(buttons[i].bitmap, DD_STATE);
 			old_state = bitRead(buttons[i].bitmap, DD_OLD_STATE);
-
 			if (state != old_state)
 			{
 				bitToggle(buttons[i].bitmap, DD_OLD_STATE);				
@@ -53,6 +54,10 @@ void buttonDispatchCallback(void const * argument) {
 				}
 			}
 		}
+	}
+	if (!work_done)
+	{
+		osTimerStop(debouncingDispatchTimerHandle);			
 	}
 }
 
@@ -86,12 +91,28 @@ static bool unsubscribe(uint32_t GPIO_Pin) {
 	}
 	return false;
 }
+typedef struct tmrTimerControl {
+	const char				*pcTimerName;
+	ListItem_t				xTimerListItem;
+} Timer_t;
 
+BaseType_t xTimerIsTimerActiveFromISR(TimerHandle_t xTimer) {
+	BaseType_t xTimerIsInActiveList;
+	Timer_t *pxTimer = (Timer_t *) xTimer;
+	
+	xTimerIsInActiveList = (BaseType_t) !(listIS_CONTAINED_WITHIN(NULL, &(pxTimer->xTimerListItem)));
+	
+	return xTimerIsInActiveList;
+}
 static void signalStateChanged(uint32_t GPIO_Pin) {
 	uint8_t idx = find_gpio_pin(GPIO_Pin);
 	if(idx_valid(idx)) {
 		buttons[idx].counter = DD_COUNTER_TOP;
 		bitToggle(buttons[idx].bitmap, DD_STATE);
+	}
+	if (!xTimerIsTimerActiveFromISR(debouncingDispatchTimerHandle))
+	{
+		osTimerStart(debouncingDispatchTimerHandle, 20);
 	}
 }
 
