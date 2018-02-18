@@ -11,7 +11,7 @@ static void configure(TOGGLE_SWITCH_CONFIG* config_in, uint8_t cnt_in) {
 		config[i].pin_bus = config_in[i].pin_bus;
 		config[i].pin_idx = config_in[i].pin_idx;
 		
-		DebouncingDispatcher.subscribe(config[i].pin_idx, &handle);		
+		DebouncingDispatcher.subscribe(config_in[i].pin_bus, config[i].pin_idx, &handle);		
 	}
 }
 static int8_t find_gpio_pin(uint16_t GPIO_Pin) {

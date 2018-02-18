@@ -56,7 +56,7 @@ void buttonDispatchCallback(void const * argument) {
 	}
 }
 
-static bool subscribe(uint32_t GPIO_Pin_in, void* callback_in) {	
+static bool subscribe(GPIO_TypeDef* GPIOx, uint32_t GPIO_Pin_in, void* callback_in) {	
 	uint8_t idx;
 	if (IRQDispatcher.subscribe(GPIO_Pin_in, &signalStateChanged))
 	{
@@ -64,6 +64,7 @@ static bool subscribe(uint32_t GPIO_Pin_in, void* callback_in) {
 		if (idx_valid(idx)) {
 			buttons[idx].gpio_pin = GPIO_Pin_in;
 			buttons[idx].callback = callback_in;
+			bitWrite(buttons[idx].bitmap, DD_STATE, HAL_GPIO_ReadPin(GPIOx, GPIO_Pin_in));
 		}
 		return true;
 	}

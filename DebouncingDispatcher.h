@@ -6,7 +6,7 @@
 
 
 #define DD_NUM_BUTTONS 4
-#define DD_COUNTER_TOP 1
+#define DD_COUNTER_TOP 5
 #define DD_OLD_STATE 0
 #define DD_STATE 1
 #define DD_ACTIVE 2
@@ -20,7 +20,7 @@ typedef struct {
 } Button;
 
 struct debouncingdispatcher {
-	bool(*subscribe)(uint32_t GPIO_Pin, void* handler);	
+	bool(*subscribe)(GPIO_TypeDef* GPIOx, uint32_t GPIO_Pin, void* handler);	
 	bool(*unsubscribe)(uint32_t GPIO_Pin);	
 	uint8_t(*get_state)(uint32_t GPIO_Pin);	
 };

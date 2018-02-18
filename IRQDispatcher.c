@@ -3,7 +3,6 @@
 volatile Subscription subscriptions[IRQD_NUM_SUBSCRIPTIONS];
 static uint16_t subscriptions_usage_mask = 0;
 
-
 static int8_t get_unused_idx() {
 	uint8_t i = 0;
 	for (i = 0; i < IRQD_NUM_SUBSCRIPTIONS; i++) {
@@ -53,7 +52,8 @@ static void dispatch() {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	uint8_t idx = find_gpio_pin(GPIO_Pin);
-	if (idx_valid(idx)) {
+	if (idx_valid(idx))
+	{
 		subscriptions[idx].callback(GPIO_Pin);
 	}
 }
