@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;../ugfx;D:/Program Files (x86)/SEGGER/JLink_V622d/Samples/RTT/SEGGER_RTT_V622d/RTT;../nanopb-0.3.9-windows-x86;../mcp4725;../stm32_isolated_adc;../st7920;../encoder;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/device;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/drivers_nrf/nrf_soc_nosd;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/libraries/util;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/examples/802_15_4/experimental/wireless_uart/first/pca10056/blank/config;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/external/segger_rtt;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;../ugfx;D:/Program Files (x86)/SEGGER/JLink_V622d/Samples/RTT/SEGGER_RTT_V622d/RTT;../nanopb-0.3.9-windows-x86;../stm32_isolated_adc;../st7920;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/device;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/drivers_nrf/nrf_soc_nosd;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/libraries/util;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/examples/802_15_4/experimental/wireless_uart/first/pca10056/blank/config;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/external/segger_rtt;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <InputLanguage>C</InputLanguage>
     </ClCompile>
@@ -165,19 +165,17 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_def.h" />
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h" />
-    <ClInclude Include="..\encoder\encoder.h" />
-    <ClInclude Include="..\mcp4725\mcp4725.h" />
-    <ClInclude Include="..\mcp4725\MCP4725Data.h" />
     <ClInclude Include="..\st7920\board_ST7920.h" />
     <ClInclude Include="..\st7920\gdisp_lld_config.h" />
-    <ClInclude Include="adc.h" />
+    <ClInclude Include="Adc.h" />
     <ClInclude Include="bithelper.h" />
     <ClInclude Include="DebouncingDispatcher.h" />
+    <ClInclude Include="RotaryEncoder.h" />
     <ClInclude Include="IRQDispatcher.h" />
+    <ClInclude Include="MCP4725.h" />
     <ClInclude Include="ToggleSwitch.h" />
     <ClInclude Include="usbserialcommand.h" />
     <ClInclude Include="application.h" />
-    <ClInclude Include="controller.h" />
     <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.h" />
     <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_Conf.h" />
     <ClInclude Include="events.h" />
@@ -192,7 +190,7 @@
     <ClInclude Include="usbd_cdc_if.h" />
     <ClInclude Include="usbd_conf.h" />
     <ClInclude Include="usbd_desc.h" />
-    <ClInclude Include="view.h" />
+    <ClInclude Include="View.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c" />
@@ -267,17 +265,16 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_core.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c" />
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c" />
-    <ClCompile Include="..\encoder\encoder.c" />
-    <ClCompile Include="..\mcp4725\mcp4725.c" />
     <ClCompile Include="..\st7920\gdisp_lld_ST7920.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
-    <ClCompile Include="adc.c" />
+    <ClCompile Include="Adc.c" />
     <ClCompile Include="DebouncingDispatcher.c" />
+    <ClCompile Include="RotaryEncoder.c" />
     <ClCompile Include="IRQDispatcher.c" />
+    <ClCompile Include="MCP4725.c" />
     <ClCompile Include="ToggleSwitch.c" />
     <ClCompile Include="usbserialcommand.c" />
     <ClCompile Include="application.c" />
-    <ClCompile Include="controller.c" />
     <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.c" />
     <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_printf.c" />
     <ClCompile Include="numtostring.c" />
@@ -291,7 +288,6 @@
     <ClCompile Include="usbd_cdc_if.c" />
     <ClCompile Include="usbd_conf.c" />
     <ClCompile Include="usbd_desc.c" />
-    <ClCompile Include="view.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="digitalpowersupply-Debug.vgdbsettings" />

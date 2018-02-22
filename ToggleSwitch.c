@@ -1,13 +1,11 @@
 #include "ToggleSwitch.h"
 
-static TOGGLE_SWITCH_CONFIG config[TOGGLESWITCH_COUNT];
-static uint8_t config_cnt = 0;
+static ToggleSwitchConfig config[TOGGLESWITCH_COUNT];
 
-static void configure(TOGGLE_SWITCH_CONFIG* config_in, uint8_t cnt_in) {
+static void configure(ToggleSwitchConfig* config_in) {
 	uint8_t i;
-	config_cnt = cnt_in;
 
-	for (i = 0; i < config_cnt; i++) {
+	for (i = 0; i < TOGGLESWITCH_COUNT; i++) {
 		config[i].pin_bus = config_in[i].pin_bus;
 		config[i].pin_idx = config_in[i].pin_idx;
 		
@@ -16,7 +14,7 @@ static void configure(TOGGLE_SWITCH_CONFIG* config_in, uint8_t cnt_in) {
 }
 static int8_t find_gpio_pin(uint16_t GPIO_Pin) {
 	uint8_t i = 0;
-	for (i = 0; i < config_cnt; i++) {		
+	for (i = 0; i < TOGGLESWITCH_COUNT; i++) {		
 		if (config[i].pin_idx == GPIO_Pin) {
 			return i;
 		}			
@@ -25,7 +23,7 @@ static int8_t find_gpio_pin(uint16_t GPIO_Pin) {
 	return -1;
 }
 static bool idx_valid(int8_t idx) {
-	return idx >= 0 && idx < config_cnt;
+	return idx >= 0 && idx < TOGGLESWITCH_COUNT;
 }
 static void handle(uint16_t gpio_pin, uint8_t state) {
 	uint8_t idx;
@@ -44,6 +42,6 @@ static void handle(uint16_t gpio_pin, uint8_t state) {
 	}	
 }
 
-const struct toggle_switch TOGGLE_SWITCH = { 
+const struct toggleswitch ToggleSwitch = { 
 	.configure = configure,
 };

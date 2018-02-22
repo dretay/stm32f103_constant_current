@@ -1,6 +1,6 @@
 #include "IRQDispatcher.h"
 
-volatile Subscription subscriptions[IRQD_NUM_SUBSCRIPTIONS];
+static volatile Subscription subscriptions[IRQD_NUM_SUBSCRIPTIONS];
 static uint16_t subscriptions_usage_mask = 0;
 
 static int8_t get_unused_idx() {

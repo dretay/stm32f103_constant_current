@@ -10,6 +10,7 @@
 #define DD_OLD_STATE 0
 #define DD_STATE 1
 #define DD_ACTIVE 2
+#define DD_SIGNALED 3
 
 
 typedef struct {

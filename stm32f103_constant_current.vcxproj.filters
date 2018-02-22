@@ -172,9 +172,6 @@
     <ClInclude Include="log.h">
       <Filter>Header files\Inc\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\mcp4725\mcp4725.h">
-      <Filter>Header files\Inc\perhiperal</Filter>
-    </ClInclude>
     <ClInclude Include="..\st7920\gdisp_lld_config.h">
       <Filter>Header files\Inc\ugfx</Filter>
     </ClInclude>
@@ -460,32 +457,17 @@
     <ClInclude Include="usbd_cdc_if.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
-    <ClInclude Include="controller.h">
-      <Filter>Header files\Inc\os</Filter>
-    </ClInclude>
     <ClInclude Include="StatusView.h">
-      <Filter>Header files\Inc\os</Filter>
-    </ClInclude>
-    <ClInclude Include="view.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
     <ClInclude Include="events.h">
       <Filter>Header files\Inc\os</Filter>
-    </ClInclude>
-    <ClInclude Include="..\encoder\encoder.h">
-      <Filter>Header files\Inc\perhiperal</Filter>
-    </ClInclude>
-    <ClInclude Include="adc.h">
-      <Filter>Header files\Inc\tasks</Filter>
     </ClInclude>
     <ClInclude Include="usbserialcommand.h">
       <Filter>Header files\Inc\tasks</Filter>
     </ClInclude>
     <ClInclude Include="application.h">
       <Filter>Header files\Inc\tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mcp4725\MCP4725Data.h">
-      <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
     <ClInclude Include="IRQDispatcher.h">
       <Filter>Header files\Inc\os</Filter>
@@ -497,6 +479,18 @@
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
     <ClInclude Include="ToggleSwitch.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="MCP4725.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="Adc.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="View.h">
+      <Filter>Header files\Inc\os</Filter>
+    </ClInclude>
+    <ClInclude Include="RotaryEncoder.h">
       <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
   </ItemGroup>
@@ -518,12 +512,6 @@
     </ClCompile>
     <ClCompile Include="Src\system_stm32f1xx.c">
       <Filter>Source files\Src\hal</Filter>
-    </ClCompile>
-    <ClCompile Include="controller.c">
-      <Filter>Source files\Src\os</Filter>
-    </ClCompile>
-    <ClCompile Include="view.c">
-      <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\croutine.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
@@ -569,9 +557,6 @@
     </ClCompile>
     <ClCompile Include="Src\main.c">
       <Filter>Source files\Src\app</Filter>
-    </ClCompile>
-    <ClCompile Include="..\mcp4725\mcp4725.c">
-      <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
     <ClCompile Include="..\st7920\gdisp_lld_ST7920.c">
       <Filter>Source files\Src\ugfx</Filter>
@@ -771,16 +756,10 @@
     <ClCompile Include="usbd_cdc_if.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
-    <ClCompile Include="..\encoder\encoder.c">
-      <Filter>Source files\Src\perhiperal</Filter>
-    </ClCompile>
     <ClCompile Include="application.c">
       <Filter>Source files\Src\tasks</Filter>
     </ClCompile>
     <ClCompile Include="usbserialcommand.c">
-      <Filter>Source files\Src\tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="adc.c">
       <Filter>Source files\Src\tasks</Filter>
     </ClCompile>
     <ClCompile Include="IRQDispatcher.c">
@@ -790,6 +769,15 @@
       <Filter>Source files\Src\os</Filter>
     </ClCompile>
     <ClCompile Include="ToggleSwitch.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="MCP4725.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="Adc.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="RotaryEncoder.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
   </ItemGroup>

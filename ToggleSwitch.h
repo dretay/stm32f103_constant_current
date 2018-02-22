@@ -12,11 +12,11 @@
 typedef struct {
 	GPIO_TypeDef* pin_bus;
 	uint16_t pin_idx;	
-} TOGGLE_SWITCH_CONFIG;
+} ToggleSwitchConfig;
 
-struct toggle_switch{
-	void(*configure)(TOGGLE_SWITCH_CONFIG* config, uint8_t cnt);			
+struct toggleswitch{
+	void(*configure)(ToggleSwitchConfig* config);			
 };
 static void handle(uint16_t gpio_pin, uint8_t state);
 
-extern const struct toggle_switch TOGGLE_SWITCH;
+extern const struct toggleswitch ToggleSwitch;

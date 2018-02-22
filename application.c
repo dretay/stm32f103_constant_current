@@ -15,7 +15,7 @@ static void configure_dac() {
 	MCP4725.add_dac(0, &hi2c1, 0xC6);	
 }
 static void configure_rotary_encoders() {		
-	ROTARY_ENCODER_CONFIG encoder_configs[1];
+	RotaryEncoderConfig encoder_configs[1];
 	encoder_configs[0].switch_bus = GPIOA;
 	encoder_configs[0].switch_idx = GPIO_PIN_15;
 	encoder_configs[0].pin_a_bus = GPIOB;
@@ -24,10 +24,10 @@ static void configure_rotary_encoders() {
 	encoder_configs[0].pin_b_idx = GPIO_PIN_4;	
 	
 
-	ROTARY_ENCODER.configure(encoder_configs, 1);
+	RotaryEncoder.configure(encoder_configs);
 }
 static void configure_adc() {
-	ADC.configure(&hadc1);
+	Adc.configure(&hadc1);
 }
 static void configure_graphics() {
 	gfxInit();
@@ -39,11 +39,11 @@ static void configure_graphics() {
 	xTaskNotify(guiDrawTaskHandle, 0x01, eSetBits);
 }
 static void configure_toggle_switches() {
-	TOGGLE_SWITCH_CONFIG switch_configs[1];
+	ToggleSwitchConfig switch_configs[1];
 	switch_configs[0].pin_bus = GPIOB;
 	switch_configs[0].pin_idx = GPIO_PIN_9;
 
-	TOGGLE_SWITCH.configure(switch_configs, 1);
+	ToggleSwitch.configure(switch_configs);
 }
 
 
@@ -61,9 +61,8 @@ void StartSysUpdateTask(void const * argument) {
 		event = osMailGet(SYS_UPDATE_MAILBOX_ID, osWaitForever);
 		if (event.status == osEventMail) {
 			update = event.value.p;		
-			views[0]->on_update(update);	
-		}	
-		xTaskNotify(guiDrawTaskHandle, 0x01, eSetBits);
+			views[0]->on_update(update);			
+		}
 		
 		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
 
@@ -76,11 +75,7 @@ void StartSysUpdateTask(void const * argument) {
 }
 void StartGUIDrawTask(void const * argument) {	
 	while (1)
-	{
-		// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
-		//todo: maybe we should notify on the view we want to be rendered?
-		xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
-		
+	{	
 		if (views[0]->dirty)
 		{
 			views[0]->dirty = false;
@@ -89,7 +84,7 @@ void StartGUIDrawTask(void const * argument) {
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 		GUIDrawTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
-		osThreadYield();	
+		vTaskDelay(200);
 	}
 }
 

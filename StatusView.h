@@ -1,14 +1,15 @@
 #pragma once
 
-#include "view.h"
+#include "View.h"
 #include <stdint.h>
 #include <stm32f1xx_hal.h>
 #include "log.h"
 #include "gfx.h"
-#include "mcp4725.h"
+#include "MCP4725.h"
 #include "numtostring.h"
 #include "math.h"
 #include <stdlib.h>
+
 uint8_t my_encoder_val;
 struct statusView {	
 	View*(*init)(void);

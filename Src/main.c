@@ -98,8 +98,8 @@ void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
 extern void StartSerialCmdTask(void const * argument);
-extern void debouncingDispatchCallback(void const * argument);
-extern void encoderCallback(void const * argument);
+extern void debounce_timer_callback(void const * argument);
+extern void encoder_timer_callback(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
                                 
@@ -161,17 +161,16 @@ int main(void)
 
   /* Create the timer(s) */
   /* definition and creation of debouncingDispatchTimer */
-  osTimerDef(debouncingDispatchTimer, debouncingDispatchCallback);
+  osTimerDef(debouncingDispatchTimer, debounce_timer_callback);
   debouncingDispatchTimerHandle = osTimerCreate(osTimer(debouncingDispatchTimer), osTimerPeriodic, NULL);
 
   /* definition and creation of encoderTimer */
-  osTimerDef(encoderTimer, encoderCallback);
+  osTimerDef(encoderTimer, encoder_timer_callback);
   encoderTimerHandle = osTimerCreate(osTimer(encoderTimer), osTimerPeriodic, NULL);
 
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */	
 	osTimerStart(encoderTimerHandle, 200);
-	//osTimerStart(debouncingDispatchTimerHandle, 20);
 	TIM_OC_InitTypeDef sConfigOC;
   
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -520,20 +519,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PB4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_9;
+  /*Configure GPIO pins : PB3 PB4 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

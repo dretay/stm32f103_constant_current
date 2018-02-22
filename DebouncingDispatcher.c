@@ -1,7 +1,7 @@
 #include "DebouncingDispatcher.h"
 
 
-volatile Button buttons[DD_NUM_BUTTONS];
+static volatile Button buttons[DD_NUM_BUTTONS];
 static uint16_t button_usage_mask = 0;
 
 static int8_t get_unused_idx() {
@@ -29,7 +29,7 @@ static int8_t find_gpio_pin(uint16_t GPIO_Pin) {
 	return -1;
 }
 
-void debouncingDispatchCallback(void const * argument) {	
+void debounce_timer_callback(void const * argument) {	
 	unsigned short int i = 0, state, old_state;
 	bool work_done = false;
 	
@@ -43,6 +43,7 @@ void debouncingDispatchCallback(void const * argument) {
 		//If debounce period has elapsed
 		if (--buttons[i].counter == 0)
 		{
+			bitToggle(buttons[i].bitmap, DD_SIGNALED);
 			state = bitRead(buttons[i].bitmap, DD_STATE);
 			old_state = bitRead(buttons[i].bitmap, DD_OLD_STATE);
 			if (state != old_state)
@@ -96,7 +97,7 @@ typedef struct tmrTimerControl {
 	ListItem_t				xTimerListItem;
 } Timer_t;
 
-BaseType_t xTimerIsTimerActiveFromISR(TimerHandle_t xTimer) {
+static BaseType_t xTimerIsTimerActiveFromISR(TimerHandle_t xTimer) {
 	BaseType_t xTimerIsInActiveList;
 	Timer_t *pxTimer = (Timer_t *) xTimer;
 	
@@ -106,13 +107,15 @@ BaseType_t xTimerIsTimerActiveFromISR(TimerHandle_t xTimer) {
 }
 static void signalStateChanged(uint32_t GPIO_Pin) {
 	uint8_t idx = find_gpio_pin(GPIO_Pin);
-	if(idx_valid(idx)) {
+	if(idx_valid(idx) && !bitRead(buttons[idx].bitmap, DD_SIGNALED)) {
 		buttons[idx].counter = DD_COUNTER_TOP;
 		bitToggle(buttons[idx].bitmap, DD_STATE);
-	}
-	if (!xTimerIsTimerActiveFromISR(debouncingDispatchTimerHandle))
-	{
-		osTimerStart(debouncingDispatchTimerHandle, 20);
+		bitToggle(buttons[idx].bitmap, DD_SIGNALED);
+
+		if (!xTimerIsTimerActiveFromISR(debouncingDispatchTimerHandle))
+		{
+			osTimerStart(debouncingDispatchTimerHandle, 20);
+		}
 	}
 }
 

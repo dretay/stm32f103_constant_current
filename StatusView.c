@@ -35,7 +35,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 	case ENCODER_SPIN_EVENT:
 		multiplier = 10 / pow(10, current_scale); 
 		temp_setting += (update->int_val * multiplier);
-		if (temp_setting > 0.f)
+		if (temp_setting >= 0.f)
 		{
 			current_setting = temp_setting;
 			MCP4725.set_dac(update->idx, floor(current_setting*current_multiplier));

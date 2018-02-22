@@ -5,12 +5,12 @@
 #include "StatusView.h"
 #include "gfx.h"
 #include "stm32f1xx_hal.h"
-#include "encoder.h"
+#include "RotaryEncoder.h"
 #include "ToggleSwitch.h"
-#include "mcp4725.h"
+#include "MCP4725.h"
 #include "strings.h"
 #include "limits.h"
-#include "adc.h"
+#include "Adc.h"
 #include "usbserialcommand.h"
 
 static void showView(uint8_t);
