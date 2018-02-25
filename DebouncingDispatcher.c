@@ -71,6 +71,7 @@ static bool subscribe(GPIO_TypeDef* GPIOx, uint32_t GPIO_Pin_in, void* callback_
 			buttons[idx].gpio_pin = GPIO_Pin_in;
 			buttons[idx].callback = callback_in;
 			bitWrite(buttons[idx].bitmap, DD_STATE, HAL_GPIO_ReadPin(GPIOx, GPIO_Pin_in));
+			bitWrite(buttons[idx].bitmap, DD_OLD_STATE, HAL_GPIO_ReadPin(GPIOx, GPIO_Pin_in));
 		}
 		return true;
 	}

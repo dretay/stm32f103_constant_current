@@ -34,7 +34,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 	for (i = 0; i < ADC_BUFFER_SIZE; i++) {		
 		adc_data_avg[i] = adc_data_avg[i] + ((adc_data[i] - adc_data_avg[i]) / ++readings_cnt);
 	}
-	if (readings_cnt == 1000)
+	if (readings_cnt == 4000)
 	{
 		for (i = 0; i < ADC_BUFFER_SIZE; i++) {		
 			update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, 0);

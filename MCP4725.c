@@ -6,7 +6,7 @@ static MCP4725Config config[MCP4725_CONFIG_CNT];
 static void marshal(uint8_t idx, uint16_t value) {
 	I2C_HandleTypeDef* hi2c1 = config[idx].p_i2c;
 	uint8_t addr = config[idx].addr;
-	uint8_t output[] = { 0x40, (value / 16), ((value % 16) << 4) };
+	uint8_t output[] = { MCP4726_CMD_WRITEDAC, (value / 16), ((value % 16) << 4) };
 	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c1, addr, output, 3, 4);
 	if (status != HAL_OK) {
 		LOG("MCP4725 Marshal Failed\n");

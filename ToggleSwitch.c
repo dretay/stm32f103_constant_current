@@ -9,7 +9,8 @@ static void configure(ToggleSwitchConfig* config_in) {
 		config[i].pin_bus = config_in[i].pin_bus;
 		config[i].pin_idx = config_in[i].pin_idx;
 		
-		DebouncingDispatcher.subscribe(config_in[i].pin_bus, config[i].pin_idx, &handle);		
+		DebouncingDispatcher.subscribe(config_in[i].pin_bus, config[i].pin_idx, &handle);	
+		handle(config[i].pin_idx, HAL_GPIO_ReadPin(config_in[i].pin_bus, config[i].pin_idx));	
 	}
 }
 static int8_t find_gpio_pin(uint16_t GPIO_Pin) {

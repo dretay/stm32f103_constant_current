@@ -15,8 +15,8 @@ static uint8_t voltage_scale = 0;
 static uint8_t current_scale = 0;
 
 //this are the raw "units" of the dac
-const static float voltage_multiplier = (4096 / 30);
-const static float current_multiplier = (4096 / 2);
+const static float voltage_multiplier = (4096.0f / 30.0f);
+const static float current_multiplier = (4096.0f / 2.9f);
 
 static void on_update(T_SYSTEM_UPDATE* update) {
 	static float multiplier;
@@ -45,12 +45,12 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 		switch (update->idx)
 		{
 		case 0:
-			voltage_reading = update->int_val/100;
+			voltage_reading = update->int_val/100.0f;
 			wattage_reading = voltage_reading * current_reading;
 			statusView.dirty = true;
 			break;
-		case 1:
-			current_reading = abs(update->int_val-2512)/185.0f;
+		case 1:		
+			current_reading = abs(update->int_val-2326)/121.0f;
 			wattage_reading = voltage_reading * current_reading;
 			statusView.dirty = true;
 			break;

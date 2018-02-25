@@ -13,6 +13,7 @@ static void configure_usb_serial_commands() {
 }
 static void configure_dac() {
 	MCP4725.add_dac(0, &hi2c1, 0xC6);	
+	MCP4725.set_dac(0, 0);
 }
 static void configure_rotary_encoders() {		
 	RotaryEncoderConfig encoder_configs[1];

@@ -5,6 +5,9 @@
 
 #define MCP4725_CONFIG_CNT 1
 
+#define MCP4726_CMD_WRITEDAC            (0x40)  // Writes data to the DAC
+#define MCP4726_CMD_WRITEDACEEPROM      (0x60)  // Writes data to the DAC and the EEPROM (persisting the assigned value after reset)
+
 typedef struct {
 	I2C_HandleTypeDef* p_i2c;
 	uint8_t addr;
