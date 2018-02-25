@@ -71,7 +71,7 @@ static void handle_rotary_spin(uint16_t gpio_pin, uint8_t state) {
 		if (result != DIR_NONE) {
 			config[idx].dirty = true;
 			config[idx].direction = result;			
-		}
+		}				
 	}
 }
 
