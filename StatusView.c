@@ -21,6 +21,35 @@ const static float current_multiplier = (4096.0f / 2.9f);
 static void on_update(T_SYSTEM_UPDATE* update) {
 	static float multiplier;
 	static float temp_setting;
+	int calculated_dac;
+
+	//temp
+	const unsigned int order = 3;
+	const unsigned int countOfElements = 8;
+	const double acceptableError = 0.01;
+	int result;
+	double xData[8] = {
+		0.21,
+		0.64,
+		1.07,
+		1.49,
+		1.92,
+		2.33,
+		2.71,
+		3.21		 
+	};
+	double yData[8] = {
+		500,
+		1000,
+		1500,
+		2000,
+		2500,
+		3000,
+		3500,
+		4000 
+	};
+	double coefficients[order + 1];
+	//end temp
 	switch (update->source)
 	{
 	case ENCODER_BUTTON_EVENT:
@@ -35,10 +64,16 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 	case ENCODER_SPIN_EVENT:
 		multiplier = 10 / pow(10, current_scale); 
 		temp_setting += (update->int_val * multiplier);
+		
 		if (temp_setting >= 0.f)
 		{
 			current_setting = temp_setting;
-			MCP4725.set_dac(update->idx, floor(current_setting*current_multiplier));
+			result = polyfit(xData, yData, countOfElements, order, coefficients);
+			calculated_dac = floor((coefficients[3] * pow(current_setting, 3)) + 
+			(coefficients[2] * pow(current_setting, 2)) + 
+			(coefficients[1] * current_setting) + 
+			coefficients[0]);
+			MCP4725.set_dac(update->idx, calculated_dac);
 		}
 		break;
 	case ADC_READING_EVENT:

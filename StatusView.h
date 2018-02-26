@@ -9,6 +9,7 @@
 #include "numtostring.h"
 #include "math.h"
 #include <stdlib.h>
+#include "polyfit.h"
 
 uint8_t my_encoder_val;
 struct statusView {	

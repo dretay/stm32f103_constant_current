@@ -170,6 +170,7 @@
     <ClInclude Include="Adc.h" />
     <ClInclude Include="bithelper.h" />
     <ClInclude Include="DebouncingDispatcher.h" />
+    <ClInclude Include="polyfit.h" />
     <ClInclude Include="RotaryEncoder.h" />
     <ClInclude Include="IRQDispatcher.h" />
     <ClInclude Include="MCP4725.h" />
@@ -269,6 +270,7 @@
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
     <ClCompile Include="Adc.c" />
     <ClCompile Include="DebouncingDispatcher.c" />
+    <ClCompile Include="polyfit.c" />
     <ClCompile Include="RotaryEncoder.c" />
     <ClCompile Include="IRQDispatcher.c" />
     <ClCompile Include="MCP4725.c" />
@@ -290,6 +292,7 @@
     <ClCompile Include="usbd_desc.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="dac_calibrator.py" />
     <None Include="digitalpowersupply-Debug.vgdbsettings" />
     <None Include="digitalpowersupply-Release.vgdbsettings" />
     <None Include="stm32.props" />

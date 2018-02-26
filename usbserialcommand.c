@@ -43,6 +43,7 @@ void StartSerialCmdTask(void const * argument) {
 	uint32_t buffptr;
 	uint32_t buffsize;
 	uint8_t i;
+	const static char NEWLINE = '\n';
 
 	while (1) {
 		if (VCP_read(&byte, 1) != 1)
@@ -75,7 +76,8 @@ void StartSerialCmdTask(void const * argument) {
 				//user has finished entering their command - let's show them what they've won
 				if (UartRxBuffer[buffptr + i] == '\r') {
 					process_command();		
-					clear_buffer();							
+					clear_buffer();	
+					VCP_write(&NEWLINE, 1);						
 				}			
 			}
 		}
