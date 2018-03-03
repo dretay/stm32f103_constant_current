@@ -46,6 +46,9 @@ static void configure_toggle_switches() {
 
 	ToggleSwitch.configure(switch_configs);
 }
+static void configure_flash() {
+	Flash.configure(false);
+}
 
 
 void StartSysUpdateTask(void const * argument) {
@@ -57,6 +60,10 @@ void StartSysUpdateTask(void const * argument) {
 	configure_rotary_encoders();
 	configure_toggle_switches();
 	configure_graphics();
+
+	configure_flash();
+	
+	
 
 	while (1) {
 		event = osMailGet(SYS_UPDATE_MAILBOX_ID, osWaitForever);

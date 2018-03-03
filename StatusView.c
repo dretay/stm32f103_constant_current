@@ -69,6 +69,17 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 		{
 			current_setting = temp_setting;
 			result = polyfit(xData, yData, countOfElements, order, coefficients);
+			
+//			Flash.set_double(0, coefficients[0]);
+//			Flash.set_double(1, coefficients[1]);
+//			Flash.set_double(2, coefficients[2]);
+//			Flash.set_double(3, coefficients[3]);					
+
+			double coefficient0 = Flash.get(0, type_double).double_val;
+			double coefficient1 = Flash.get(1, type_double).double_val;
+			double coefficient2 = Flash.get(2, type_double).double_val;
+			double coefficient3 = Flash.get(3, type_double).double_val;
+
 			calculated_dac = floor((coefficients[3] * pow(current_setting, 3)) + 
 			(coefficients[2] * pow(current_setting, 2)) + 
 			(coefficients[1] * current_setting) + 

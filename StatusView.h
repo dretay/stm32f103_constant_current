@@ -10,6 +10,7 @@
 #include "math.h"
 #include <stdlib.h>
 #include "polyfit.h"
+#include "Flash.h"
 
 uint8_t my_encoder_val;
 struct statusView {	

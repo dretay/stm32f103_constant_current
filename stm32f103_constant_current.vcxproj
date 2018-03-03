@@ -43,7 +43,7 @@
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <LinkerScript />
+      <LinkerScript>STM32F103CB_flash.lds</LinkerScript>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
@@ -170,11 +170,14 @@
     <ClInclude Include="Adc.h" />
     <ClInclude Include="bithelper.h" />
     <ClInclude Include="DebouncingDispatcher.h" />
+    <ClInclude Include="Flash.h" />
+    <ClInclude Include="flashpages.h" />
     <ClInclude Include="polyfit.h" />
     <ClInclude Include="RotaryEncoder.h" />
     <ClInclude Include="IRQDispatcher.h" />
     <ClInclude Include="MCP4725.h" />
     <ClInclude Include="ToggleSwitch.h" />
+    <ClInclude Include="types.h" />
     <ClInclude Include="usbserialcommand.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.h" />
@@ -270,6 +273,7 @@
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
     <ClCompile Include="Adc.c" />
     <ClCompile Include="DebouncingDispatcher.c" />
+    <ClCompile Include="Flash.c" />
     <ClCompile Include="polyfit.c" />
     <ClCompile Include="RotaryEncoder.c" />
     <ClCompile Include="IRQDispatcher.c" />
@@ -305,6 +309,9 @@
     <Text Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\License\license.txt" />
     <Text Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\readme.txt" />
     <Text Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\st_readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <LinkerScript Include="STM32F103CB_flash.lds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

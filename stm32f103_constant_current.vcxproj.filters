@@ -496,6 +496,15 @@
     <ClInclude Include="polyfit.h">
       <Filter>Header files\Inc\util</Filter>
     </ClInclude>
+    <ClInclude Include="flashpages.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
+    <ClInclude Include="Flash.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
@@ -786,6 +795,9 @@
     <ClCompile Include="polyfit.c">
       <Filter>Source files\Src\util</Filter>
     </ClCompile>
+    <ClCompile Include="Flash.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="digitalpowersupply-Debug.vgdbsettings">
@@ -815,5 +827,10 @@
     <Text Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\st_readme.txt">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <LinkerScript Include="STM32F103CB_flash.lds">
+      <Filter>Source files</Filter>
+    </LinkerScript>
   </ItemGroup>
 </Project>

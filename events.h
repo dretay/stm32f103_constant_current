@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "cmsis_os.h"
 #include "stdbool.h"
+#include "types.h"
 
 #define SYS_UPDATE_MAIL_SIZE        (uint32_t) 10
 extern osMailQId SYS_UPDATE_MAILBOX_ID;
@@ -18,11 +19,6 @@ typedef struct {
 		int int_val;	
 		bool bool_val;
 	};
-	enum
-	{
-		type_float,
-		type_int,
-		type_bool
-	} val_type;
+	VALUE_TYPE val_type;
 
 } T_SYSTEM_UPDATE;

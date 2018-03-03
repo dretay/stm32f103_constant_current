@@ -12,6 +12,7 @@
 #include "limits.h"
 #include "Adc.h"
 #include "usbserialcommand.h"
+#include "Flash.h"
 
 static void showView(uint8_t);
 
@@ -26,9 +27,11 @@ UBaseType_t SysUpdateTask_Watermark;
 UBaseType_t GUIDrawTask_Watermark;
 #endif
 
+
 struct application
 {
 	void(*showView)(uint8_t idx);
 };
 
 extern const struct application Application;
+
