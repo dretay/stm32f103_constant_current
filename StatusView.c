@@ -11,12 +11,12 @@ static float current_reading = 0.0;
 static float wattage_reading = 0.0;
 static char* status = "OFF";
 
-static uint8_t voltage_scale = 0;
-static uint8_t current_scale = 0;
+static int voltage_scale = 0;
+static int current_scale = 0;
 
 //this are the raw "units" of the dac
 const static float voltage_multiplier = (4096.0f / 30.0f);
-const static float current_multiplier = (4096.0f / 2.9f);
+const static float current_multiplier = (4095.0f / 2.341f);
 
 static void on_update(T_SYSTEM_UPDATE* update) {
 	static float multiplier;
@@ -68,23 +68,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 		if (temp_setting >= 0.f)
 		{
 			current_setting = temp_setting;
-			result = polyfit(xData, yData, countOfElements, order, coefficients);
-			
-//			Flash.set_double(0, coefficients[0]);
-//			Flash.set_double(1, coefficients[1]);
-//			Flash.set_double(2, coefficients[2]);
-//			Flash.set_double(3, coefficients[3]);					
-
-			double coefficient0 = Flash.get(0, type_double).double_val;
-			double coefficient1 = Flash.get(1, type_double).double_val;
-			double coefficient2 = Flash.get(2, type_double).double_val;
-			double coefficient3 = Flash.get(3, type_double).double_val;
-
-			calculated_dac = floor((coefficients[3] * pow(current_setting, 3)) + 
-			(coefficients[2] * pow(current_setting, 2)) + 
-			(coefficients[1] * current_setting) + 
-			coefficients[0]);
-			MCP4725.set_dac(update->idx, calculated_dac);
+			CurrentSink.set(current_setting);
 		}
 		break;
 	case ADC_READING_EVENT:
@@ -96,7 +80,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 			statusView.dirty = true;
 			break;
 		case 1:		
-			current_reading = abs(update->int_val-2326)/121.0f;
+			current_reading = abs(update->int_val-2296)/150.0f;
 			wattage_reading = voltage_reading * current_reading;
 			statusView.dirty = true;
 			break;

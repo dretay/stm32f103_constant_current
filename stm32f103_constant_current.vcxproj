@@ -168,17 +168,21 @@
     <ClInclude Include="..\st7920\board_ST7920.h" />
     <ClInclude Include="..\st7920\gdisp_lld_config.h" />
     <ClInclude Include="Adc.h" />
+    <ClInclude Include="ADS1115.h" />
     <ClInclude Include="bithelper.h" />
+    <ClInclude Include="CurrentSink.h" />
     <ClInclude Include="DebouncingDispatcher.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="flashpages.h" />
+    <ClInclude Include="minmax.h" />
     <ClInclude Include="polyfit.h" />
     <ClInclude Include="RotaryEncoder.h" />
     <ClInclude Include="IRQDispatcher.h" />
     <ClInclude Include="MCP4725.h" />
+    <ClInclude Include="SerialCommandAdapter.h" />
     <ClInclude Include="ToggleSwitch.h" />
     <ClInclude Include="types.h" />
-    <ClInclude Include="usbserialcommand.h" />
+    <ClInclude Include="serialcommand.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.h" />
     <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_Conf.h" />
@@ -191,9 +195,11 @@
     <ClInclude Include="Inc\stm32f1xx_it.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="StatusView.h" />
+    <ClInclude Include="UartSerialCommandAdapter.h" />
     <ClInclude Include="usbd_cdc_if.h" />
     <ClInclude Include="usbd_conf.h" />
     <ClInclude Include="usbd_desc.h" />
+    <ClInclude Include="UsbSerialCommandAdapter.h" />
     <ClInclude Include="View.h" />
   </ItemGroup>
   <ItemGroup>
@@ -272,6 +278,8 @@
     <ClCompile Include="..\st7920\gdisp_lld_ST7920.c" />
     <ClCompile Include="..\ugfx\src\gfx_mk.c" />
     <ClCompile Include="Adc.c" />
+    <ClCompile Include="ADS1115.c" />
+    <ClCompile Include="CurrentSink.c" />
     <ClCompile Include="DebouncingDispatcher.c" />
     <ClCompile Include="Flash.c" />
     <ClCompile Include="polyfit.c" />
@@ -279,7 +287,7 @@
     <ClCompile Include="IRQDispatcher.c" />
     <ClCompile Include="MCP4725.c" />
     <ClCompile Include="ToggleSwitch.c" />
-    <ClCompile Include="usbserialcommand.c" />
+    <ClCompile Include="serialcommand.c" />
     <ClCompile Include="application.c" />
     <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.c" />
     <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_printf.c" />
@@ -291,9 +299,11 @@
     <ClCompile Include="Src\stm32f1xx_it.c" />
     <ClCompile Include="Src\system_stm32f1xx.c" />
     <ClCompile Include="StatusView.c" />
+    <ClCompile Include="UartSerialCommandAdapter.c" />
     <ClCompile Include="usbd_cdc_if.c" />
     <ClCompile Include="usbd_conf.c" />
     <ClCompile Include="usbd_desc.c" />
+    <ClCompile Include="UsbSerialCommandAdapter.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dac_calibrator.py" />

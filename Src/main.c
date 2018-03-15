@@ -69,14 +69,13 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
 
-PCD_HandleTypeDef hpcd_USB_FS;
-
 osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
 osThreadId serialCmdTaskHandle;
 osTimerId debouncingDispatchTimerHandle;
 osTimerId encoderTimerHandle;
+osTimerId adcTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -92,7 +91,6 @@ static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_USB_PCD_Init(void);
 static void MX_ADC1_Init(void);
 void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
@@ -100,6 +98,7 @@ extern void StartGUIDrawTask(void const * argument);
 extern void StartSerialCmdTask(void const * argument);
 extern void debounce_timer_callback(void const * argument);
 extern void encoder_timer_callback(void const * argument);
+extern void adcCallback(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
                                 
@@ -144,7 +143,6 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
-  MX_USB_PCD_Init();
   MX_ADC1_Init();
 
   /* USER CODE BEGIN 2 */
@@ -168,9 +166,14 @@ int main(void)
   osTimerDef(encoderTimer, encoder_timer_callback);
   encoderTimerHandle = osTimerCreate(osTimer(encoderTimer), osTimerPeriodic, NULL);
 
+  /* definition and creation of adcTimer */
+  osTimerDef(adcTimer, adcCallback);
+  adcTimerHandle = osTimerCreate(osTimer(adcTimer), osTimerPeriodic, NULL);
+
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */	
 	osTimerStart(encoderTimerHandle, 200);
+	osTimerStart(adcTimerHandle, 2000);
 	TIM_OC_InitTypeDef sConfigOC;
   
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -188,7 +191,7 @@ int main(void)
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
-  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityAboveNormal, 0, 136);
+  osThreadDef(sysUpdateTask, StartSysUpdateTask, osPriorityAboveNormal, 0, 150);
   sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
 
   /* definition and creation of guiDrawTask */
@@ -196,7 +199,7 @@ int main(void)
   guiDrawTaskHandle = osThreadCreate(osThread(guiDrawTask), NULL);
 
   /* definition and creation of serialCmdTask */
-  osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityIdle, 0, 128);
+  osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityIdle, 0, 256);
   serialCmdTaskHandle = osThreadCreate(osThread(serialCmdTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -267,9 +270,8 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC|RCC_PERIPHCLK_USB;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
   PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV8;
-  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -429,24 +431,6 @@ static void MX_USART1_UART_Init(void)
 
 }
 
-/* USB init function */
-static void MX_USB_PCD_Init(void)
-{
-
-  hpcd_USB_FS.Instance = USB;
-  hpcd_USB_FS.Init.dev_endpoints = 8;
-  hpcd_USB_FS.Init.speed = PCD_SPEED_FULL;
-  hpcd_USB_FS.Init.ep0_mps = DEP0CTL_MPS_8;
-  hpcd_USB_FS.Init.low_power_enable = DISABLE;
-  hpcd_USB_FS.Init.lpm_enable = DISABLE;
-  hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
-  if (HAL_PCD_Init(&hpcd_USB_FS) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-}
-
 /** 
   * Enable DMA controller clock
   */
@@ -496,8 +480,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA2 PA3 PA8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_8;
+  /*Configure GPIO pins : PA2 PA3 PA8 PA11 
+                           PA12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_8|GPIO_PIN_11 
+                          |GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 

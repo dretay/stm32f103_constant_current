@@ -28,6 +28,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 #include "usbd_core.h"
+#ifdef HAL_PCD_MODULE_ENABLED
+
 
 #if defined(STM32F102x6) || defined(STM32F102xB) || defined(STM32F103x6) || defined(STM32F103xB) || defined(STM32F103xG) || defined(STM32F103xE)
 
@@ -876,6 +878,7 @@ void USBD_LL_Delay(uint32_t Delay) {
 	HAL_Delay(Delay);
 }
 
+#endif 
 #endif 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

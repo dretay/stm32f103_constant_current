@@ -463,9 +463,6 @@
     <ClInclude Include="events.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
-    <ClInclude Include="usbserialcommand.h">
-      <Filter>Header files\Inc\tasks</Filter>
-    </ClInclude>
     <ClInclude Include="application.h">
       <Filter>Header files\Inc\tasks</Filter>
     </ClInclude>
@@ -504,6 +501,27 @@
     </ClInclude>
     <ClInclude Include="types.h">
       <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
+    <ClInclude Include="CurrentSink.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="ADS1115.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="minmax.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
+    <ClInclude Include="serialcommand.h">
+      <Filter>Header files\Inc\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="UsbSerialCommandAdapter.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialCommandAdapter.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="UartSerialCommandAdapter.h">
+      <Filter>Header files\Inc\perhiperal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -771,9 +789,6 @@
     <ClCompile Include="application.c">
       <Filter>Source files\Src\tasks</Filter>
     </ClCompile>
-    <ClCompile Include="usbserialcommand.c">
-      <Filter>Source files\Src\tasks</Filter>
-    </ClCompile>
     <ClCompile Include="IRQDispatcher.c">
       <Filter>Source files\Src\os</Filter>
     </ClCompile>
@@ -796,6 +811,21 @@
       <Filter>Source files\Src\util</Filter>
     </ClCompile>
     <ClCompile Include="Flash.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="CurrentSink.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="ADS1115.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="serialcommand.c">
+      <Filter>Source files\Src\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="UsbSerialCommandAdapter.c">
+      <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="UartSerialCommandAdapter.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
   </ItemGroup>

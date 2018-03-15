@@ -11,7 +11,10 @@
 #include "strings.h"
 #include "limits.h"
 #include "Adc.h"
-#include "usbserialcommand.h"
+#include "ADS1115.h"
+#include "serialcommand.h"
+#include "UsbSerialCommandAdapter.h"
+#include "UartSerialCommandAdapter.h"
 #include "Flash.h"
 
 static void showView(uint8_t);

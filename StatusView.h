@@ -9,8 +9,8 @@
 #include "numtostring.h"
 #include "math.h"
 #include <stdlib.h>
-#include "polyfit.h"
-#include "Flash.h"
+#include "CurrentSink.h"
+
 
 uint8_t my_encoder_val;
 struct statusView {	
