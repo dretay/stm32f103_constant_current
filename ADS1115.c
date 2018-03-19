@@ -112,7 +112,7 @@ void adcCallback(void const * argument) {
 		update->idx = i;
 		update->float_val = reading * 1;//channel_config.ratio;	
 		update->val_type = type_float;		
-		update->source = ADC_READING_EVENT;		
+		update->source = ADS1115_READ_EVENT;		
 		osMailPut(SYS_UPDATE_MAILBOX_ID, update);	
 		
 	}	

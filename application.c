@@ -32,8 +32,7 @@ static void configure_rotary_encoders() {
 	encoder_configs[0].pin_a_bus = GPIOB;
 	encoder_configs[0].pin_a_idx = GPIO_PIN_3;
 	encoder_configs[0].pin_b_bus = GPIOB;
-	encoder_configs[0].pin_b_idx = GPIO_PIN_4;	
-	
+	encoder_configs[0].pin_b_idx = GPIO_PIN_4;		
 
 	RotaryEncoder.configure(encoder_configs);
 }

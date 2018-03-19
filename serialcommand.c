@@ -24,6 +24,7 @@ static void process_command(void) {
 	for (i = 0; i < USB_SERIAL_COMMAND_CNT; i++) {
 		if (strncmp(token, commands[i].command, strcspn(token, "\r")) == 0) {
 			commands[i].function();	
+			break;
 		}
 	}
 }
@@ -32,52 +33,61 @@ void StartSerialCmdTask(void const * argument) {
 	// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
 	xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
 
+	char bytes[16];
 	char byte;
 	uint32_t buffptr;
 	uint32_t buffsize;
 	uint8_t i;
+	int bytes_read = 0;
 	const static char NEWLINE = '\n';
 
 	while (1) {
-		if (serial_adapter->read(&byte, 1) != 1)
-			continue;
-		serial_adapter->write(&byte, 1);
-
-		//increment the "next" pointer
-		UartRxBuffer[BufPtrIn++] = byte;
-
-		//wrap the ring buffer if we've overflowed
-		if (BufPtrIn == RX_DATA_SIZE) {
-			BufPtrIn = 0;
-		}
-
-
-		if (BufPtrOut != BufPtrIn) {
-			if (BufPtrOut > BufPtrIn) /* rollback */ {
-				buffsize = RX_DATA_SIZE - BufPtrOut;
-			}
-			else {
-				buffsize = BufPtrIn - BufPtrOut;
-			}
-
-			buffptr = BufPtrOut;
-
-			BufPtrOut += buffsize;
-			if (BufPtrOut == RX_DATA_SIZE) {
-				BufPtrOut = 0;
-			}
-			for (i = 0; i < buffsize; i++) {
-				//user has finished entering their command - let's show them what they've won
-				if (UartRxBuffer[buffptr + i] == '\r') {
-					serial_adapter->write(&NEWLINE, 1);						
-					process_command();		
-					clear_buffer();	
-				}			
-			}
-		}
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 		SerialCmdTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
+
+		memset(bytes, 0, sizeof(bytes));
+		bytes_read = serial_adapter->read(&bytes, 16);
+		if (bytes_read <= 0)
+			continue;		
+		for (i = 0; i < bytes_read; i++) {
+			byte = bytes[i];
+			//increment the "next" pointer
+			UartRxBuffer[BufPtrIn++] = byte;
+
+			//wrap the ring buffer if we've overflowed
+			if (BufPtrIn == RX_DATA_SIZE) {
+				BufPtrIn = 0;
+			}
+
+
+			if (BufPtrOut != BufPtrIn) {
+				if (BufPtrOut > BufPtrIn) /* rollback */ {
+					buffsize = RX_DATA_SIZE - BufPtrOut;
+				}
+				else {
+					buffsize = BufPtrIn - BufPtrOut;
+				}
+
+				buffptr = BufPtrOut;
+
+				BufPtrOut += buffsize;
+				if (BufPtrOut == RX_DATA_SIZE) {
+					BufPtrOut = 0;
+				}
+			
+			}
+		}
+		for (i = 0; i < buffsize; i++) {
+			//user has finished entering their command - let's show them what they've won
+			if (UartRxBuffer[buffptr + i] == '\r' || UartRxBuffer[buffptr + i] == '\n') {
+				serial_adapter->write(&NEWLINE, 1);						
+				process_command();		
+				clear_buffer();	
+			}			
+		}
+		
+
 		osThreadYield();
 	}	
 }

@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
+#import ivi
 import visa
 import time
-import csv
 
 class Instrument(object):
 	def __init__(self, visa_name):
@@ -13,57 +13,31 @@ class Instrument(object):
 		return self.resource.query(param)
 	def write(self, param):
 		return self.resource.write(param)
-	def close(self):
-		return self.resource.close()
 
 class SerialInstrument(Instrument):
 	def __init__(self, visa_name, baud_rate):		
 		super(SerialInstrument, self).__init__(visa_name)
 		self.resource.baud_rate = baud_rate
 
-class ConstantCurrent(SerialInstrument):	
+class CurrentSink(SerialInstrument):
 	def __init__(self,visa_name,baud_rate):
-		super(ConstantCurrent, self).__init__(visa_name, baud_rate)
+		super(CurrentSink, self).__init__(visa_name, baud_rate)
 		self._dac = 0
-		self.resource.tiemout = 0		
-
+	
 	@property
 	def dac(self):
 		return self._dac
+	
 	@dac.setter
 	def dac(self,value):
-		self.resource.write(f'dac {value}','\r')
-		self._dac = value		
+		self.resource.write(f'dacset {value}')
+		time.sleep(0.5)
+		self._dac = value
 
-class K34461A(Instrument):
-	# note: sending G1 command will disable prefixed data
-	@property
-	def voltage(self):
-		return float(self.resource.query(""))
-
-	def display_off(self):
-		self.resource.query("D@X")
-visa.log_to_screen()
-#k34461a = K34461A('TCPIP0::192.168.1.48')
-constant_current = ConstantCurrent('COM17',115200)
-
-constant_current.dac = 100
-
-constant_current.close()
-#k34461a.close()
-
-# dcsource = Agilent66309D('GPIB1::4::INSTR')
-# dmm = Keithley2015('GPIB1::2::INSTR')
-# dmm2 = Keithley196('GPIB1::3::INSTR')
-
-# start by initializing good cal constants
-
-# cv "L" readback 
-
-
-
-
-
+#meter = ivi.agilent.agilent34461A("TCPIP0::192.168.1.48::INSTR")
+currentsink = CurrentSink('COM15',115200)
+currentsink.dac = 1000
+#print(meter.measurement.read(1))
 # with open('calibration.csv', 'wb') as csvfile:
 # 	writer = csv.writer(csvfile, delimiter=',')	
 # 	for offset in xrange(0,1):

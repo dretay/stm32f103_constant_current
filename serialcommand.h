@@ -5,6 +5,7 @@
 #include "cmsis_os.h"
 #include <limits.h>
 #include "SerialCommandAdapter.h"
+#include <string.h>
 
 #define RX_DATA_SIZE  32
 #define USB_SERIAL_COMMAND_CNT 6

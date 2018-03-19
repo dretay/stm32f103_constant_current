@@ -71,7 +71,7 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 			CurrentSink.set(current_setting);
 		}
 		break;
-	case ADC_READING_EVENT:
+	case ADC_READ_EVENT:
 		switch (update->idx)
 		{
 		case 0:
