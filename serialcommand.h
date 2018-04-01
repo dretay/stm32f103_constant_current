@@ -32,6 +32,7 @@ struct serialcommand {
 	char*(*next)(void);	
 	int(*next_int)(void);	
 	float(*next_float)(void);	
+	double(*next_double)(void);	
 	void(*echo)(char* output, int length);
 };
 

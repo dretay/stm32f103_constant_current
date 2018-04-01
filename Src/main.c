@@ -190,7 +190,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 150);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 100);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
@@ -206,7 +206,7 @@ int main(void)
   serialCmdTaskHandle = osThreadCreate(osThread(serialCmdTask), NULL);
 
   /* definition and creation of uiUpdateTask */
-  osThreadDef(uiUpdateTask, StartUIUpdateTask, osPriorityIdle, 0, 64);
+  osThreadDef(uiUpdateTask, StartUIUpdateTask, osPriorityIdle, 0, 128);
   uiUpdateTaskHandle = osThreadCreate(osThread(uiUpdateTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

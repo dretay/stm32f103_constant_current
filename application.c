@@ -90,7 +90,7 @@ static void configure_toggle_switches() {
 	ToggleSwitch.configure(switch_configs);
 }
 static void configure_flash() {
-	Flash.configure(true);
+	Flash.configure(false);
 }
 
 static void configure() {

@@ -148,6 +148,9 @@ static int next_int() {
 	return atoi(SerialCommand.next());	
 }
 static float next_float() {
+	return strtof(SerialCommand.next(), NULL);	
+}
+static double next_double() {
 	return atof(SerialCommand.next());	
 }
 static void echo(char* output, int length) {
@@ -159,5 +162,6 @@ const struct serialcommand SerialCommand = {
 	.next = next,	
 	.next_int = next_int,	
 	.next_float = next_float,	
+	.next_double = next_double,	
 	.echo = echo
 };

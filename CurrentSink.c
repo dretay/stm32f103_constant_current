@@ -22,11 +22,15 @@ static void configure(uint8_t idx_in, I2C_HandleTypeDef* p_i2c_in, uint8_t addr_
 //todo these should be stored as constants?
 const static float current_multiplier = (4095.0f / (5.0f));
 static void set(float setting) {
+	double cal_const_0 = Flash.get(CURRENT_SINK_COEFFICIENT_0, type_double).double_val;
+	double cal_const_1 = Flash.get(CURRENT_SINK_COEFFICIENT_1, type_double).double_val;
+	double cal_const_2 = Flash.get(CURRENT_SINK_COEFFICIENT_2, type_double).double_val;
+	
 	current_setting = setting;
 	unsigned int converted_setting = 
-	(706.7463663 * setting) + 
-	(241.8250987 * setting) /
-	(setting + 0.0002106490029);
+	(cal_const_0 * setting) + 
+	(cal_const_1 * setting) /
+	(setting + cal_const_2);
 
 	MCP4725.set_dac(DAC_IDX, MIN(4095, floor(converted_setting)));
 
@@ -36,19 +40,19 @@ static void set(float setting) {
 static void save_cal_const() {
 	
 	int idx = SerialCommand.next_int();
-	float value = SerialCommand.next_float();
+	double value = SerialCommand.next_double();
 	
 	if (idx >= 0 && value > 0.0)
 	{
-		Flash.set_float(idx, value);
+		Flash.set_double(idx, value);
 	}	
 }
 static void print_cal_const() {
 	
 	int idx = SerialCommand.next_int();
-	FLASH_RECORD record = Flash.get(0, type_float);	
+	FLASH_RECORD record = Flash.get(idx, type_double);	
 	char textbuf[32];	
-	sprintf(textbuf, "%f\n\r", record.float_val);
+	sprintf(textbuf, "%0.13f\n\r", record.double_val);
 	SerialCommand.echo(textbuf, strlen(textbuf));
 		
 }
@@ -62,18 +66,7 @@ static void calibrate_dump() {
 	}
 	
 }
-static void calibrate_finish() {
-//	const unsigned int order = 3;
-//	const unsigned int countOfElements = 9;
-//	const double acceptableError = 0.01;
-//	double coefficients[order + 1];
-//	int result = polyfit(xData, yData, countOfElements, order, coefficients);
-//			
-//	Flash.set_double(CURRENT_SINK_COEFFICIENT_0, coefficients[0]);
-//	Flash.set_double(CURRENT_SINK_COEFFICIENT_1, coefficients[1]);
-//	Flash.set_double(CURRENT_SINK_COEFFICIENT_2, coefficients[2]);
-//	Flash.set_double(CURRENT_SINK_COEFFICIENT_3, coefficients[3]);
-}
+
 static void print_setting(void) {
 	char textbuf[32];	
 	sprintf(textbuf, "%.2f\n\r", current_setting);
