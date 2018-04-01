@@ -24,12 +24,16 @@ static HAL_StatusTypeDef configure(bool erase) {
 }
 static HAL_StatusTypeDef marshal(unsigned int idx, unsigned int value) {
 	unsigned long address;
+	HAL_StatusTypeDef status;
 	HAL_FLASH_Unlock();	
-
-	address = FLASH_USER_START_ADDR + (idx * 4);
+	//https://stackoverflow.com/questions/28498191/cant-write-to-flash-memory-after-erase
+	//grr... looks like by default you can only write once to flash w/o clearing this...
+	CLEAR_BIT(FLASH->CR, (FLASH_CR_PG));
+	address = FLASH_USER_START_ADDR + (idx * sizeof(uint));
 	if (address < FLASH_USER_END_ADDR) {
-		return HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, value);		
+		status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, value);		
 		HAL_FLASH_Lock();
+		return status;
 	}
 	
 	HAL_FLASH_Lock();
@@ -39,7 +43,7 @@ static HAL_StatusTypeDef marshal(unsigned int idx, unsigned int value) {
 static __IO unsigned int unmarshal(unsigned int idx) {
 	unsigned long address;
 
-	address = FLASH_USER_START_ADDR + (idx * 4);
+	address = FLASH_USER_START_ADDR + (idx * sizeof(uint));
 	
 	if (address < FLASH_USER_END_ADDR) {
 		return *(__IO unsigned int*)address;
@@ -65,12 +69,14 @@ static unsigned int record_size(FLASH_RECORD *record) {
 
 static HAL_StatusTypeDef set(FLASH_RECORD record) {
 	unsigned int i = 0;
-	
+	HAL_StatusTypeDef status;
+
 	for (; i < record_size(&record)/4; i++)
 	{
-		if (marshal(record.idx++, record.uint_array[i]) != HAL_OK)
+		status = marshal(record.idx++, record.uint_array[i]);
+		if (status != HAL_OK)
 		{
-			return HAL_ERROR;
+			return status;
 		}							
 	}
 	return HAL_OK;
@@ -80,6 +86,14 @@ static HAL_StatusTypeDef set_double(unsigned int idx, double value) {
 	record.val_type = type_double;
 	record.idx = idx*2;
 	record.double_val = value;
+
+	return set(record);
+}
+static HAL_StatusTypeDef set_float(unsigned int idx, float value) {
+	FLASH_RECORD record;
+	record.val_type = type_float;
+	record.idx = idx;
+	record.float_val = value;
 
 	return set(record);
 }
@@ -106,5 +120,6 @@ const struct flash Flash= {
 	.configure = configure,
 	.set = set,
 	.set_double = set_double,
+	.set_float = set_float,
 	.get = get
 };

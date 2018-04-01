@@ -5,7 +5,7 @@
 #include "stm32f1xx_ll_dma.h"
 #include "SerialCommandAdapter.h"
 #include "cmsis_os.h"
-
+#include "stdbool.h"
 
 
 extern UART_HandleTypeDef huart1;

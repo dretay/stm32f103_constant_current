@@ -8,14 +8,31 @@ static void write(const void* buffer, int size) {
 	}
 }
 
-static int read(void *buffer, int size) {
-	osDelay(100);
-	return 0;
+#define DMA_RX_BUFFER_SIZE          32
+char DMA_RX_Buffer[DMA_RX_BUFFER_SIZE];
+bool pending = false;
+
+//todo: this is probably not great since a fast enough xmit will just stomp the reads 
+//but it works for tonight...
+static int read(char *buffer, int size) {
+	osDelay(50);
+	int i = 0;
+	int length = 0;
+	if (pending)
+	{
+		length = strlen(DMA_RX_Buffer);
+		for (i =0; i < length; i++)
+		{
+			buffer[i] = DMA_RX_Buffer[i];	
+		}
+		pending = false;		
+	}
+	return length;	
 }
 
 
-#define DMA_RX_BUFFER_SIZE          32
-uint8_t DMA_RX_Buffer[DMA_RX_BUFFER_SIZE];
+
+//idle interrupt handler
 void USART1_IRQHandler(void) {
 	if (LL_USART_IsActiveFlag_IDLE(USART1)) {
 		LL_USART_ClearFlag_IDLE(USART1);
@@ -27,17 +44,12 @@ void USART1_IRQHandler(void) {
 		}
 	}
 }
-void HAL_UART_AbortCpltCallback(UART_HandleTypeDef *huart) {
-	LOG("FOO");
+
+//uart abort complete callback
+void HAL_UART_AbortReceiveCpltCallback(UART_HandleTypeDef *huart) {
+	pending = true;
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {	
-	Error_Handler();
-}
-
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
-	Error_Handler();
-}
 
 static SerialCommandAdapter* configure(void) {
 	//enable idle line detection

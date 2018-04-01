@@ -1,25 +1,52 @@
 #include "application.h"
 
-View* views[5];
+
 
 void set_dac() {
 	char* arg = SerialCommand.next();
 	unsigned int value = atoi(arg);
 	MCP4725.set_dac(0, value);
 }
+void get_dac() {
+	char* arg = SerialCommand.next();
+	unsigned int idx = atoi(arg);
+	int value = MCP4725.get_dac(idx);
+	char textbuf[128];	
+	sprintf(textbuf, "%d\n\r",value);
+	SerialCommand.echo(textbuf, strlen(textbuf));
+}
 void set_contrast() {
 	char* arg = SerialCommand.next();
-	uint16_t value = atoi(arg);
+	int value = atoi(arg);	
+	gdispSetContrast(value);	
+}
+void get_contrast() {
+	char textbuf[128];	
+	int value = gdispGetContrast();	
+	sprintf(textbuf, "%d\n\r", value);
+	SerialCommand.echo(textbuf, strlen(textbuf));
+}
+void set_current() {
+	char* arg = SerialCommand.next(); 	
 	
-	gdispSetContrast(value);
+	//todo this is bad bad bad
+	arg[strcspn(arg, "\r\n")] = '\0';
+	
+	float val = atof(arg);
+	CurrentSink.set(val);
 }
 static void configure_usb_serial_commands() {
-	SerialCommand.register_command(0, "dacset", &set_dac);
-	SerialCommand.register_command(1, "contr", &set_contrast);
-	SerialCommand.register_command(2, "dacsetup", CurrentSink.calibrate_setup);
-	SerialCommand.register_command(3, "dacsave", CurrentSink.calibrate_save);
-	SerialCommand.register_command(4, "dacfin", CurrentSink.calibrate_finish);
-	SerialCommand.register_command(5, "dacdump", CurrentSink.calibrate_dump);
+	SerialCommand.register_command(0, "setdac", &set_dac);
+	SerialCommand.register_command(1, "getdac", &get_dac);
+	SerialCommand.register_command(2, "setcont", &set_contrast);
+	SerialCommand.register_command(3, "getcont", &get_contrast);
+	SerialCommand.register_command(4, "getcurr", CurrentSink.print_setting);
+	SerialCommand.register_command(5, "setcurr", set_current);
+	SerialCommand.register_command(6, "readcurr", CurrentSink.print_current_reading);
+	SerialCommand.register_command(7, "calconst", CurrentSink.save_cal_const);
+	SerialCommand.register_command(8, "getcal", CurrentSink.print_cal_const);
+
+
 	SerialCommand.configure(UartSerialCommandAdapter.configure());
 }
 static void configure_current_sink() {
@@ -53,13 +80,7 @@ static void configure_adc() {
 	ADS1115.configure(&hi2c1, 0x90);
 }
 static void configure_graphics() {
-	gfxInit();
-	gdispSetContrast(40);
-	views[0] = StatusView.init();
-	
-	//todo: maybe set this by default on the first view?
-	views[0]->dirty = true;
-	xTaskNotify(guiDrawTaskHandle, 0x01, eSetBits);
+	GUI.configure();
 }
 static void configure_toggle_switches() {
 	ToggleSwitchConfig switch_configs[1];
@@ -69,61 +90,22 @@ static void configure_toggle_switches() {
 	ToggleSwitch.configure(switch_configs);
 }
 static void configure_flash() {
-	Flash.configure(false);
+	Flash.configure(true);
 }
 
-
-void StartSysUpdateTask(void const * argument) {
-	osEvent event;	
-	T_SYSTEM_UPDATE *update;
+static void configure() {
 	configure_usb_serial_commands();
 	configure_current_sink();
 	configure_adc();
 	configure_rotary_encoders();
 	configure_toggle_switches();
-	configure_graphics();
-	
+	configure_graphics();	
 	configure_flash();
-	
-	
 
-	while (1) {
-		event = osMailGet(SYS_UPDATE_MAILBOX_ID, osWaitForever);
-		if (event.status == osEventMail) {
-			update = event.value.p;		
-			views[0]->on_update(update);			
-		}
-		
-		osMailFree(SYS_UPDATE_MAILBOX_ID, update);		
-
-
-#ifdef INCLUDE_uxTaskGetStackHighWaterMark
-		SysUpdateTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
-#endif
-		osThreadYield();	
-	}
-}
-void StartGUIDrawTask(void const * argument) {	
-	while (1)
-	{	
-		if (views[0]->dirty)
-		{
-			views[0]->dirty = false;
-			views[0]->render();	
-		}	
-#ifdef INCLUDE_uxTaskGetStackHighWaterMark
-		GUIDrawTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
-#endif
-		vTaskDelay(200);
-	}
-}
-
-static void showView(uint8_t idx) {
-	views[idx]->render();
 }
 
 const struct application Application = { 
-	.showView = showView
+	.configure = configure
 };
 
 

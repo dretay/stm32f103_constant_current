@@ -26,21 +26,21 @@ static void configure(RotaryEncoderConfig* config_in) {
 
 static void publish_encoder_change(uint8_t idx, bool val, RotaryEncoderEventSource source) {
 	
-	T_SYSTEM_UPDATE *update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, 0); 
+	T_UI_UPDATE *update = osMailAlloc(UI_UPDATE_MAILBOX_ID, 0); 
 	if (update != NULL) {				
 		update->idx = idx;
 		if (source == encoder) {
 			update->int_val = val ? -1 : 1;	
 			update->val_type = type_int;
 			update->source = ENCODER_SPIN_EVENT;
-			osMailPut(SYS_UPDATE_MAILBOX_ID, update);
+			osMailPut(UI_UPDATE_MAILBOX_ID, update);
 		}
 		else {
 			update->idx = idx;
 			update->bool_val = val;	
 			update->val_type = type_bool;
 			update->source = ENCODER_BUTTON_EVENT;
-			osMailPut(SYS_UPDATE_MAILBOX_ID, update);			
+			osMailPut(UI_UPDATE_MAILBOX_ID, update);			
 		}
 	}			
 }

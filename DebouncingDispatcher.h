@@ -12,6 +12,7 @@
 #define DD_ACTIVE 2
 #define DD_SIGNALED 3
 
+extern UART_HandleTypeDef huart1;
 
 typedef struct {
 	uint32_t gpio_pin;

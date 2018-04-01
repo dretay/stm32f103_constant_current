@@ -10,13 +10,14 @@
 
 typedef struct {
 	I2C_HandleTypeDef* p_i2c;
-	uint8_t addr;
+	int addr;
+	int setting;
 } MCP4725Config;
 
 struct mcp4725 {
-	void(*add_dac)(uint8_t idx, I2C_HandleTypeDef* p_i2c_in, uint8_t addr_in);	
-	void(*set_dac)(uint8_t idx, uint16_t value);
-	uint8_t(*get_dac)(void);
+	void(*add_dac)(int idx, I2C_HandleTypeDef* p_i2c_in, int addr_in);	
+	void(*set_dac)(int idx, int value);
+	int(*get_dac)(int idx);
 };
 
 extern const struct mcp4725 MCP4725;

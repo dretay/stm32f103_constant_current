@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "cmsis_os.h"
 #include "log.h"
-#include "StatusView.h"
+
 #include "gfx.h"
 #include "stm32f1xx_hal.h"
 #include "RotaryEncoder.h"
@@ -16,6 +16,8 @@
 #include "UsbSerialCommandAdapter.h"
 #include "UartSerialCommandAdapter.h"
 #include "Flash.h"
+#include "CurrentSink.h"
+#include "gui.h"
 
 static void showView(uint8_t);
 
@@ -23,17 +25,10 @@ extern I2C_HandleTypeDef hi2c1;
 extern I2C_HandleTypeDef hi2c2;
 extern UART_HandleTypeDef huart1;
 extern ADC_HandleTypeDef hadc1;
-extern osThreadId guiDrawTaskHandle;
-
-#ifdef INCLUDE_uxTaskGetStackHighWaterMark
-UBaseType_t SysUpdateTask_Watermark;
-UBaseType_t GUIDrawTask_Watermark;
-#endif
-
 
 struct application
 {
-	void(*showView)(uint8_t idx);
+	void(*configure)(void);
 };
 
 extern const struct application Application;

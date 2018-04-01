@@ -18,10 +18,14 @@ static void unmarshal(void) {
 
 }
 
-static void set_dac(uint8_t idx, uint16_t value) {
+static void set_dac(int idx, int value) {
 	marshal(idx, value);	
+	config[idx].setting = value;
 }
-static void add_dac(uint8_t idx, I2C_HandleTypeDef* p_i2c_in, uint8_t addr_in) {
+static int get_dac(int idx) {
+	return config[idx].setting;
+}
+static void add_dac(int idx, I2C_HandleTypeDef* p_i2c_in, int addr_in) {
 	if (idx <= MCP4725_CONFIG_CNT) {
 		config[idx].p_i2c = p_i2c_in;
 		config[idx].addr = addr_in;		
@@ -29,5 +33,6 @@ static void add_dac(uint8_t idx, I2C_HandleTypeDef* p_i2c_in, uint8_t addr_in) {
 }
 const struct mcp4725 MCP4725 = { 
 	.add_dac = add_dac,
-	.set_dac = set_dac
+	.set_dac = set_dac,
+	.get_dac = get_dac
 };

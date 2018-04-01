@@ -32,6 +32,7 @@ static int8_t find_gpio_pin(uint16_t GPIO_Pin) {
 void debounce_timer_callback(void const * argument) {	
 	unsigned short int i = 0, state, old_state;
 	bool work_done = false;
+	char buffer[2];
 	
 	for (i = 0; i < DD_NUM_BUTTONS; i++) {
 		//Skip items that have been idle
@@ -51,6 +52,8 @@ void debounce_timer_callback(void const * argument) {
 				bitToggle(buttons[i].bitmap, DD_OLD_STATE);				
 				if (buttons[i].callback != NULL)
 				{
+					sprintf(buffer, "%d%d", i, state);
+					HAL_UART_Transmit(&huart1, (uint8_t *)buffer, 2, 1);
 					buttons[i].callback(buttons[i].gpio_pin, state);									
 				}
 			}

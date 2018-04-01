@@ -4,13 +4,6 @@ View statusView;
 static font_t DejaVuSans10, DejaVuSans12, DejaVuSans12Bold, DejaVuSans20, DejaVuSans32, Fixed_5x8, Fixed_7x14;
 static coord_t DisplayWidth, DisplayHeight;
 
-static float voltage_setting = 0.0;
-static float voltage_reading = 0.0;
-static float current_setting = 0.0;
-static float current_reading = 0.0;
-static float wattage_reading = 0.0;
-static char* status = "OFF";
-
 static int voltage_scale = 0;
 static int current_scale = 0;
 
@@ -18,38 +11,11 @@ static int current_scale = 0;
 const static float voltage_multiplier = (4096.0f / 30.0f);
 const static float current_multiplier = (4095.0f / 2.341f);
 
-static void on_update(T_SYSTEM_UPDATE* update) {
+static void on_update(T_UI_UPDATE* update) {
 	static float multiplier;
 	static float temp_setting;
 	int calculated_dac;
-
-	//temp
-	const unsigned int order = 3;
-	const unsigned int countOfElements = 8;
-	const double acceptableError = 0.01;
-	int result;
-	double xData[8] = {
-		0.21,
-		0.64,
-		1.07,
-		1.49,
-		1.92,
-		2.33,
-		2.71,
-		3.21		 
-	};
-	double yData[8] = {
-		500,
-		1000,
-		1500,
-		2000,
-		2500,
-		3000,
-		3500,
-		4000 
-	};
-	double coefficients[order + 1];
-	//end temp
+	
 	switch (update->source)
 	{
 	case ENCODER_BUTTON_EVENT:
@@ -67,36 +33,9 @@ static void on_update(T_SYSTEM_UPDATE* update) {
 		
 		if (temp_setting >= 0.f)
 		{
-			current_setting = temp_setting;
-			CurrentSink.set(current_setting);
+			CurrentSink.set(temp_setting);
 		}
 		break;
-	case ADC_READ_EVENT:
-		switch (update->idx)
-		{
-		case 0:
-			voltage_reading = update->int_val/100.0f;
-			wattage_reading = voltage_reading * current_reading;
-			statusView.dirty = true;
-			break;
-		case 1:		
-			current_reading = abs(update->int_val-2296)/150.0f;
-			wattage_reading = voltage_reading * current_reading;
-			statusView.dirty = true;
-			break;
-		}
-		break;
-	case TOGGLE_SWITCH_EVENT:
-		if (update->bool_val)
-		{
-			status = "ON";
-		}
-		else
-		{
-			status = "OFF";			
-		}
-		break;
-
 		
 	}
 	statusView.dirty = true;	
@@ -205,7 +144,18 @@ static void render_setting(uint8_t idx, float setting, char *units, uint8_t scal
 		75 + (10*idx)+gdispGetFontMetric(DejaVuSans10, fontHeight), 
 		White);
 }
-static void render_status(char *status) {
+static void render_status(bool enabled) {
+	char *status;
+	if (enabled)
+	{
+		status = "ON";
+		
+	}
+	else
+	{
+		status = "OFF";
+		
+	}
 	gdispDrawStringBox(0,
 		DisplayHeight - gdispGetFontMetric(DejaVuSans32, fontHeight)+6,
 		DisplayWidth,
@@ -223,16 +173,16 @@ static void render(void) {
 
 	//render out readings
 	render_readings_label();
-	render_reading(0, voltage_reading, "V");
-	render_reading(1, current_reading, "A");
-	render_reading(2, wattage_reading, "W");
+	render_reading(0, CurrentSink.get_voltage_reading(), "V");
+	render_reading(1, CurrentSink.get_current_reading(), "A");
+	render_reading(2, CurrentSink.get_power_reading(), "W");
 
 	//render out settings
 	render_settings_label();
-	render_setting(1, current_setting, "A", current_scale);
+	render_setting(1, CurrentSink.get_current_setting(), "A", current_scale);
 
 	//render status
-	render_status(status);
+	render_status(CurrentSink.get_enable_setting());
 	
 	//manually flush at then end - otherwise you end up redrawing each time you you call a gdisp* command
 	gdispGFlush(gdispGetDisplay(0));

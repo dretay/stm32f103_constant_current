@@ -26,6 +26,7 @@ struct flash {
 	HAL_StatusTypeDef(*configure)(bool erase);			
 	HAL_StatusTypeDef(*set)(FLASH_RECORD record);
 	HAL_StatusTypeDef(*set_double)(unsigned int idx, double value);
+	HAL_StatusTypeDef(*set_float)(unsigned int idx, float value);
 	FLASH_RECORD(*get)(unsigned int idx, VALUE_TYPE val_type);		
 };
 

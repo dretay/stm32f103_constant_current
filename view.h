@@ -6,6 +6,6 @@
 
 typedef struct {
 	void(*render)(void);
-	void(*on_update)(T_SYSTEM_UPDATE*);
+	void(*on_update)(T_UI_UPDATE*);
 	bool dirty;
 } View;

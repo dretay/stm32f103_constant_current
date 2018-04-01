@@ -463,9 +463,6 @@
     <ClInclude Include="events.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Header files\Inc\tasks</Filter>
-    </ClInclude>
     <ClInclude Include="IRQDispatcher.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
@@ -522,6 +519,12 @@
     </ClInclude>
     <ClInclude Include="UartSerialCommandAdapter.h">
       <Filter>Header files\Inc\perhiperal</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>Header files\Inc\tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Header files\Inc\os</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -786,9 +789,6 @@
     <ClCompile Include="usbd_cdc_if.c">
       <Filter>Source files\Src\perhiperal</Filter>
     </ClCompile>
-    <ClCompile Include="application.c">
-      <Filter>Source files\Src\tasks</Filter>
-    </ClCompile>
     <ClCompile Include="IRQDispatcher.c">
       <Filter>Source files\Src\os</Filter>
     </ClCompile>
@@ -827,6 +827,12 @@
     </ClCompile>
     <ClCompile Include="UartSerialCommandAdapter.c">
       <Filter>Source files\Src\perhiperal</Filter>
+    </ClCompile>
+    <ClCompile Include="gui.c">
+      <Filter>Source files\Src\tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="application.c">
+      <Filter>Source files\Src\os</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

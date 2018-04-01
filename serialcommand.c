@@ -51,6 +51,7 @@ void StartSerialCmdTask(void const * argument) {
 		if (bytes_read <= 0)
 			continue;		
 		for (i = 0; i < bytes_read; i++) {
+			serial_adapter->write(&bytes, strlen(bytes));
 			byte = bytes[i];
 			//increment the "next" pointer
 			UartRxBuffer[BufPtrIn++] = byte;
@@ -116,7 +117,7 @@ static size_t my_strlcpy(char *dst, const char *src, size_t size) {
 
 	return bytes;
 }
-static void register_command(uint8_t idx, char* command_in, void* function_in) {
+static void register_command(int idx, char* command_in, void* function_in) {
 	if (idx <= USB_SERIAL_COMMAND_CNT)
 	{	
 		strncpy(commands[idx].command , command_in, 8);
@@ -124,13 +125,39 @@ static void register_command(uint8_t idx, char* command_in, void* function_in) {
 		
 	}
 }
+//spit out space separated tokens that were arguments to functions
+//once end is reached continually output the last token
+//strip out line feed information from tokens that are returned
 static char* next() {
 	char *nextToken;
+	int eol_idx;
 	nextToken = strtok_r(NULL, " ", &last); 
+	if (nextToken == NULL)
+	{
+		return last;
+	}
+	
+	eol_idx = strcspn(nextToken, "\r\n");
+	if (eol_idx != strlen(nextToken))
+	{
+		nextToken[eol_idx] = '\0';
+	}
 	return nextToken; 
+}
+static int next_int() {
+	return atoi(SerialCommand.next());	
+}
+static float next_float() {
+	return atof(SerialCommand.next());	
+}
+static void echo(char* output, int length) {
+	serial_adapter->write(output, length);
 }
 const struct serialcommand SerialCommand = { 
 	.register_command = register_command,
 	.configure = configure,	
-	.next = next	
+	.next = next,	
+	.next_int = next_int,	
+	.next_float = next_float,	
+	.echo = echo
 };

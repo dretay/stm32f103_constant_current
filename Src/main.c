@@ -75,13 +75,17 @@ osThreadId defaultTaskHandle;
 osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
 osThreadId serialCmdTaskHandle;
+osThreadId uiUpdateTaskHandle;
 osTimerId debouncingDispatchTimerHandle;
 osTimerId encoderTimerHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 osMailQId SYS_UPDATE_MAILBOX_ID;
-
+osMailQId UI_UPDATE_MAILBOX_ID;
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+UBaseType_t DefaultTask_Watermark;
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,6 +102,7 @@ void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
 extern void StartSerialCmdTask(void const * argument);
+extern void StartUIUpdateTask(void const * argument);
 extern void debounce_timer_callback(void const * argument);
 extern void encoder_timer_callback(void const * argument);
 
@@ -185,7 +190,7 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 150);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
@@ -193,12 +198,16 @@ int main(void)
   sysUpdateTaskHandle = osThreadCreate(osThread(sysUpdateTask), NULL);
 
   /* definition and creation of guiDrawTask */
-  osThreadDef(guiDrawTask, StartGUIDrawTask, osPriorityNormal, 0, 176);
+  osThreadDef(guiDrawTask, StartGUIDrawTask, osPriorityNormal, 0, 200);
   guiDrawTaskHandle = osThreadCreate(osThread(guiDrawTask), NULL);
 
   /* definition and creation of serialCmdTask */
-  osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityHigh, 0, 300);
+  osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityHigh, 0, 250);
   serialCmdTaskHandle = osThreadCreate(osThread(serialCmdTask), NULL);
+
+  /* definition and creation of uiUpdateTask */
+  osThreadDef(uiUpdateTask, StartUIUpdateTask, osPriorityIdle, 0, 64);
+  uiUpdateTaskHandle = osThreadCreate(osThread(uiUpdateTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -208,6 +217,9 @@ int main(void)
   /* add queues, ... */
   osMailQDef(SYS_UPDATE_MAILBOX, SYS_UPDATE_MAIL_SIZE, T_SYSTEM_UPDATE);
   SYS_UPDATE_MAILBOX_ID = osMailCreate(osMailQ(SYS_UPDATE_MAILBOX), NULL);
+
+  osMailQDef(UI_UPDATE_MAILBOX, SYS_UPDATE_MAIL_SIZE, T_SYSTEM_UPDATE);
+  UI_UPDATE_MAILBOX_ID = osMailCreate(osMailQ(UI_UPDATE_MAILBOX), NULL);
 
   
   /* USER CODE END RTOS_QUEUES */
@@ -557,6 +569,10 @@ void StartDefaultTask(void const * argument)
 {
 
   /* USER CODE BEGIN 5 */
+	Application.configure();
+#ifdef INCLUDE_uxTaskGetStackHighWaterMark
+	DefaultTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
+#endif
 	while (1)
 	{		
 		// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
