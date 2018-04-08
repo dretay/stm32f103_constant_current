@@ -43,8 +43,9 @@ static void configure_usb_serial_commands() {
 	SerialCommand.register_command(4, "getcurr", CurrentSink.print_setting);
 	SerialCommand.register_command(5, "setcurr", set_current);
 	SerialCommand.register_command(6, "readcurr", CurrentSink.print_current_reading);
-	SerialCommand.register_command(7, "calconst", CurrentSink.save_cal_const);
-	SerialCommand.register_command(8, "getcal", CurrentSink.print_cal_const);
+	SerialCommand.register_command(7, "getcal", CurrentSink.print_cal_const);
+	SerialCommand.register_command(8, "getrawc", CurrentSink.print_raw_current);
+	SerialCommand.register_command(9, "getrawv", CurrentSink.print_raw_voltage);
 
 
 	SerialCommand.configure(UartSerialCommandAdapter.configure());

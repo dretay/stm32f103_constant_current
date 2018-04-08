@@ -8,7 +8,12 @@
 #define SYS_UPDATE_MAIL_SIZE        (uint32_t) 10
 extern osMailQId SYS_UPDATE_MAILBOX_ID;
 extern osMailQId UI_UPDATE_MAILBOX_ID;
+extern osMailQId SERCMD_UPDATE_MAILBOX_ID;
 
+typedef struct {
+	char string[32];
+	int size;
+} T_SERCMD_UPDATE;
 
 typedef struct {
 	enum { ENCODER_BUTTON_EVENT, ENCODER_SPIN_EVENT } source;

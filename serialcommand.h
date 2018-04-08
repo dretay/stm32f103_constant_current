@@ -7,10 +7,12 @@
 #include "SerialCommandAdapter.h"
 #include <string.h>
 #include <stdlib.h>
+#include "events.h"
 
 #define RX_DATA_SIZE  80
-#define USB_SERIAL_COMMAND_CNT 9
-    
+#define USB_SERIAL_COMMAND_CNT 11
+extern osMailQId SERCMD_UPDATE_MAILBOX_ID;
+
 extern osThreadId serialCmdTaskHandle;						         
 UBaseType_t SerialCmdTask_Watermark;
 

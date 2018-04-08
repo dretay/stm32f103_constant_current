@@ -31,8 +31,9 @@ struct currentsink {
 	float(*get_power_reading)(void);
 	float(*get_current_setting)(void);
 	bool(*get_enable_setting)(void);
-	void(*save_cal_const)();
 	void(*print_cal_const)();
+	void(*print_raw_current)();
+	void(*print_raw_voltage)();
 	
 };
 

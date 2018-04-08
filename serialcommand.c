@@ -33,25 +33,32 @@ void StartSerialCmdTask(void const * argument) {
 	// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
 	xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
 
-	char bytes[16];
+	osEvent event;
+	T_SERCMD_UPDATE *update;
 	char byte;
+	char *bytes;
 	uint32_t buffptr;
 	uint32_t buffsize;
 	uint8_t i;
-	int bytes_read = 0;
 	const static char NEWLINE = '\n';
+
 
 	while (1) {
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 		SerialCmdTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
 
-		memset(bytes, 0, sizeof(bytes));
-		bytes_read = serial_adapter->read(&bytes, 16);
-		if (bytes_read <= 0)
-			continue;		
-		for (i = 0; i < bytes_read; i++) {
-			serial_adapter->write(&bytes, strlen(bytes));
+//		memset(bytes, 0, sizeof(bytes));
+//		bytes_read = serial_adapter->read(&bytes, 16);
+		event = osMailGet(SERCMD_UPDATE_MAILBOX_ID, osWaitForever);
+		if (event.status != osEventMail)
+		{
+			continue;
+		}
+		update = event.value.p;
+		bytes = update->string;
+		//serial_adapter->write(update->string, update->size);
+		for (i = 0; i < update->size; i++) {
 			byte = bytes[i];
 			//increment the "next" pointer
 			UartRxBuffer[BufPtrIn++] = byte;
@@ -81,12 +88,12 @@ void StartSerialCmdTask(void const * argument) {
 		}
 		for (i = 0; i < buffsize; i++) {
 			//user has finished entering their command - let's show them what they've won
-			if (UartRxBuffer[buffptr + i] == '\r' || UartRxBuffer[buffptr + i] == '\n') {
-				serial_adapter->write(&NEWLINE, 1);						
+			if (UartRxBuffer[buffptr + i] == '\r' || UartRxBuffer[buffptr + i] == '\n') {								
 				process_command();		
 				clear_buffer();	
 			}			
 		}
+		osMailFree(SERCMD_UPDATE_MAILBOX_ID, update);
 		
 
 		osThreadYield();

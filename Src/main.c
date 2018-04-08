@@ -83,6 +83,7 @@ osTimerId encoderTimerHandle;
 /* Private variables ---------------------------------------------------------*/
 osMailQId SYS_UPDATE_MAILBOX_ID;
 osMailQId UI_UPDATE_MAILBOX_ID;
+osMailQId SERCMD_UPDATE_MAILBOX_ID;
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 UBaseType_t DefaultTask_Watermark;
 #endif
@@ -221,7 +222,9 @@ int main(void)
   osMailQDef(UI_UPDATE_MAILBOX, SYS_UPDATE_MAIL_SIZE, T_SYSTEM_UPDATE);
   UI_UPDATE_MAILBOX_ID = osMailCreate(osMailQ(UI_UPDATE_MAILBOX), NULL);
 
-  
+  osMailQDef(SERCMD_UPDATE_MAILBOX, SYS_UPDATE_MAIL_SIZE, T_SERCMD_UPDATE);
+  SERCMD_UPDATE_MAILBOX_ID = osMailCreate(osMailQ(SERCMD_UPDATE_MAILBOX), NULL);
+
   /* USER CODE END RTOS_QUEUES */
  
 

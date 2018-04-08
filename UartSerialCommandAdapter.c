@@ -3,6 +3,7 @@
 static SerialCommandAdapter adapter;
 
 static void write(const void* buffer, int size) {
+	
 	if (HAL_UART_Transmit(&huart1, (uint8_t *)buffer, size, 1) != HAL_OK) {		
 		Error_Handler();
 	}
@@ -34,6 +35,7 @@ static int read(char *buffer, int size) {
 
 //idle interrupt handler
 void USART1_IRQHandler(void) {
+	T_SERCMD_UPDATE *update;
 	if (LL_USART_IsActiveFlag_IDLE(USART1)) {
 		LL_USART_ClearFlag_IDLE(USART1);
 
@@ -42,6 +44,11 @@ void USART1_IRQHandler(void) {
 		if (HAL_UART_Receive_DMA(&huart1, (uint8_t*)DMA_RX_Buffer, DMA_RX_BUFFER_SIZE) != HAL_OK) {        
 			Error_Handler();
 		}
+	
+		update = osMailAlloc(SERCMD_UPDATE_MAILBOX_ID, 0); /* Allocate memory */
+		update->size = strlen(DMA_RX_Buffer);
+		strncpy(update->string, DMA_RX_Buffer, update->size);		
+		osMailPut(SERCMD_UPDATE_MAILBOX_ID, update);	
 	}
 }
 
