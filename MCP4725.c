@@ -9,7 +9,7 @@ static void marshal(uint8_t idx, uint16_t value) {
 	uint8_t output[] = { MCP4726_CMD_WRITEDAC, (value / 16), ((value % 16) << 4) };
 	HAL_StatusTypeDef status = HAL_I2C_Master_Transmit(hi2c1, addr, output, 3, 4);
 	if (status != HAL_OK) {
-		LOG("MCP4725 Marshal Failed\n");
+		
 	}
 }
 

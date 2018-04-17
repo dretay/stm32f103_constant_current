@@ -53,12 +53,6 @@
     <Filter Include="Header files\Inc\hal">
       <UniqueIdentifier>{62d68ab0-f309-4619-8cb9-14a68cca40da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source files\Src\segger">
-      <UniqueIdentifier>{c36bf7b7-755c-45c9-9080-35257ba07ee2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header files\Inc\segger">
-      <UniqueIdentifier>{89e103d7-cd87-4ffe-b5bb-739980f751b9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header files\Inc\util">
       <UniqueIdentifier>{8370224e-b666-43ce-af41-65509c327dd1}</UniqueIdentifier>
     </Filter>
@@ -77,12 +71,6 @@
     <Filter Include="Source files\Src\perhiperal">
       <UniqueIdentifier>{d505cc85-0472-408c-9fa1-94c2deabc11a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source files\Device-specific files\USB Device">
-      <UniqueIdentifier>{e9e8e33f-ee96-4658-a027-d6b6df962a52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header files\Device-specific files\USB Device">
-      <UniqueIdentifier>{27be5fba-851e-4c95-8fdb-9671f202e296}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header files\Inc\os">
       <UniqueIdentifier>{29ec79b9-506c-46a0-9466-0f554b294014}</UniqueIdentifier>
     </Filter>
@@ -94,6 +82,18 @@
     </Filter>
     <Filter Include="Header files\Inc\tasks">
       <UniqueIdentifier>{c5feeade-005e-46e9-9e6e-6342a6d284b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Inc\perhiperal\usb">
+      <UniqueIdentifier>{3dd412ea-4e72-4898-b465-a154c533af34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Src\perhiperal\usb">
+      <UniqueIdentifier>{812e0cde-94b7-40bb-8b30-7b070ed4f43b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\Device-specific files\USB Device">
+      <UniqueIdentifier>{69568e66-eebc-4910-b5f6-38280d1e5849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Device-specific files\USB Device">
+      <UniqueIdentifier>{a3b76c5b-5349-423a-8eaf-c8f15d9d2626}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -157,20 +157,11 @@
     <ClInclude Include="numtostring.h">
       <Filter>Header files\Inc\util</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.h">
-      <Filter>Header files\Inc\segger</Filter>
-    </ClInclude>
-    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_Conf.h">
-      <Filter>Header files\Inc\segger</Filter>
-    </ClInclude>
     <ClInclude Include="Inc\FreeRTOSConfig.h">
       <Filter>Header files\Inc\app</Filter>
     </ClInclude>
     <ClInclude Include="Inc\main.h">
       <Filter>Header files\Inc\app</Filter>
-    </ClInclude>
-    <ClInclude Include="log.h">
-      <Filter>Header files\Inc\util</Filter>
     </ClInclude>
     <ClInclude Include="..\st7920\gdisp_lld_config.h">
       <Filter>Header files\Inc\ugfx</Filter>
@@ -433,30 +424,6 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\CMSIS_HAL\RTOS\Template\cmsis_os.h">
       <Filter>Header files\Device-specific files\HAL</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Class\CDC\Inc\usbd_cdc.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_core.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_def.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h">
-      <Filter>Header files\Device-specific files\USB Device</Filter>
-    </ClInclude>
-    <ClInclude Include="usbd_conf.h">
-      <Filter>Header files\Inc\perhiperal</Filter>
-    </ClInclude>
-    <ClInclude Include="usbd_desc.h">
-      <Filter>Header files\Inc\perhiperal</Filter>
-    </ClInclude>
-    <ClInclude Include="usbd_cdc_if.h">
-      <Filter>Header files\Inc\perhiperal</Filter>
-    </ClInclude>
     <ClInclude Include="StatusView.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
@@ -526,6 +493,33 @@
     <ClInclude Include="application.h">
       <Filter>Header files\Inc\os</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\usb_device.h">
+      <Filter>Header files\Inc\perhiperal\usb</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\usbd_cdc_if.h">
+      <Filter>Header files\Inc\perhiperal\usb</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\usbd_conf.h">
+      <Filter>Header files\Inc\perhiperal\usb</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\usbd_desc.h">
+      <Filter>Header files\Inc\perhiperal\usb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Class\CDC\Inc\usbd_cdc.h">
+      <Filter>Header files\Device-specific files\USB Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_core.h">
+      <Filter>Header files\Device-specific files\USB Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h">
+      <Filter>Header files\Device-specific files\USB Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_def.h">
+      <Filter>Header files\Device-specific files\USB Device</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h">
+      <Filter>Header files\Device-specific files\USB Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
@@ -578,12 +572,6 @@
     </ClCompile>
     <ClCompile Include="numtostring.c">
       <Filter>Source files\Src\util</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.c">
-      <Filter>Source files\Src\segger</Filter>
-    </ClCompile>
-    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_printf.c">
-      <Filter>Source files\Src\segger</Filter>
     </ClCompile>
     <ClCompile Include="Src\freertos.c">
       <Filter>Source files\Src\app</Filter>
@@ -768,27 +756,6 @@
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_utils.c">
       <Filter>Source files\Device-specific files\HAL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_core.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c">
-      <Filter>Source files\Device-specific files\USB Device</Filter>
-    </ClCompile>
-    <ClCompile Include="usbd_conf.c">
-      <Filter>Source files\Src\perhiperal</Filter>
-    </ClCompile>
-    <ClCompile Include="usbd_desc.c">
-      <Filter>Source files\Src\perhiperal</Filter>
-    </ClCompile>
-    <ClCompile Include="usbd_cdc_if.c">
-      <Filter>Source files\Src\perhiperal</Filter>
-    </ClCompile>
     <ClCompile Include="IRQDispatcher.c">
       <Filter>Source files\Src\os</Filter>
     </ClCompile>
@@ -833,6 +800,30 @@
     </ClCompile>
     <ClCompile Include="application.c">
       <Filter>Source files\Src\os</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\usb_device.c">
+      <Filter>Source files\Src\perhiperal\usb</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\usbd_cdc_if.c">
+      <Filter>Source files\Src\perhiperal\usb</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\usbd_conf.c">
+      <Filter>Source files\Src\perhiperal\usb</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\usbd_desc.c">
+      <Filter>Source files\Src\perhiperal\usb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c">
+      <Filter>Source files\Device-specific files\USB Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_core.c">
+      <Filter>Source files\Device-specific files\USB Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c">
+      <Filter>Source files\Device-specific files\USB Device</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c">
+      <Filter>Source files\Device-specific files\USB Device</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

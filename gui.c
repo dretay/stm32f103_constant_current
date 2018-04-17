@@ -4,6 +4,12 @@ static View* views[5];
 
 void StartGUIDrawTask(void const * argument) {	
 	xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
+	gfxInit();
+	gdispSetContrast(40);
+	views[0] = StatusView.init();
+	
+	//todo: maybe set this by default on the first view?
+	views[0]->dirty = true;
 	while (1) {	
 		views[0]->render();	
 			
@@ -23,7 +29,7 @@ void StartUIUpdateTask(void const * argument) {
 		UiUpdateTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
 		event = osMailGet(UI_UPDATE_MAILBOX_ID, osWaitForever);
-		if (event.status == osEventMail) {
+		if (event.status == osEventMail && views[0] != NULL) {
 			update = event.value.p;		
 			views[0]->on_update(update);			
 		}
@@ -35,12 +41,7 @@ void StartUIUpdateTask(void const * argument) {
 	}
 }
 void configure() {
-	gfxInit();
-	gdispSetContrast(40);
-	views[0] = StatusView.init();
 	
-	//todo: maybe set this by default on the first view?
-	views[0]->dirty = true;
 	xTaskNotify(guiDrawTaskHandle, 0x01, eSetBits);
 }
 const struct gui GUI = { 

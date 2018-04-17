@@ -93,15 +93,15 @@
 //    #define GDISP_INCLUDE_FONT_UI2                   FALSE		// The smallest preferred font.
     #define GDISP_INCLUDE_FONT_LARGENUMBERS          FALSE
 #define GDISP_INCLUDE_FONT_DEJAVUSANS10          TRUE
-    #define GDISP_INCLUDE_FONT_DEJAVUSANS12          TRUE
+#define GDISP_INCLUDE_FONT_DEJAVUSANS12          TRUE
     #define GDISP_INCLUDE_FONT_DEJAVUSANS16          FALSE
-    #define GDISP_INCLUDE_FONT_DEJAVUSANS20          TRUE
+#define GDISP_INCLUDE_FONT_DEJAVUSANS20          TRUE
     #define GDISP_INCLUDE_FONT_DEJAVUSANS24          FALSE
-    #define GDISP_INCLUDE_FONT_DEJAVUSANS32          TRUE
-    #define GDISP_INCLUDE_FONT_DEJAVUSANSBOLD12      TRUE
+#define GDISP_INCLUDE_FONT_DEJAVUSANS32          TRUE
+#define GDISP_INCLUDE_FONT_DEJAVUSANSBOLD12      TRUE
 	  #define GDISP_INCLUDE_FONT_FIXED_10X20           FALSE
-    #define GDISP_INCLUDE_FONT_FIXED_7X14            TRUE
-    #define GDISP_INCLUDE_FONT_FIXED_5X8             TRUE
+#define GDISP_INCLUDE_FONT_FIXED_7X14            TRUE
+#define GDISP_INCLUDE_FONT_FIXED_5X8             TRUE
 //    #define GDISP_INCLUDE_FONT_DEJAVUSANS12_AA       FALSE
 //    #define GDISP_INCLUDE_FONT_DEJAVUSANS16_AA       FALSE
 //    #define GDISP_INCLUDE_FONT_DEJAVUSANS20_AA       FALSE
@@ -185,7 +185,7 @@
 ///////////////////////////////////////////////////////////////////////////
 // GWIN                                                                  //
 ///////////////////////////////////////////////////////////////////////////
-#define GFX_USE_GWIN                                 TRUE
+#define GFX_USE_GWIN                                 FALSE
 
 //#define GWIN_NEED_WINDOWMANAGER                      FALSE
 //    #define GWIN_REDRAW_IMMEDIATE                    FALSE
@@ -200,7 +200,7 @@
 //    #define GWIN_CONSOLE_ESCSEQ                      FALSE
 //    #define GWIN_CONSOLE_USE_BASESTREAM              FALSE
 //    #define GWIN_CONSOLE_USE_FLOAT                   FALSE
-#define GWIN_NEED_GRAPH                              TRUE
+#define GWIN_NEED_GRAPH                              FALSE
 //#define GWIN_NEED_GL3D                               FALSE
 
 //#define GWIN_NEED_WIDGET                             FALSE

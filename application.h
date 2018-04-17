@@ -1,8 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include "cmsis_os.h"
-#include "log.h"
-
+#include <stdbool.h>
 #include "gfx.h"
 #include "stm32f1xx_hal.h"
 #include "RotaryEncoder.h"

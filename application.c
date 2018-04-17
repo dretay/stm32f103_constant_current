@@ -96,11 +96,11 @@ static void configure_flash() {
 
 static void configure() {
 	configure_usb_serial_commands();
-	configure_current_sink();
-	configure_adc();
-	configure_rotary_encoders();
-	configure_toggle_switches();
-	configure_graphics();	
+//	configure_current_sink();
+//	configure_adc();
+//	configure_rotary_encoders();
+//	configure_toggle_switches();
+//	configure_graphics();	
 	configure_flash();
 
 }

@@ -48,8 +48,6 @@ void StartSerialCmdTask(void const * argument) {
 		SerialCmdTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
 
-//		memset(bytes, 0, sizeof(bytes));
-//		bytes_read = serial_adapter->read(&bytes, 16);
 		event = osMailGet(SERCMD_UPDATE_MAILBOX_ID, osWaitForever);
 		if (event.status != osEventMail)
 		{

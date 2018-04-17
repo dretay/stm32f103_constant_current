@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;../ugfx;D:/Program Files (x86)/SEGGER/JLink_V622d/Samples/RTT/SEGGER_RTT_V622d/RTT;../nanopb-0.3.9-windows-x86;../stm32_isolated_adc;../st7920;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/device;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/drivers_nrf/nrf_soc_nosd;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/libraries/util;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/examples/802_15_4/experimental/wireless_uart/first/pca10056/blank/config;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/external/segger_rtt;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;../ugfx;../nanopb-0.3.9-windows-x86;../st7920;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <InputLanguage>C</InputLanguage>
     </ClCompile>
@@ -48,7 +48,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Inc;../ugfx;D:/Program Files (x86)/SEGGER/JLink_V622d/Samples/RTT/SEGGER_RTT_V622d/RTT;../nanopb-0.3.9-windows-x86;../mcp4725;../stm32_isolated_adc;../encoder;../st7920;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/device;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/drivers_nrf/nrf_soc_nosd;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/components/libraries/util;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/examples/802_15_4/experimental/wireless_uart/first/pca10056/blank/config;C:/Users/drew/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.nordic.nrf5x/nRF5x/external/segger_rtt;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Inc;../ugfx;../nanopb-0.3.9-windows-x86;../mcp4725;../stm32_isolated_adc;../encoder;../st7920;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -175,6 +175,10 @@
     <ClInclude Include="Flash.h" />
     <ClInclude Include="flashpages.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="Inc\usbd_cdc_if.h" />
+    <ClInclude Include="Inc\usbd_conf.h" />
+    <ClInclude Include="Inc\usbd_desc.h" />
+    <ClInclude Include="Inc\usb_device.h" />
     <ClInclude Include="minmax.h" />
     <ClInclude Include="polyfit.h" />
     <ClInclude Include="RotaryEncoder.h" />
@@ -185,8 +189,6 @@
     <ClInclude Include="types.h" />
     <ClInclude Include="serialcommand.h" />
     <ClInclude Include="application.h" />
-    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.h" />
-    <ClInclude Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_Conf.h" />
     <ClInclude Include="events.h" />
     <ClInclude Include="numtostring.h" />
     <ClInclude Include="gfxconf.h" />
@@ -194,12 +196,8 @@
     <ClInclude Include="Inc\main.h" />
     <ClInclude Include="Inc\stm32f1xx_hal_conf.h" />
     <ClInclude Include="Inc\stm32f1xx_it.h" />
-    <ClInclude Include="log.h" />
     <ClInclude Include="StatusView.h" />
     <ClInclude Include="UartSerialCommandAdapter.h" />
-    <ClInclude Include="usbd_cdc_if.h" />
-    <ClInclude Include="usbd_conf.h" />
-    <ClInclude Include="usbd_desc.h" />
     <ClInclude Include="UsbSerialCommandAdapter.h" />
     <ClInclude Include="View.h" />
   </ItemGroup>
@@ -288,11 +286,13 @@
     <ClCompile Include="RotaryEncoder.c" />
     <ClCompile Include="IRQDispatcher.c" />
     <ClCompile Include="MCP4725.c" />
+    <ClCompile Include="Src\usbd_cdc_if.c" />
+    <ClCompile Include="Src\usbd_conf.c" />
+    <ClCompile Include="Src\usbd_desc.c" />
+    <ClCompile Include="Src\usb_device.c" />
     <ClCompile Include="ToggleSwitch.c" />
     <ClCompile Include="serialcommand.c" />
     <ClCompile Include="application.c" />
-    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT.c" />
-    <ClCompile Include="D:\Program Files (x86)\SEGGER\JLink_V622d\Samples\RTT\SEGGER_RTT_V622d\RTT\SEGGER_RTT_printf.c" />
     <ClCompile Include="numtostring.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\main.c" />
@@ -302,9 +302,6 @@
     <ClCompile Include="Src\system_stm32f1xx.c" />
     <ClCompile Include="StatusView.c" />
     <ClCompile Include="UartSerialCommandAdapter.c" />
-    <ClCompile Include="usbd_cdc_if.c" />
-    <ClCompile Include="usbd_conf.c" />
-    <ClCompile Include="usbd_desc.c" />
     <ClCompile Include="UsbSerialCommandAdapter.c" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MCP4725.h"
-#include "polyfit.h"
 #include "Flash.h"
 #include "math.h"
 #include "serialcommand.h"

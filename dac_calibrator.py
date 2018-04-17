@@ -6,9 +6,9 @@ import csv
 import serial
 import vxi11
 
-supply = vxi11.Instrument("192.168.1.36")
-meter = ivi.agilent.agilent34461A("TCPIP0::192.168.1.27::INSTR")
-currentsink = serial.Serial('COM15',115200, timeout=0.1)
+# supply = vxi11.Instrument("192.168.1.36")
+# meter = ivi.agilent.agilent34461A("TCPIP0::192.168.1.27::INSTR")
+currentsink = serial.Serial('COM26',115200, timeout=0.1)
 
 def send(input):
   currentsink.write(input)
@@ -91,9 +91,9 @@ def calibrate_voltage_sense():
 		time.sleep(1)
 
 #calibrate_current_sense()
-#send(f"setdac 0\r\n".encode())
+send(f"setcont 90\r\n".encode())
 
-#supply.write(f"CH1:VOLT 0")
-while(True):
-	print(float(supply.ask("MEAS:CURR? CH1"))*2)
-	time.sleep(1)
+# supply.write(f"CH1:VOLT 0")
+# while(True):
+# 	print(float(supply.ask("MEAS:CURR? CH1"))*2)
+# 	time.sleep(1)
