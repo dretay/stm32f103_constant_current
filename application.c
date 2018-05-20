@@ -1,7 +1,5 @@
 #include "application.h"
 
-
-
 void set_dac() {
 	char* arg = SerialCommand.next();
 	unsigned int value = atoi(arg);

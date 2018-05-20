@@ -24,8 +24,8 @@
   <config>
     <name>stm32f103_constant_current</name>				
     <device>STM32F103C8Tx</device>		 
-    <heapSize>0x200</heapSize>
-    <stackSize>0x400</stackSize>
+    <heapSize>0x600</heapSize>
+    <stackSize>0x800</stackSize>
     
     	<board>custom</board>
 			

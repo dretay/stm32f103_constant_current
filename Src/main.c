@@ -203,7 +203,7 @@ int main(void)
   guiDrawTaskHandle = osThreadCreate(osThread(guiDrawTask), NULL);
 
   /* definition and creation of serialCmdTask */
-  osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityHigh, 0, 250);
+  osThreadDef(serialCmdTask, StartSerialCmdTask, osPriorityHigh, 0, 300);
   serialCmdTaskHandle = osThreadCreate(osThread(serialCmdTask), NULL);
 
   /* definition and creation of uiUpdateTask */
