@@ -1,5 +1,4 @@
 #pragma once
-//based on library https://github.com/soligen2010/Adafruit_ADS1X15
 
 #include "stm32f1xx_hal.h"
 #include <stdint.h>
@@ -47,15 +46,6 @@
 #define ADS1X15_REG_CONFIG_MODE_CONTIN  (0x0000)  // Continuous conversion mode
 #define ADS1X15_REG_CONFIG_MODE_SINGLE  (0x0100)  // Power-down single-shot mode (default)
 
-#define ADS1015_REG_CONFIG_DR_MASK      (0x00E0)  
-#define ADS1015_REG_CONFIG_DR_128SPS    (0x0000)  // 128 samples per second
-#define ADS1015_REG_CONFIG_DR_250SPS    (0x0020)  // 250 samples per second
-#define ADS1015_REG_CONFIG_DR_490SPS    (0x0040)  // 490 samples per second
-#define ADS1015_REG_CONFIG_DR_920SPS    (0x0060)  // 920 samples per second
-#define ADS1015_REG_CONFIG_DR_1600SPS   (0x0080)  // 1600 samples per second (default)
-#define ADS1015_REG_CONFIG_DR_2400SPS   (0x00A0)  // 2400 samples per second
-#define ADS1015_REG_CONFIG_DR_3300SPS   (0x00C0)  // 3300 samples per second
-
 #define ADS1115_REG_CONFIG_DR_8SPS      (0x0000)  // 8 samples per second
 #define ADS1115_REG_CONFIG_DR_16SPS     (0x0020)  // 16 samples per second
 #define ADS1115_REG_CONFIG_DR_32SPS     (0x0040)  // 32 samples per second
@@ -91,17 +81,6 @@
 #define ADS1115_VOLTS_PER_BIT_GAIN_EIGHT       0.000015625F  
 #define ADS1115_VOLTS_PER_BIT_GAIN_SIXTEEN     0.0000078125F 
 
-#define ADS1015_VOLTS_PER_BIT_GAIN_TWOTHIRDS   0.003F
-#define ADS1015_VOLTS_PER_BIT_GAIN_ONE         0.002F 
-#define ADS1015_VOLTS_PER_BIT_GAIN_TWO         0.001F  
-#define ADS1015_VOLTS_PER_BIT_GAIN_FOUR        0.0005F   
-#define ADS1015_VOLTS_PER_BIT_GAIN_EIGHT       0.00025F  
-#define ADS1015_VOLTS_PER_BIT_GAIN_SIXTEEN     0.000125F 
-
-//CHIP BASED BIT SHIFT
-#define ADS1015_CONV_REG_BIT_SHIFT_4           4
-#define ADS1115_CONV_REG_BIT_SHIFT_0           0
-
 typedef enum {
 	GAIN_TWOTHIRDS = ADS1X15_REG_CONFIG_PGA_6_144V,
 	GAIN_ONE       = ADS1X15_REG_CONFIG_PGA_4_096V,
@@ -116,23 +95,15 @@ extern I2C_HandleTypeDef hi2c1;
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 UBaseType_t AdcPollTaskTask_Watermark;
 #endif
-typedef struct {	
-	uint8_t idx;
-	float ratio;
-	bool differential;
-} ADS1115_CHANNEL_CONFIG;
 
-typedef struct {
-	I2C_HandleTypeDef* p_i2c;
-	uint8_t addr;
-	uint8_t channel_cnt;
-	ADS1115_CHANNEL_CONFIG *channel_configs;
-} ADS1115_CONFIG;
+static float volts_per_bit();
+
+
 
 struct ads1115 {
-	void(*configure)(I2C_HandleTypeDef *hi2c_in, uint8_t addr_in);	
-	float(*get_reading)(int idx);
-	void(*start_continuous)(int idx);
+	void(*configure)(int num_channels_in, I2C_HandleTypeDef *hi2c_in, uint8_t addr_in, short int irq_pin);		
+	void(*set_ssps)(int ssps);
+	void(*set_gain)(int gain);
 
 };
 

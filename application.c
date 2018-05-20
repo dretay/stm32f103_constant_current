@@ -65,7 +65,7 @@ static void configure_rotary_encoders() {
 	RotaryEncoder.configure(encoder_configs);
 }
 static void configure_adc() {
-	ADS1115.configure(&hi2c1, 0x90);	
+	ADS1115.configure(2, &hi2c1, 0x90, GPIO_PIN_14);	
 }
 static void configure_graphics() {
 	GUI.configure();
