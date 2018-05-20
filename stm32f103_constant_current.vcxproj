@@ -172,6 +172,7 @@
     <ClInclude Include="bithelper.h" />
     <ClInclude Include="CurrentSink.h" />
     <ClInclude Include="DebouncingDispatcher.h" />
+    <ClInclude Include="dwt_stm32_delay.h" />
     <ClInclude Include="Flash.h" />
     <ClInclude Include="flashpages.h" />
     <ClInclude Include="gui.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="ADS1115.c" />
     <ClCompile Include="CurrentSink.c" />
     <ClCompile Include="DebouncingDispatcher.c" />
+    <ClCompile Include="dwt_stm32_delay.c" />
     <ClCompile Include="Flash.c" />
     <ClCompile Include="gui.c" />
     <ClCompile Include="polyfit.c" />

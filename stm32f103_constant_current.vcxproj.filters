@@ -520,6 +520,9 @@
     <ClInclude Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h">
       <Filter>Header files\Device-specific files\USB Device</Filter>
     </ClInclude>
+    <ClInclude Include="dwt_stm32_delay.h">
+      <Filter>Header files\Inc\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c">
@@ -824,6 +827,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c">
       <Filter>Source files\Device-specific files\USB Device</Filter>
+    </ClCompile>
+    <ClCompile Include="dwt_stm32_delay.c">
+      <Filter>Source files\Src\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

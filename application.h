@@ -17,6 +17,7 @@
 #include "Flash.h"
 #include "CurrentSink.h"
 #include "gui.h"
+#include "dwt_stm32_delay.h"
 
 static void showView(uint8_t);
 

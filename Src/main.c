@@ -183,7 +183,9 @@ int main(void)
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);  
-
+	if (DWT_Delay_Init()) {
+		Error_Handler(); /* Call Error Handler */
+	}
 //	HAL_TIM_Base_Start_IT(&htim2);
 //	HAL_TIM_Base_Start(&htim2);
 		
