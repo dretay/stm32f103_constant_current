@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 //based on https://gist.github.com/psych0der/6319244
 
 void ftos(char* str, float f, uint8_t precision);

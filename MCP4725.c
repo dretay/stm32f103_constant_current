@@ -11,7 +11,7 @@ static void marshal(uint8_t idx, uint16_t value) {
 	if (status != HAL_OK) {
 		
 	}
-}
+        }
 
 //do conversion from device response
 static void unmarshal(void) {

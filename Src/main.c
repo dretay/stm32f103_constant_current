@@ -58,9 +58,6 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
-DMA_HandleTypeDef hdma_adc1;
-
 I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi1;
@@ -75,6 +72,7 @@ osThreadId sysUpdateTaskHandle;
 osThreadId guiDrawTaskHandle;
 osThreadId serialCmdTaskHandle;
 osThreadId uiUpdateTaskHandle;
+osThreadId adcPollTaskHandle;
 osTimerId debouncingDispatchTimerHandle;
 osTimerId encoderTimerHandle;
 
@@ -96,12 +94,12 @@ static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_ADC1_Init(void);
 void StartDefaultTask(void const * argument);
 extern void StartSysUpdateTask(void const * argument);
 extern void StartGUIDrawTask(void const * argument);
 extern void StartSerialCmdTask(void const * argument);
 extern void StartUIUpdateTask(void const * argument);
+extern void StartAdcPollTask(void const * argument);
 extern void debounce_timer_callback(void const * argument);
 extern void encoder_timer_callback(void const * argument);
 
@@ -152,7 +150,6 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
-  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -186,12 +183,15 @@ int main(void)
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);  
+
+//	HAL_TIM_Base_Start_IT(&htim2);
+//	HAL_TIM_Base_Start(&htim2);
 		
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 100);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 200);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of sysUpdateTask */
@@ -209,6 +209,10 @@ int main(void)
   /* definition and creation of uiUpdateTask */
   osThreadDef(uiUpdateTask, StartUIUpdateTask, osPriorityIdle, 0, 64);
   uiUpdateTaskHandle = osThreadCreate(osThread(uiUpdateTask), NULL);
+
+  /* definition and creation of adcPollTask */
+  osThreadDef(adcPollTask, StartAdcPollTask, osPriorityAboveNormal, 0, 64);
+  adcPollTaskHandle = osThreadCreate(osThread(adcPollTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -285,8 +289,7 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC|RCC_PERIPHCLK_USB;
-  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV8;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
   PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -303,47 +306,6 @@ void SystemClock_Config(void)
 
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 15, 0);
-}
-
-/* ADC1 init function */
-static void MX_ADC1_Init(void)
-{
-
-  ADC_ChannelConfTypeDef sConfig;
-
-    /**Common config 
-    */
-  hadc1.Instance = ADC1;
-  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 2;
-  if (HAL_ADC_Init(&hadc1) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**Configure Regular Channel 
-    */
-  sConfig.Channel = ADC_CHANNEL_0;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_71CYCLES_5;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
-    /**Configure Regular Channel 
-    */
-  sConfig.Channel = ADC_CHANNEL_1;
-  sConfig.Rank = ADC_REGULAR_RANK_2;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
-
 }
 
 /* I2C1 init function */
@@ -456,9 +418,6 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
-  /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
   /* DMA1_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
@@ -486,38 +445,44 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|GPIO_PIN_6, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_6, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12|GPIO_PIN_13, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1|GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PC13 PC14 PC15 */
   GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA2 PA3 PA8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_8;
+  /*Configure GPIO pins : PA0 PA1 PA2 PA8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA4 PA6 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_6;
+  /*Configure GPIO pins : PA3 PA4 PA6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB1 PB2 PB10 PB11 
-                           PB14 PB15 PB5 PB8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11 
-                          |GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_5|GPIO_PIN_8;
+  /*Configure GPIO pins : PB1 PB13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB2 PB10 PB11 PB15 
+                           PB3 PB8 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_15 
+                          |GPIO_PIN_3|GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB12 PB13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  /*Configure GPIO pins : PB12 PB14 PB5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_14|GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PA15 */
@@ -526,16 +491,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB3 PB4 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_9;
+  /*Configure GPIO pin : PB4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI3_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
-
   HAL_NVIC_SetPriority(EXTI4_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 
@@ -548,7 +510,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+static int old_tick = 0;
+static int new_tick = 0;
+float value;
+int counter;
 /* USER CODE END 4 */
 
 /* StartDefaultTask function */
@@ -559,14 +524,26 @@ void StartDefaultTask(void const * argument)
 
   /* USER CODE BEGIN 5 */
 	Application.configure();
+	while (1)
+	{		
+//		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
+//		HAL_Delay(5000);
+//		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_3);
+		// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
+//		osThreadYield();
+//		counter = __HAL_TIM_GetCounter(&htim2);
+//		char textbuf[12];	
+//		int delta = (new_tick - old_tick);
+//		if (delta > 0)
+//		{
+//			value = ((float)htim2.Init.Period / delta);///1.63805;			
+//			snprintf(textbuf, 11, "%0.2f", value);
+//			SerialCommand.echo(textbuf, strlen(textbuf));			
+//		}
 #ifdef INCLUDE_uxTaskGetStackHighWaterMark
 	DefaultTask_Watermark = uxTaskGetStackHighWaterMark(NULL);
 #endif
-	while (1)
-	{		
-		// Don't clear bits on entry., Clear all bits on exit., Stores the notified value.
-		xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
-		osThreadYield();
+	xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
 	}		
 
   /* USER CODE END 5 */ 
@@ -590,7 +567,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
   /* USER CODE BEGIN Callback 1 */
 	if (htim->Instance == TIM2) {
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1);
+		old_tick = new_tick;
+		new_tick = HAL_GetTick();
 	}
   /* USER CODE END Callback 1 */
 }

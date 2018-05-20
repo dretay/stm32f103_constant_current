@@ -3,6 +3,7 @@
 #include "events.h"
 #include "limits.h"
 
+#ifdef HAL_ADC_MODULE_ENABLED
 extern osThreadId adcTaskHandle;						         
 #define ADC_BUFFER_SIZE ((uint8_t)    2)
 struct adc {
@@ -10,3 +11,5 @@ struct adc {
 };
 
 extern const struct adc Adc;
+
+#endif

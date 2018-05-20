@@ -64,7 +64,7 @@ int VCP_write(const void *pBuffer, int size) {
 }
 
 
-static int read(void *buffer, int size) {
+static int read(char *buffer, int size) {
 	return VCP_read(buffer, size);
 }
 static void write(const void* buffer, int size) {

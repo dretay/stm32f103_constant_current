@@ -35,7 +35,7 @@ void set_current() {
 	float val = atof(arg);
 	CurrentSink.set(val);
 }
-static void configure_usb_serial_commands() {
+static void configure_serial_commands() {
 	SerialCommand.register_command(0, "setdac", &set_dac);
 	SerialCommand.register_command(1, "getdac", &get_dac);
 	SerialCommand.register_command(2, "setcont", &set_contrast);
@@ -58,27 +58,14 @@ static void configure_rotary_encoders() {
 	encoder_configs[0].switch_bus = GPIOA;
 	encoder_configs[0].switch_idx = GPIO_PIN_15;
 	encoder_configs[0].pin_a_bus = GPIOB;
-	encoder_configs[0].pin_a_idx = GPIO_PIN_3;
+	encoder_configs[0].pin_a_idx = GPIO_PIN_5;
 	encoder_configs[0].pin_b_bus = GPIOB;
 	encoder_configs[0].pin_b_idx = GPIO_PIN_4;		
 
 	RotaryEncoder.configure(encoder_configs);
 }
 static void configure_adc() {
-	Adc.configure(&hadc1);
-//	ADS1115_CHANNEL_CONFIG ads1115_channel_configs[1];
-//	ads1115_channel_configs[0].idx = 0;
-//	ads1115_channel_configs[0].ratio = 1;
-//	ads1115_channel_configs[0].differential = false;	
-//
-//
-//	ADS1115_CONFIG ads1115_configs[1];
-//	ads1115_configs[0].addr = 0x90;
-//	ads1115_configs[0].p_i2c = &hi2c1;
-//	ads1115_configs[0].channel_cnt = 1;
-//	ads1115_configs[0].channel_configs = ads1115_channel_configs;
-
-	ADS1115.configure(&hi2c1, 0x90);
+	ADS1115.configure(&hi2c1, 0x90);	
 }
 static void configure_graphics() {
 	GUI.configure();
@@ -86,7 +73,7 @@ static void configure_graphics() {
 static void configure_toggle_switches() {
 	ToggleSwitchConfig switch_configs[1];
 	switch_configs[0].pin_bus = GPIOB;
-	switch_configs[0].pin_idx = GPIO_PIN_9;
+	switch_configs[0].pin_idx = GPIO_PIN_12;
 
 	ToggleSwitch.configure(switch_configs);
 }
@@ -95,12 +82,14 @@ static void configure_flash() {
 }
 
 static void configure() {
-	configure_usb_serial_commands();
-//	configure_current_sink();
-//	configure_adc();
-//	configure_rotary_encoders();
-//	configure_toggle_switches();
-//	configure_graphics();	
+	configure_serial_commands();
+	configure_current_sink();
+
+	configure_adc();
+	configure_rotary_encoders();
+	configure_toggle_switches();
+	configure_graphics();
+//	SerialCommand.echo("READY!", 6);
 	configure_flash();
 
 }

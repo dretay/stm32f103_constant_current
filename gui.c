@@ -5,7 +5,7 @@ static View* views[5];
 void StartGUIDrawTask(void const * argument) {	
 	xTaskNotifyWait(pdFALSE, ULONG_MAX, NULL, osWaitForever);
 	gfxInit();
-	gdispSetContrast(40);
+	gdispSetContrast(100);
 	views[0] = StatusView.init();
 	
 	//todo: maybe set this by default on the first view?

@@ -23,7 +23,6 @@ static void showView(uint8_t);
 extern I2C_HandleTypeDef hi2c1;
 extern I2C_HandleTypeDef hi2c2;
 extern UART_HandleTypeDef huart1;
-extern ADC_HandleTypeDef hadc1;
 
 struct application
 {

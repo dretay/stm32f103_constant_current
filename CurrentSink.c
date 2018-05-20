@@ -14,7 +14,7 @@ static void configure(uint8_t idx_in, I2C_HandleTypeDef* p_i2c_in, uint8_t addr_
 	DAC_IDX = idx_in;
 
 	MCP4725.add_dac(DAC_IDX, p_i2c_in, addr_in);	
-	MCP4725.set_dac(DAC_IDX, 0);
+	MCP4725.set_dac(DAC_IDX,0);
 
 }
 
@@ -100,31 +100,33 @@ void StartSysUpdateTask(void const * argument) {
 		//todo: make these constants in eeprom
 		case ADC_READ_EVENT:
 			switch (update->idx) {
-			case 0:
-				raw_voltage_reading = update->int_val;				
-				temp_reading = 
-					(0.009379665312 * raw_voltage_reading) +
-					(0.02846160893 * raw_voltage_reading) /
-					(raw_voltage_reading - 0.7092668529);
-				if (temp_reading > 0)
-				{
-					voltage_reading = temp_reading;
-					wattage_reading = voltage_reading * current_reading;				
-					
-				}
+			case 0:		
+				voltage_reading = update->float_val*10;
+//				raw_current_reading = update->int_val;				
+//				temp_reading = 
+//					(-0.000001318965458 * pow(raw_current_reading, 2)) -
+//					(0.1934410638 * pow(raw_current_reading,0.5)) +
+//					(16.6824594);
+//				if (temp_reading > 0) 
+//				{
+//					current_reading = temp_reading;
+//					wattage_reading = voltage_reading * current_reading;				
+//				}				
 				break;
-			case 1:		
-				raw_current_reading = update->int_val;				
-				temp_reading = 
-					(-0.000001318965458 * pow(raw_current_reading, 2)) -
-					(0.1934410638 * pow(raw_current_reading,0.5)) +
-					(16.6824594);
-				if (temp_reading > 0) 
-				{
-					current_reading = temp_reading;
-					wattage_reading = voltage_reading * current_reading;				
-				}				
-				break;
+			case 1:
+				current_reading = (update->float_val /2);
+//				raw_voltage_reading = update->int_val;				
+//				temp_reading = 
+//					(0.009379665312 * raw_voltage_reading) +
+//					(0.02846160893 * raw_voltage_reading) /
+//					(raw_voltage_reading - 0.7092668529);
+//				if (temp_reading > 0)
+//				{
+//					voltage_reading = temp_reading;
+//					wattage_reading = voltage_reading * current_reading;				
+//					
+//				}
+//				break;
 			}
 			break;
 		case TOGGLE_SWITCH_EVENT:

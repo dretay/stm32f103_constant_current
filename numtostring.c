@@ -56,7 +56,7 @@ void ftos(char* str, float f, uint8_t precision) {
 	obtained as quotient by dividing number by 10^k where k = (number of digit -1)
 	*/
 	
-	itoa(a, str);
+	itoa(a, str, 10);
 	if (a < 10)
 	{
 		str[i++] = '0';

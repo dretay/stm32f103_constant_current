@@ -1,5 +1,7 @@
 #include "Adc.h"
 
+#ifdef HAL_ADC_MODULE_ENABLED
+
 static ADC_HandleTypeDef *hadc;
 
 static uint16_t  adc_data[ADC_BUFFER_SIZE];
@@ -27,14 +29,13 @@ static void configure(ADC_HandleTypeDef *hadc_in) {
 		Error_Handler();
 	}
 }
-
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 	T_SYSTEM_UPDATE *update;
 	uint8_t i = 0;	
 	for (i = 0; i < ADC_BUFFER_SIZE; i++) {		
 		adc_data_avg[i] = adc_data_avg[i] + ((adc_data[i] - adc_data_avg[i]) / ++readings_cnt);
 	}
-	if (readings_cnt == 4000)
+	if (readings_cnt == 500)
 	{
 		for (i = 0; i < ADC_BUFFER_SIZE; i++) {		
 			update = osMailAlloc(SYS_UPDATE_MAILBOX_ID, 0);
@@ -56,3 +57,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 const struct adc Adc = { 
 	.configure = configure,
 };
+
+
+#endif
